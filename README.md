@@ -49,6 +49,27 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 - the module of react-router-dom should use "require" to import
 
+
+## 系统模块
++ 用户管理
+  - 登录
+  - 注册
+  - 退出登录
++ 首页管理
+  - 轮播图配置
+  - 快捷导航配置
+  - 热门推荐配置
++ 分类管理
+  - 新增
+  - 修改
++ 商品管理
+  - 新增
+  - 修改/上下架
+  - 详情
++ 购物车管理
++ 订单管理
+
+
 ## 设置路径别名
 
 - 在根目录下创建 paths.json 文件，内容如下：
