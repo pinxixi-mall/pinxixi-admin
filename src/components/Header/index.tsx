@@ -24,7 +24,7 @@ const Header = (props: Props) => {
 
   const menu = (
     <Menu>
-      <Menu.Item icon={<UserOutlined />} key="/user-center/user-info" onClick={toUserInfo}>个人中心</Menu.Item>
+      <Menu.Item icon={<UserOutlined />} key="/user-manage/user-info" onClick={toUserInfo}>个人信息</Menu.Item>
       <Menu.Divider key="divider" />
       <Menu.Item icon={<PoweroffOutlined />} key="/login" onClick={handleLogout}>退出登录</Menu.Item>
     </Menu>

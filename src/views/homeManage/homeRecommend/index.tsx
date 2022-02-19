@@ -159,7 +159,7 @@ const HomeRecommend: React.FC = () => {
 
   // 新增|编辑
   const handleRecommendEdit = (id?: string): void => {
-    history.push(`/product-manage/home-recomend/recommend-edit?id=${id||''}`)
+    history.push(`/home-manage/recommend-edit?id=${id||''}`)
   }
 
   // 上、下架

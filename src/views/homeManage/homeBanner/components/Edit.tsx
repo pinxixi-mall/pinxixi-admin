@@ -3,7 +3,7 @@ import { Form, Input, Modal, InputNumber, message, Upload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { updateHomeBanner, commonUpload } from '@/api'
 import { useResetFormOnCloseModal } from '@/utils/common'
-import type { BannerProps } from '../../index'
+import type { BannerProps } from '../index'
 const { TextArea } = Input
 interface ModalFormProps {
   visible: boolean;

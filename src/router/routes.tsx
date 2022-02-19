@@ -1,12 +1,14 @@
 
 import React from "react";
-import { UserOutlined, HomeOutlined, ShopOutlined } from '@ant-design/icons';
-import Login from "@/views/login/login";
-import Home from "@/views/home/home";
-import HomeBanner from "@/views/productManage/homeBanner";
-import HomeRecommend from "@/views/productManage/homeRecommend";
-import UserInfo from "@/views/user/userInfo";
-import RecommendEdit from "@/views/productManage/homeRecommend/recommendEdit/recommendEdit";
+import { UserOutlined, HomeOutlined, ShopOutlined, AppstoreOutlined, OrderedListOutlined   } from '@ant-design/icons';
+import Login from "@/views/login";
+import Dashboard from "@/views/dashboard";
+import HomeBanner from "@/views/homeManage/homeBanner";
+import HomeRecommend from "@/views/homeManage/homeRecommend";
+import UserInfo from "@/views/userManage/userInfo";
+import RecommendEdit from "@/views/homeManage/homeRecommend/edit";
+import ProductCategory from "@/views/categoryManage/productCategory";
+import AllOrder from "@/views/orderManage/allOrder";
 
 export interface routeType {
   path: string;
@@ -42,24 +44,24 @@ const defaultRoutes: Array<routeType> = [
 // 左侧菜单
 const navMenus: Array<routeType> = [
   {
-    path: '/home',
-    name: 'home',
+    path: '/dashboard',
+    name: 'dashboard',
     meta: {
-      title: '首页',
+      title: 'Dashboard',
       icon: <HomeOutlined />
     },
-    component: Home
+    component: Dashboard
   },
   {
-    path: '/product-manage',
-    name: 'product-manage',
+    path: '/home-manage',
+    name: 'home-manage',
     meta: {
-      title: '商品管理',
+      title: '首页管理',
       icon: <ShopOutlined />
     },
     routes: [
       {
-        path: '/product-manage/home-banner',
+        path: '/home-manage/home-banner',
         name: 'home-banner',
         meta: {
           title: '首页轮播'
@@ -67,7 +69,7 @@ const navMenus: Array<routeType> = [
         component: HomeBanner
       },
       {
-        path: '/product-manage/home-recomend',
+        path: '/home-manage/home-recomend',
         name: 'home-recomend',
         meta: {
           title: '首页推荐'
@@ -75,7 +77,7 @@ const navMenus: Array<routeType> = [
         component: HomeRecommend
       },
       {
-        path: '/product-manage/home-recomend/recommend-edit',
+        path: '/home-manage/recommend-edit',
         name: 'recommend-edit',
         meta: {
           title: '编辑',
@@ -86,23 +88,59 @@ const navMenus: Array<routeType> = [
     ]
   },
   {
-    path: '/user-center',
-    name: 'user-center',
+    path: '/category-manage',
+    name: 'category-manage',
     meta: {
-      title: '个人中心',
+      title: '分类管理',
+      icon: <AppstoreOutlined />
+    },
+    routes: [
+      {
+        path: '/category-manage/product-category',
+        name: 'product-category',
+        meta: {
+          title: '商品分类'
+        },
+        component: ProductCategory
+      }
+    ]
+  },
+  {
+    path: '/order-manage',
+    name: 'order-manage',
+    meta: {
+      title: '订单管理',
+      icon: <OrderedListOutlined />
+    },
+    routes: [
+      {
+        path: '/order-manage/all-order',
+        name: 'all-order',
+        meta: {
+          title: '所有订单'
+        },
+        component: AllOrder
+      }
+    ]
+  },
+  {
+    path: '/user-manage',
+    name: 'user-manage',
+    meta: {
+      title: '用户管理',
       icon: <UserOutlined />
     },
     routes: [
       {
-        path: '/user-center/user-info',
+        path: '/user-manage/user-info',
         name: 'user-info',
         meta: {
-          title: '个人资料'
+          title: '个人信息'
         },
         component: UserInfo
       }
     ]
-  }
+  },
 ]
 
 

@@ -1,7 +1,7 @@
 import { useEffect, FC, ReactElement } from "react";
 import { Form, Input, Button, Checkbox } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import styles from "./login.module.less";
+import styles from "./index.module.less";
 import { login } from '@/api'
 import { setToken } from '@/utils/utils'
 const { useHistory } = require('react-router-dom')

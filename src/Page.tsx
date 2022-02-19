@@ -1,6 +1,6 @@
 import React from 'react';
 // import NotFound from './components/pages/NotFound';
-import Login from "@/views/login/login";
+import Login from "@/views/login";
 import App from './App';
 const { HashRouter: Router, Route, Switch, Redirect } =require('react-router-dom');
 

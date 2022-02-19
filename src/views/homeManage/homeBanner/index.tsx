@@ -3,7 +3,7 @@ import { Card, Button, Table, Space, SpinProps, Tooltip, Image, Modal, message }
 import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/es/table'
 import SearchPannel from '@/components/SearchPannel'
-import BannerEdit from './components/bannerEdit'
+import BannerEdit from './components/Edit'
 import { getHomeBanner, updateBannerStatus, deleteBanner } from '@/api'
 import type { SearchFormProps } from '@/components/SearchPannel'
 export interface BannerProps {
