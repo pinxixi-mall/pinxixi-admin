@@ -7,7 +7,7 @@
  * Copyright 2020 - present, karakal
  */
 import React, { useMemo } from 'react';
-// import DocumentTitle from 'react-document-title';
+import DocumentTitle from 'react-document-title';
 // import queryString from 'query-string';
 
 const RouteWrapper = (props: any) => {
@@ -39,9 +39,9 @@ const RouteWrapper = (props: any) => {
         return merge;
     };
     return (
-        // <DocumentTitle title={route.title}>
+        <DocumentTitle title={route.title}>
             <Comp {...mergeQueryToProps()} />
-        // </DocumentTitle>
+        </DocumentTitle>
     );
 };
 

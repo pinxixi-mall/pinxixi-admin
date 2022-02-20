@@ -17,7 +17,7 @@ const devServerConfig = () => (config) => {
     port: 9091,
     proxy: {
       "/api": {
-        target: "http://localhost:3001/",
+        target: "http://localhost:9090/",
         pathRewrite: {
           "^/api": "",
         },

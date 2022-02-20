@@ -1,5 +1,5 @@
 import { useEffect, FC, ReactElement } from "react";
-import { Form, Input, Button, Checkbox } from "antd";
+import { Form, Input, Button, Checkbox, Image } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import styles from "./index.module.less";
 import { login } from '@/api'
@@ -22,7 +22,7 @@ const Login: FC = (): ReactElement => {
     document.addEventListener('keydown', (e) => {
       e.key === 'Enter' && form.validateFields()
     })
-  }, [])
+  }, [form])
 
   const onFinish = async (values: SubmitValues) => {
     const { redirect } = url.parse(history.location.search, true).query
@@ -43,18 +43,25 @@ const Login: FC = (): ReactElement => {
         }}
         onFinish={onFinish}
       >
+        <section className={styles.logo}>
+          <Image
+            width={200}
+            src="img/pxx-logo.png"
+          />
+          <span className={styles.name}>后台管理系统</span>
+        </section>
         <Form.Item
           name="username"
           rules={[
             {
               required: true,
-              message: "Please input your Username!",
+              message: "请输入用户名",
             },
           ]}
         >
           <Input
             prefix={<UserOutlined className="site-form-item-icon" />}
-            placeholder="Username"
+            placeholder="用户名"
           />
         </Form.Item>
         <Form.Item
@@ -62,19 +69,19 @@ const Login: FC = (): ReactElement => {
           rules={[
             {
               required: true,
-              message: "Please input your Password!",
+              message: "请输入密码",
             },
           ]}
         >
           <Input
             prefix={<LockOutlined className="site-form-item-icon" />}
             type="password"
-            placeholder="Password"
+            placeholder="密码"
           />
         </Form.Item>
         <Form.Item>
           <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>Remember me</Checkbox>
+            <Checkbox>记住我</Checkbox>
           </Form.Item>
         </Form.Item>
         <Form.Item>
@@ -85,7 +92,7 @@ const Login: FC = (): ReactElement => {
             className="login-form-button"
             block
           >
-            Log in
+            登 录
           </Button>
         </Form.Item>
       </Form>

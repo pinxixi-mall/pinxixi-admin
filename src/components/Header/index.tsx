@@ -34,8 +34,9 @@ const Header = (props: Props) => {
     <AntHeader className={styles.navHeader}>
       <Image
         className={styles.logo}
-        width={40}
-        src="./imgs/logo.png"
+        preview={false}
+        height={36}
+        src="./img/pxx-logo.png"
       />
       <div className={styles.headerRight}>
         <Dropdown overlay={menu} arrow>

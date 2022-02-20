@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { defaultRoutes, navMenus } from '@/router/routes';
+import DocumentTitle from 'react-document-title';
 const { Route, Redirect, Switch } = require('react-router-dom');
 
 type RouterProps = {
@@ -17,7 +18,9 @@ const createRoute = (r: any) => {
                 path={r.route || r.path}
                 render={(props: any) => {
                     const wrapper = (
-                        <Component {...{ ...props, Comp: Component, route: r }} />
+                        <DocumentTitle title={r.meta.title}>
+                            <Component {...{ ...props, Comp: Component, route: r }} />
+                        </DocumentTitle>
                     )
                     return wrapper
                 }}
