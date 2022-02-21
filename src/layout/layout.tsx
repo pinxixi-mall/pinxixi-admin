@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { Layout as AntLayout, Menu } from 'antd';
 import Header from '@/components/Header'
 import Breadcrumb from '@/components/Breadcrumb'
-import { navMenus } from '@/router/routes';
+import { navRoutes } from '@/router/routes';
 import type { routeType } from '@/router/routes'
 import { inject, observer } from 'mobx-react'
 import styles from './index.module.less'
@@ -33,7 +33,7 @@ const Layout: React.FC = (props: any) => {
   const initPage = () => {
     const pathname = history.location.pathname // /aaa/bbb/ccc/ddd
     // 菜单渲染
-    setMenus(createMenu(navMenus))
+    setMenus(createMenu(navRoutes))
 
     // 初始化菜单、面包屑
     onMenuClick({ key: pathname }, false)

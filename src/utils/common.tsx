@@ -2,7 +2,7 @@ import { useEffect, useRef } from 'react'
 import { FormInstance } from 'antd/lib/form'
 import type { routeType } from '@/router/routes'
 import stores from '@/store'
-import { navMenus } from '@/router/routes'
+import { navRoutes } from '@/router/routes'
 
 /**
  * 获取路由title
@@ -63,10 +63,10 @@ export const handleRouter = (pathname: string) => {
  * 组装面包屑
  * @param pathArr
  */
-export const getRouterPaths = (pathArr: string[], navMenus: Array<routeType>) => {
+export const getRouterPaths = (pathArr: string[], navRoutes: Array<routeType>) => {
   let paths: string[] = []
   for (const key of pathArr) {
-    paths.push(getRouterTitle(key, navMenus))
+    paths.push(getRouterTitle(key, navRoutes))
   }
 
   return paths
@@ -75,11 +75,11 @@ export const getRouterPaths = (pathArr: string[], navMenus: Array<routeType>) =>
 /**
  * 设置菜单展开、面包屑
  * @param key 当前路由
- * @param navMenus 菜单路由表
+ * @param navRoutes 菜单路由表
  */
 export const setMenuAndBreadcurmb = (key: string) => {
   const openPaths = handleRouter(key)
-  const breadcrumb = getRouterPaths(openPaths, navMenus)
+  const breadcrumb = getRouterPaths(openPaths, navRoutes)
   // 设置面包屑
   stores.LayoutStore.setBreadcrumb(breadcrumb)
   // 设置菜单展开

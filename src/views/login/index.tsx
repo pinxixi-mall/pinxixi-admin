@@ -45,7 +45,8 @@ const Login: FC = (): ReactElement => {
       >
         <section className={styles.logo}>
           <Image
-            width={200}
+            preview={false}
+            height={50}
             src="img/pxx-logo.png"
           />
           <span className={styles.name}>后台管理系统</span>

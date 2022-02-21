@@ -9,6 +9,8 @@ import UserInfo from "@/views/userManage/userInfo";
 import RecommendEdit from "@/views/homeManage/homeRecommend/edit";
 import ProductCategory from "@/views/categoryManage/productCategory";
 import AllOrder from "@/views/orderManage/allOrder";
+import NotFound from '@/views/404';
+const { Redirect } = require("react-router-dom")
 
 export interface routeType {
   path: string;
@@ -25,24 +27,28 @@ export interface routeType {
   isShowMenu?: boolean;
 }
 
-const defaultRoutes: Array<routeType> = [
+// 非菜单路由
+const otherRoutes: Array<routeType> = [
   {
     path: '/login',
     name: 'login',
     meta: {
-      title: '登录页'
+      title: '登录'
     },
     component: Login
   },
-  // { // 重定向一定要放最后
-  //   path: '/',
-  //   name: 'index',
-  //   render: () => <Redirect to="/home"/>
-  // }
+  {
+    path: '/404',
+    name: '404',
+    meta: {
+      title: 'not found'
+    },
+    component: NotFound
+  },
 ]
 
-// 左侧菜单
-const navMenus: Array<routeType> = [
+// 左侧菜单路由
+const navRoutes: Array<routeType> = [
   {
     path: '/dashboard',
     name: 'dashboard',
@@ -145,6 +151,6 @@ const navMenus: Array<routeType> = [
 
 
 export {
-  defaultRoutes,
-  navMenus
+  otherRoutes,
+  navRoutes
 }
