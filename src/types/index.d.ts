@@ -1,3 +1,4 @@
+import { type } from 'os'
 import { ReactElement, ReactNode, ReactChildren } from 'react'
 
 export interface PaginationProps {
@@ -36,4 +37,11 @@ export interface UploadProps {
 export interface RichTextProps {
   value?: any;
   onChange(value: any): any;
+}
+
+// 验证码
+export type VerifyCodeProps = {
+  width?: number;
+  height?: number;
+  length?: number;
 }

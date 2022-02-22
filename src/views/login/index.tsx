@@ -1,15 +1,17 @@
 import { useEffect, FC, ReactElement } from "react";
 import { Form, Input, Button, Checkbox, Image } from "antd";
-import { UserOutlined, LockOutlined } from "@ant-design/icons";
+import { UserOutlined, LockOutlined, EyeTwoTone, EyeInvisibleOutlined, SafetyCertificateOutlined } from "@ant-design/icons";
 import styles from "./index.module.less";
 import { login } from '@/api'
 import { setToken } from '@/utils/utils'
+import VerifyCode from "@/components/VerifyCode"
 const { useHistory } = require('react-router-dom')
 const url = require('url')
 
 type SubmitValues = {
   username: string;
   password: string;
+  verifyCode: string;
   remember: boolean;
 }
 
@@ -30,7 +32,7 @@ const Login: FC = (): ReactElement => {
     sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
     setToken(token)
     history.push(redirect || '/home')
-  };
+  }
 
   return (
     <div className={styles.loginBox}>
@@ -44,11 +46,11 @@ const Login: FC = (): ReactElement => {
         onFinish={onFinish}
       >
         <section className={styles.logo}>
-          <Image
+          {/* <Image
             preview={false}
             height={50}
             src="img/pxx-logo.png"
-          />
+          /> */}
           <span className={styles.name}>后台管理系统</span>
         </section>
         <Form.Item
@@ -61,6 +63,7 @@ const Login: FC = (): ReactElement => {
           ]}
         >
           <Input
+            size="large"
             prefix={<UserOutlined className="site-form-item-icon" />}
             placeholder="用户名"
           />
@@ -74,16 +77,40 @@ const Login: FC = (): ReactElement => {
             },
           ]}
         >
-          <Input
-            prefix={<LockOutlined className="site-form-item-icon" />}
-            type="password"
+          <Input.Password
+            size="large"
             placeholder="密码"
+            prefix={<LockOutlined className="site-form-item-icon" />}
+            iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
           />
         </Form.Item>
         <Form.Item>
-          <Form.Item name="remember" valuePropName="checked" noStyle>
-            <Checkbox>记住我</Checkbox>
-          </Form.Item>
+          <Input.Group className={styles.verify}>
+            <Form.Item
+              name="verifyCode"
+              rules={[
+                {
+                  validator: (_, value) =>
+                    !value
+                    ? Promise.reject(new Error('请输入验证码'))
+                    : value ! = 456
+                    ? Promise.reject(new Error('验证码不正确'))
+                    : Promise.resolve() 
+                },
+              ]}>
+              <Input
+                className={styles.verifyInput}
+                size="large"
+                placeholder="验证码"
+                maxLength={4}
+                prefix={<SafetyCertificateOutlined />}
+              />
+            </Form.Item>
+            <VerifyCode width={120} height={38} length={4} />
+          </Input.Group>
+        </Form.Item>
+        <Form.Item name="remember" valuePropName="checked">
+          <Checkbox>记住密码</Checkbox>
         </Form.Item>
         <Form.Item>
           <Button

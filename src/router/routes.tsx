@@ -10,8 +10,6 @@ import RecommendEdit from "@/views/homeManage/homeRecommend/edit";
 import ProductCategory from "@/views/categoryManage/productCategory";
 import AllOrder from "@/views/orderManage/allOrder";
 import NotFound from '@/views/404';
-const { Redirect } = require("react-router-dom")
-
 export interface routeType {
   path: string;
   name: string;
