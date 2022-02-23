@@ -1,15 +1,23 @@
 import { FC, ReactElement, useEffect, useRef, useState } from 'react'
-import { VerifyCodeProps } from '@/types'
-import './index.css'
+
+type VerifyCodeProps = {
+  width?: number; // 验证码图片宽度
+  height?: number; // 验证码图片高度
+  letters?: string; // 验证码字符集
+  length?: number; // 验证码位数
+  maxFontSize?: number; // 验证码最大字体大小
+  minFontSize?: number; // 验证码最小字体大小
+  change(code: string): void; // 验证码改变事件
+}
 
 const VerifyCode: FC<VerifyCodeProps> = (props: VerifyCodeProps) : ReactElement => {
-  const { width = 200, height = 40, length = 4} = props
+  const TEXTS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+  const LINES = 6 // 干扰线数量
+  const DOTS = 50 // 干扰点数量
+
+  const { width = 120, height = 40, letters = TEXTS, length = 4, minFontSize = 20, maxFontSize = 30, change } = props
   const verifyCodeRef = useRef<any>(null)
   const [ctx, setCtx] = useState<any>()
-  
-  const TEXTS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
-  const LINES = 6
-  const DOTS = 50
   
   useEffect(() => {
     setCtx((verifyCodeRef as any).current.getContext("2d"))
@@ -19,6 +27,7 @@ const VerifyCode: FC<VerifyCodeProps> = (props: VerifyCodeProps) : ReactElement 
     ctx && drawCodeImg()
   }, [ctx])
 
+  // 点击
   const handleClick = () : void => {
     drawCodeImg()
   }
@@ -46,23 +55,26 @@ const VerifyCode: FC<VerifyCodeProps> = (props: VerifyCodeProps) : ReactElement 
   const drawText = (): void => {
     let code = ''
     for (let index = 0; index < length; index++) {
-      const textIdx = randomNum(0, TEXTS.length)
+      const fontSize = randomNum(minFontSize, maxFontSize) // 字体大小
+      const fontWidth = maxFontSize - minFontSize + 6 // 字体宽度
+      const textSpace = (width - fontWidth * length) / (length + 1) // 文字间距
+      const x = (index + 1) * textSpace + fontWidth * index // x方向坐标
+      const y = randomNum(22, height) // y方向坐标
       const deg = randomNum(-40, 40) // 旋转角度
-      const y = randomNum(22, 36) // y方向坐标
-      const fontSize = randomNum(20, 30) // 字体大小
-      const letter = TEXTS[textIdx]
+      const textIdx = randomNum(0, letters.length)
+      const letter = letters[textIdx]
       ctx.textBaseline = 'alphabetic'
       ctx.font = `${fontSize}px Simhei`
       ctx.fillStyle = randomColor(60, 150)
       ctx.save()
-      ctx.translate(10 + index * 26, y)
+      ctx.translate(x, y)
       ctx.rotate(deg * Math.PI / 180)
       ctx.fillText(letter, 0, 0)
       ctx.restore()
       code += letter
     }
   
-    // emit("update:modelValue", code)
+    change(code)
   }
   
   // 绘制线
@@ -94,9 +106,15 @@ const VerifyCode: FC<VerifyCodeProps> = (props: VerifyCodeProps) : ReactElement 
     }
   }
 
+  const canvasStyle = {
+    width,
+    height,
+    border: '1px solid #d9d9d9',
+  }
+
   return (
-    <div className='verify-img' style={{height: height + 2 + 'px'}}>
-      <canvas onClick={handleClick} ref={verifyCodeRef} width={width} height={height}></canvas>
+    <div style={canvasStyle}>
+      <canvas onClick={handleClick} ref={verifyCodeRef} width={width - 2} height={height - 2}></canvas>
     </div>
   )
   

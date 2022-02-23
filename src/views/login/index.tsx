@@ -1,10 +1,11 @@
-import { useEffect, FC, ReactElement } from "react";
+import { useEffect, FC, ReactElement, useState } from "react";
 import { Form, Input, Button, Checkbox, Image } from "antd";
 import { UserOutlined, LockOutlined, EyeTwoTone, EyeInvisibleOutlined, SafetyCertificateOutlined } from "@ant-design/icons";
 import styles from "./index.module.less";
 import { login } from '@/api'
 import { setToken } from '@/utils/utils'
 import VerifyCode from "@/components/VerifyCode"
+// import VerifyCode from "@/components/verify-code-react"
 const { useHistory } = require('react-router-dom')
 const url = require('url')
 
@@ -18,6 +19,7 @@ type SubmitValues = {
 const Login: FC = (): ReactElement => {
   const history = useHistory()
   const [form] = Form.useForm()
+  const [verifyImgCode, setVerifyImgCode] = useState<string>()
 
   useEffect(() => {
     setToken(null)
@@ -25,6 +27,10 @@ const Login: FC = (): ReactElement => {
       e.key === 'Enter' && form.validateFields()
     })
   }, [form])
+
+  const onVerifyCodeChange = (code: string) : void => {
+    setVerifyImgCode(code)
+  }
 
   const onFinish = async (values: SubmitValues) => {
     const { redirect } = url.parse(history.location.search, true).query
@@ -93,7 +99,7 @@ const Login: FC = (): ReactElement => {
                   validator: (_, value) =>
                     !value
                     ? Promise.reject(new Error('请输入验证码'))
-                    : value ! = 456
+                    : value.toLocaleLowerCase() !== verifyImgCode?.toLocaleLowerCase()
                     ? Promise.reject(new Error('验证码不正确'))
                     : Promise.resolve() 
                 },
@@ -106,7 +112,7 @@ const Login: FC = (): ReactElement => {
                 prefix={<SafetyCertificateOutlined />}
               />
             </Form.Item>
-            <VerifyCode width={120} height={38} length={4} />
+            <VerifyCode width={120} height={40} length={4} change={onVerifyCodeChange}/>
           </Input.Group>
         </Form.Item>
         <Form.Item name="remember" valuePropName="checked">
