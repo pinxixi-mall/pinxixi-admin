@@ -90,9 +90,10 @@ const Login: FC = (): ReactElement => {
             iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
           />
         </Form.Item>
-        <Form.Item>
+        <Form.Item style={{marginBottom:'10px'}}>
           <Input.Group className={styles.verify}>
             <Form.Item
+              style={{marginBottom:0}}
               name="verifyCode"
               rules={[
                 {
