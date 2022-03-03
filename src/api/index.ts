@@ -6,28 +6,33 @@ export const login = (data?: any) => {
 };
 
 // 退出登录
-export const logout = (data?: any) => {
-  return http.post("/admin/logout", data);
+export const logout = () => {
+  return http.post("/admin/logout");
+};
+
+// 用户信息
+export const getUserInfo = () => {
+  return http.get("/admin/userInfo");
 };
 
 // 轮播图列表
-export const getHomeBanner = (data?: any, options?: any) => {
-  return http.get("/admin/getHomeBanner", data, options);
+export const getHomeCarousel = (data?: any, options?: any) => {
+  return http.get("/admin/home-manage/carousels", data, options);
 };
 
 // 首页轮播图新增/修改
-export const updateHomeBanner = (data?: any) => {
-  return http.post("/admin/updateHomeBanner", data);
+export const updateHomeCarousel = (data?: any) => {
+  return http.post("/admin/updateHomeCarousel", data);
 };
 
 // 首页轮播图上、下架
-export const updateBannerStatus = (data?: any) => {
-  return http.post("/admin/updateBannerStatus", data);
+export const updateCarouselStatus = (data?: any) => {
+  return http.post("/admin/updateCarouselStatus", data);
 };
 
 // 首页轮播图删除
-export const deleteBanner = (data?: any) => {
-  return http.delete("/admin/deleteBanner", data);
+export const deleteCarousel = (data?: any) => {
+  return http.delete("/admin/deleteCarousel", data);
 };
 
 // 首页推荐列表

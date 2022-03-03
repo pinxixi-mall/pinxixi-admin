@@ -7,6 +7,7 @@ import type { routeType } from '@/router/routes'
 import { inject, observer } from 'mobx-react'
 import styles from './index.module.less'
 import { setMenuAndBreadcurmb } from '@/utils/common'
+import { UserInfoProps } from "@/types"
 const { useHistory, useLocation } = require('react-router-dom')
 const { SubMenu } = Menu
 const { Content, Sider } = AntLayout
@@ -14,12 +15,11 @@ const { Content, Sider } = AntLayout
 const Layout: React.FC = (props: any) => {
   const history = useHistory()
   const { pathname } = useLocation()
-  let [avater, setAvater] = useState<string>('')
+  let [userInfo, setUserInfo] = useState<UserInfoProps>()
   let [menus, setMenus] = useState<Array<React.ReactElement>>([])
 
   useEffect(() => {
-    let userInfo = JSON.parse(sessionStorage.getItem('userInfo') || '{}')
-    userInfo.avater && setAvater(userInfo.avater)
+    setUserInfo(JSON.parse(sessionStorage.getItem('userInfo') || '{}'))
     initPage() // useEffect里调用外面定义的函数会警告，加下面注释可屏蔽
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -70,7 +70,7 @@ const Layout: React.FC = (props: any) => {
   return (
     <>
       <AntLayout>
-        <Header avater={avater} />
+        <Header {...userInfo} />
         <AntLayout className={styles.layoutContent}>
           <Sider width={200}>
             <Menu

@@ -3,12 +3,12 @@ import { Card, Button, Table, Space, SpinProps, Tooltip, Image, Modal, message }
 import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/es/table'
 import SearchPannel from '@/components/SearchPannel'
-import BannerEdit from './components/Edit'
-import { getHomeBanner, updateBannerStatus, deleteBanner } from '@/api'
+import CarouselEdit from './components/Edit'
+import { getHomeCarousel, updateCarouselStatus, deleteCarousel } from '@/api'
 import type { SearchFormProps } from '@/components/SearchPannel'
-export interface BannerProps {
+export interface CarouselProps {
   key?: number;
-  bannerId?: number;
+  CarouselId?: number;
   desc: string;
   imageUrl: string;
   status?: string,
@@ -24,13 +24,13 @@ export interface paginationProps {
   showSizeChanger?: boolean;
 }
 
-const HomeBanner: React.FC = (props: any) => {
+const HomeCarousel: React.FC = (props: any) => {
   const [loading, setLoading] = useState<boolean | SpinProps | undefined>(false)
-  const [tableData, setTableData] = useState<BannerProps[]>([])
+  const [tableData, setTableData] = useState<CarouselProps[]>([])
   const [visible, setVisible] = useState<boolean>(false)
   const [pageType, setPageType] = useState<string>()
   const [refresh, setRefresh] = useState<boolean>()
-  const [detail, setDetail] = useState<BannerProps>({
+  const [detail, setDetail] = useState<CarouselProps>({
     desc: '',
     imageUrl: ''
   })
@@ -48,20 +48,20 @@ const HomeBanner: React.FC = (props: any) => {
     const getList = async () => {
       const params = {
         ...searchParams,
-        pageNo: pagination.current,
+        pageNum: pagination.current,
         pageSize: pagination.pageSize
       }
       setLoading(true)
       try {
-        let { data: { list, pageData: { pageNo, pageSize, total } } } = await getHomeBanner(params, { noLoading: true })
+        let { data: { list, pageData: { pageNum, pageSize, total } } } = await getHomeCarousel(params, { noLoading: true })
         const rows = list.map((it: any) => ({
           ...it,
-          key: it.bannerId
+          key: it.CarouselId
         }))
         setTableData(rows)
         setPagination({
           ...pagination,
-          current: pageNo,
+          current: pageNum,
           pageSize,
           total
         })
@@ -73,7 +73,7 @@ const HomeBanner: React.FC = (props: any) => {
   }, [refresh])
 
   // 新增|编辑
-  const onEditVisible = (show: boolean, data?: BannerProps): void => {
+  const onEditVisible = (show: boolean, data?: CarouselProps): void => {
     setVisible(show)
     setPageType(data ? 'EDIT' : 'ADD')
     if (data) {
@@ -101,7 +101,7 @@ const HomeBanner: React.FC = (props: any) => {
 
   // 上、下架
   const onChangeStatus = (record: any) => {
-    const { bannerId, status } = record
+    const { CarouselId, status } = record
     Modal.confirm({
       title: `${status === 0 ? '上架' : '下架'}活动`,
       icon: <ExclamationCircleOutlined />,
@@ -109,7 +109,7 @@ const HomeBanner: React.FC = (props: any) => {
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await updateBannerStatus({ bannerId, status: status === 0 ? 1 : 0 })
+        await updateCarouselStatus({ CarouselId, status: status === 0 ? 1 : 0 })
         message.success('操作成功')
         setRefresh(!refresh)
       }
@@ -118,7 +118,7 @@ const HomeBanner: React.FC = (props: any) => {
 
   // 删除
   const onDelete = (record: any) => {
-    const { bannerId } = record
+    const { CarouselId } = record
     Modal.confirm({
       title: '删除活动',
       icon: <ExclamationCircleOutlined />,
@@ -126,7 +126,7 @@ const HomeBanner: React.FC = (props: any) => {
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await deleteBanner({ bannerId })
+        await deleteCarousel({ CarouselId })
         message.success('操作成功')
         setRefresh(!refresh)
       }
@@ -158,7 +158,7 @@ const HomeBanner: React.FC = (props: any) => {
     </>
   )
 
-  const columns: ColumnsType<BannerProps> = [
+  const columns: ColumnsType<CarouselProps> = [
     {
       title: '序号',
       dataIndex: 'index',
@@ -168,7 +168,7 @@ const HomeBanner: React.FC = (props: any) => {
     },
     {
       title: '活动ID',
-      dataIndex: 'bannerId',
+      dataIndex: 'CarouselId',
       width: 100,
     },
     {
@@ -242,7 +242,7 @@ const HomeBanner: React.FC = (props: any) => {
     {
       type: 'INPUT',
       label: '活动ID',
-      field: 'bannerId'
+      field: 'CarouselId'
     },
     {
       type: 'INPUT',
@@ -269,7 +269,7 @@ const HomeBanner: React.FC = (props: any) => {
         title="首页轮播列表"
         extra={extra}
       >
-        <Table<BannerProps>
+        <Table<CarouselProps>
           columns={columns}
           dataSource={tableData}
           loading={loading}
@@ -279,7 +279,7 @@ const HomeBanner: React.FC = (props: any) => {
           }}
         />
       </Card>
-      <BannerEdit
+      <CarouselEdit
         visible={visible}
         pageType={pageType}
         detail={detail}
@@ -290,4 +290,4 @@ const HomeBanner: React.FC = (props: any) => {
   );
 }
 
-export default HomeBanner
+export default HomeCarousel

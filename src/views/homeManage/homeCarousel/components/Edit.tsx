@@ -1,19 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { Form, Input, Modal, InputNumber, message, Upload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
-import { updateHomeBanner, commonUpload } from '@/api'
+import { updateHomeCarousel, commonUpload } from '@/api'
 import { useResetFormOnCloseModal } from '@/utils/common'
-import type { BannerProps } from '../index'
+import type { CarouselProps } from '../index'
 const { TextArea } = Input
 interface ModalFormProps {
   visible: boolean;
   pageType?: string;
-  detail: BannerProps,
+  detail: CarouselProps,
   onCancel: Function;
   onSuccess: () => void;
 }
 
-const BannerEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onSuccess, pageType }) => {
+const CarouselEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onSuccess, pageType }) => {
   const [confirmLoading, setConfirmLoading] = useState(false)
   const [form] = Form.useForm()
   const [fileList, setFileList] = useState<Array<any>>([])
@@ -56,9 +56,9 @@ const BannerEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onSuc
     form.validateFields().then(async values => {
       setConfirmLoading(false)
       if (pageType === 'EDIT') {
-        values.bannerId = detail.bannerId
+        values.CarouselId = detail.CarouselId
       }
-      await updateHomeBanner(values)
+      await updateHomeCarousel(values)
       message.success('操作成功')
       onSuccess()
     }, () => {
@@ -177,4 +177,4 @@ const BannerEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onSuc
   );
 }
 
-export default BannerEdit
+export default CarouselEdit

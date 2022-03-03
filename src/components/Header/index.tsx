@@ -1,24 +1,24 @@
-import React from 'react'
+import { FC } from 'react'
 import { Layout as AntLayout, Avatar, Image, Dropdown, Menu  } from 'antd';
 import { UserOutlined, PoweroffOutlined } from '@ant-design/icons';
 import styles from './index.module.less'
 import { logout } from '@/api'
+import { UserInfoProps } from "@/types"
+import { setToken } from '@/utils/utils'
 const { useHistory } = require('react-router-dom')
-
 const { Header: AntHeader } = AntLayout;
-interface Props {
-  avater?: string
-}
 
-const Header = (props: Props) => {
+const Header: FC<UserInfoProps> = (props: UserInfoProps) => {
   const history = useHistory()
 
   const toUserInfo = ({ key }: { key: string }) => {    
     history.push(key)
   }
 
-  const handleLogout = ({ key }: { key: string }) => {
-    logout()
+  const handleLogout = async ({ key }: { key: string }) => {
+    await logout()
+    sessionStorage.removeItem('userInfo')
+    setToken(null)
     history.push(key)
   }
 
@@ -39,8 +39,9 @@ const Header = (props: Props) => {
         src="./img/pxx-logo.png"
       />
       <div className={styles.headerRight}>
+        <span className={styles.userName}>{props.userName}</span>
         <Dropdown overlay={menu} arrow>
-          <Avatar size="large" src={props.avater} icon={<UserOutlined />} />
+          <Avatar size="large" src={props.avatar} icon={<UserOutlined />} />
         </Dropdown>
       </div>
     </AntHeader>

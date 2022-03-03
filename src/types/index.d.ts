@@ -45,3 +45,11 @@ export type VerifyCodeProps = {
   height?: number;
   length?: number;
 }
+
+// 用户信息
+export interface UserInfoProps {
+  userId?: number;
+  userName?: string;
+  nickName?: string;
+  avatar?: string;
+}

@@ -3,7 +3,7 @@ import React from "react";
 import { UserOutlined, HomeOutlined, ShopOutlined, AppstoreOutlined, OrderedListOutlined   } from '@ant-design/icons';
 import Login from "@/views/login";
 import Dashboard from "@/views/dashboard";
-import HomeBanner from "@/views/homeManage/homeBanner";
+import HomeCarousel from "@/views/homeManage/homeCarousel";
 import HomeRecommend from "@/views/homeManage/homeRecommend";
 import UserInfo from "@/views/userManage/userInfo";
 import RecommendEdit from "@/views/homeManage/homeRecommend/edit";
@@ -65,12 +65,12 @@ const navRoutes: Array<routeType> = [
     },
     routes: [
       {
-        path: '/home-manage/home-banner',
-        name: 'home-banner',
+        path: '/home-manage/home-carousel',
+        name: 'home-carousel',
         meta: {
           title: '首页轮播'
         },
-        component: HomeBanner
+        component: HomeCarousel
       },
       {
         path: '/home-manage/home-recomend',

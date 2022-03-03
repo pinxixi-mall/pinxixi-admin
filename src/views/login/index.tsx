@@ -2,7 +2,7 @@ import { useEffect, FC, ReactElement, useState } from "react";
 import { Form, Input, Button, Checkbox, Image } from "antd";
 import { UserOutlined, LockOutlined, EyeTwoTone, EyeInvisibleOutlined, SafetyCertificateOutlined } from "@ant-design/icons";
 import styles from "./index.module.less";
-import { login } from '@/api'
+import { login, getUserInfo } from '@/api'
 import { setToken } from '@/utils/utils'
 import VerifyCode from "@/components/VerifyCode"
 // import VerifyCode from "@/components/verify-code-react"
@@ -10,7 +10,7 @@ const { useHistory } = require('react-router-dom')
 const url = require('url')
 
 type SubmitValues = {
-  username: string;
+  userName: string;
   password: string;
   verifyCode: string;
   remember: boolean;
@@ -34,10 +34,11 @@ const Login: FC = (): ReactElement => {
 
   const onFinish = async (values: SubmitValues) => {
     const { redirect } = url.parse(history.location.search, true).query
-    const { data: { token, userInfo } } = await login(values)
-    sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+    const { data: { token } } = await login(values)
     setToken(token)
-    history.push(redirect || '/home')
+    const { data: userInfo } = await getUserInfo()
+    sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
+    history.push(redirect || '/dashboard')
   }
 
   return (
@@ -52,15 +53,15 @@ const Login: FC = (): ReactElement => {
         onFinish={onFinish}
       >
         <section className={styles.logo}>
-          {/* <Image
+          <Image
             preview={false}
             height={50}
             src="img/pxx-logo.png"
-          /> */}
+          />
           <span className={styles.name}>后台管理系统</span>
         </section>
         <Form.Item
-          name="username"
+          name="userName"
           rules={[
             {
               required: true,

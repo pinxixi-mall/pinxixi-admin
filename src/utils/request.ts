@@ -59,9 +59,9 @@ class httpRequest {
         const token = getToken();
         !options.noLoading && showLoading()
         if (!isNull(token)) {
-          config.headers.authorization = `Bearer ${token}`;
+          config.headers.Authorization = `Bearer ${token}`;
         } else {
-          config.headers && delete config.headers.authorization;
+          config.headers && delete config.headers.Authorization;
         }
         return config;
       },
@@ -90,7 +90,7 @@ class httpRequest {
               title: "请登录后再进行操作",
               onOk() {
                 const hash = window.location.hash
-                const path = hash ? `#/login?redirect=${hash}` : '#/home'
+                const path = hash ? `#/login?redirect=${hash}` : '#/dashboard'
                 window.location.replace(path)
               },
             });
@@ -100,7 +100,7 @@ class httpRequest {
               title: "登录状态已失效，请重新登录",
               onOk() {
                 const hash = window.location.hash.substr(1)
-                const path = hash ? `#/login?redirect=${hash}` : '#/home'
+                const path = hash ? `#/login?redirect=${hash}` : '#/dashboard'
                 window.location.replace(path)
               },
             });
@@ -172,22 +172,22 @@ class httpRequest {
   }
 
   // get请求实例
-  get(url: string, params: any, options?: any) {
+  get(url: string, params?: any, options?: any) {
     return this.request('GET', url, params, options, 'params')
   }
 
   // post请求实例
-  post(url: string, data: any, options?: any) {
+  post(url: string, data?: any, options?: any) {
     return this.request('POST', url, data, options)
   }
 
   // put请求实例
-  put(url: string, data: any, options?: any) {
+  put(url: string, data?: any, options?: any) {
     return this.request('PUT', url, data, options)
   }
 
   // delete请求实例
-  delete(url: string, data: any, options?: any) {
+  delete(url: string, data?: any, options?: any) {
     return this.request('DELETE', url, data, options)
   }
 }

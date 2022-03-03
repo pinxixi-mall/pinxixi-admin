@@ -2,7 +2,7 @@
 export const NOT_LOGIN = 4002
 
 // token失效
-export const TOKEN_EXPIRED = 4001
+export const TOKEN_EXPIRED = 403
 
 export const BASEURL = process.env.NODE_ENV === 'development' ? 'api' : ''
 

@@ -13,10 +13,10 @@ const useTable = (options?: PaginationProps, updateTable?: () => void) => {
   })
 
   // 分页操作
-  const onPageChange = (pageNo: number, pageSize?: number | undefined) => {
+  const onPageChange = (pageNum: number, pageSize?: number | undefined) => {
     setPagination({
       ...pagination,
-      current: pageNo,
+      current: pageNum,
       pageSize
     })
     // 刷新表格
@@ -24,10 +24,10 @@ const useTable = (options?: PaginationProps, updateTable?: () => void) => {
   }
 
   // 分页数据更新
-  const setPageData = ({ pageNo, pageSize, total }: { pageNo: number, pageSize: number, total: number }) => {
+  const setPageData = ({ pageNum, pageSize, total }: { pageNum: number, pageSize: number, total: number }) => {
     setPagination({
       ...pagination,
-      current: pageNo,
+      current: pageNum,
       pageSize,
       total
     })
