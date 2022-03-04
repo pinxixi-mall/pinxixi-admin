@@ -65,7 +65,7 @@ const VerifyCode: FC<VerifyCodeProps> = (props: VerifyCodeProps) : ReactElement 
       const letter = letters[textIdx]
       ctx.textBaseline = 'alphabetic'
       ctx.font = `${fontSize}px Simhei`
-      ctx.fillStyle = randomColor(60, 150)
+      ctx.fillStyle = randomColor(40, 100)
       ctx.save()
       ctx.translate(x, y)
       ctx.rotate(deg * Math.PI / 180)

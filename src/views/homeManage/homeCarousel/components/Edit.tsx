@@ -44,7 +44,7 @@ const CarouselEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
         {
           name: 'image.png',
           status: 'done',
-          url: detail.imageUrl
+          url: detail.carouselImage
         },
       ])
     }

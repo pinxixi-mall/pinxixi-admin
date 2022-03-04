@@ -9,10 +9,9 @@ import type { SearchFormProps } from '@/components/SearchPannel'
 export interface CarouselProps {
   key?: number;
   CarouselId?: number;
-  desc: string;
-  imageUrl: string;
-  status?: string,
-  sort?: number;
+  carouselImage: string;
+  carouselStatus?: string,
+  carouselSort?: number;
 }
 
 export interface paginationProps {
@@ -31,12 +30,11 @@ const HomeCarousel: React.FC = (props: any) => {
   const [pageType, setPageType] = useState<string>()
   const [refresh, setRefresh] = useState<boolean>()
   const [detail, setDetail] = useState<CarouselProps>({
-    desc: '',
-    imageUrl: ''
+    carouselImage: ''
   })
   const [pagination, setPagination] = useState<paginationProps>({
     current: 1,
-    pageSize: 5,
+    pageSize: 2,
     total: 0,
     pageSizeOptions: ['5', '10', '20'],
     showQuickJumper: true,
@@ -53,7 +51,7 @@ const HomeCarousel: React.FC = (props: any) => {
       }
       setLoading(true)
       try {
-        let { data: { list, pageData: { pageNum, pageSize, total } } } = await getHomeCarousel(params, { noLoading: true })
+        let { data: { list, pageNum, pageSize, total } } = await getHomeCarousel(params, { noLoading: true })
         const rows = list.map((it: any) => ({
           ...it,
           key: it.CarouselId
@@ -80,8 +78,7 @@ const HomeCarousel: React.FC = (props: any) => {
       setDetail(data)
     } else {
       setDetail({
-        imageUrl: '',
-        desc: ''
+        carouselImage: '',
       })
     }
   }
@@ -95,21 +92,25 @@ const HomeCarousel: React.FC = (props: any) => {
   // 搜索
   const onSearch = (values: any) => {
     console.log(values);
+    setPagination({
+      ...pagination,
+      current: 1
+    })
     setSearchParams(values)
     setRefresh(!refresh)
   }
 
   // 上、下架
   const onChangeStatus = (record: any) => {
-    const { CarouselId, status } = record
+    const { CarouselId, carouselStatus } = record
     Modal.confirm({
-      title: `${status === 0 ? '上架' : '下架'}活动`,
+      title: `${carouselStatus === '0' ? '上架' : '下架'}活动`,
       icon: <ExclamationCircleOutlined />,
-      content: `确定${status === 0 ? '上架' : '下架'}该活动？`,
+      content: `确定${carouselStatus === '0' ? '上架' : '下架'}该活动？`,
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await updateCarouselStatus({ CarouselId, status: status === 0 ? 1 : 0 })
+        await updateCarouselStatus({ CarouselId, carouselStatus: carouselStatus === '0' ? '1' : '0' })
         message.success('操作成功')
         setRefresh(!refresh)
       }
@@ -167,34 +168,16 @@ const HomeCarousel: React.FC = (props: any) => {
       render: (text: string, record, index) => <a>{index + 1}</a>,
     },
     {
-      title: '活动ID',
-      dataIndex: 'CarouselId',
-      width: 100,
-    },
-    {
-      title: '图片',
-      dataIndex: 'imageUrl',
-      key: 'imageUrl',
+      title: '轮播图',
+      dataIndex: 'carouselImage',
+      key: 'carouselImage',
       width: 200,
-      render: imageUrl => (
+      render: carouselImage => (
         <Image
           width={100}
           height={50}
-          src={imageUrl}
+          src={carouselImage}
         />
-      ),
-    },
-    {
-      title: '活动说明',
-      dataIndex: 'desc',
-      key: 'desc',
-      ellipsis: {
-        showTitle: false,
-      },
-      render: desc => (
-        <Tooltip placement="top" title={desc}>
-          {desc}
-        </Tooltip>
       ),
     },
     {
@@ -208,17 +191,17 @@ const HomeCarousel: React.FC = (props: any) => {
     },
     {
       title: '排序',
-      dataIndex: 'sort',
-      key: 'sort',
+      dataIndex: 'carouselSort',
+      key: 'carouselSort',
       width: 120
     },
     {
       title: '状态',
-      dataIndex: 'status',
-      key: 'sort',
+      dataIndex: 'carouselStatus',
+      key: 'carouselStatus',
       width: 120,
       render: (text: any, record: any) => {
-        return record.status === 0 ? '已下架' : '上架中'
+        return record.carouselStatus === '0' ? '已下架' : '上架中'
       }
     },
     {
@@ -226,11 +209,11 @@ const HomeCarousel: React.FC = (props: any) => {
       key: 'action',
       width: 200,
       render: (text: any, record: any) => {
-        const { status } = record
+        const { carouselStatus } = record
         return (
           <Space size={0}>
             <Button type="link" onClick={() => onEditVisible(true, record)}>编辑</Button>
-            <Button type="link" onClick={() => onChangeStatus(record)}>{status === 0 ? '上架' : '下架'}</Button>
+            <Button type="link" onClick={() => onChangeStatus(record)}>{carouselStatus === '0' ? '上架' : '下架'}</Button>
             <Button type="link" danger onClick={() => onDelete(record)}>删除</Button>
           </Space>
         )
@@ -252,19 +235,19 @@ const HomeCarousel: React.FC = (props: any) => {
     {
       type: 'SELECT',
       label: '状态',
-      field: 'status',
+      field: 'carouselStatus',
       initialValue: '',
       options: [
         { value: '', label: '全部'},
-        { value: 1, label: '上架中'},
-        { value: 0, label: '已下架'}
+        { value: '1', label: '上架中'},
+        { value: '0', label: '已下架'}
       ]
     }
   ]
 
   return (
     <>
-      <SearchPannel searchFormList={searchFormList} onSearch={onSearch} />
+      {/* <SearchPannel searchFormList={searchFormList} onSearch={onSearch} /> */}
       <Card
         title="首页轮播列表"
         extra={extra}
