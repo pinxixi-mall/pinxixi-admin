@@ -8,7 +8,7 @@ import { getHomeCarousel, updateCarouselStatus, deleteCarousel } from '@/api'
 import type { SearchFormProps } from '@/components/SearchPannel'
 export interface CarouselProps {
   key?: number;
-  CarouselId?: number;
+  carouselId?: number;
   carouselImage: string;
   carouselStatus?: string,
   carouselSort?: number;
@@ -54,7 +54,7 @@ const HomeCarousel: React.FC = (props: any) => {
         let { data: { list, pageNum, pageSize, total } } = await getHomeCarousel(params, { noLoading: true })
         const rows = list.map((it: any) => ({
           ...it,
-          key: it.CarouselId
+          key: it.carouselId
         }))
         setTableData(rows)
         setPagination({
@@ -181,15 +181,6 @@ const HomeCarousel: React.FC = (props: any) => {
       ),
     },
     {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      key: 'createTime',
-      width: 160,
-      render: (text: any, record: any) => {
-        return record.createTime
-      }
-    },
-    {
       title: '排序',
       dataIndex: 'carouselSort',
       key: 'carouselSort',
@@ -202,6 +193,24 @@ const HomeCarousel: React.FC = (props: any) => {
       width: 120,
       render: (text: any, record: any) => {
         return record.carouselStatus === '0' ? '已下架' : '上架中'
+      }
+    },
+    {
+      title: '创建时间',
+      dataIndex: 'createTime',
+      key: 'createTime',
+      width: 160,
+      render: (text: any, record: any) => {
+        return record.createTime
+      }
+    },
+    {
+      title: '更新时间',
+      dataIndex: 'updateTime',
+      key: 'updateTime',
+      width: 160,
+      render: (text: any, record: any) => {
+        return record.updateTime
       }
     },
     {

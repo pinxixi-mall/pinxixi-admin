@@ -69,7 +69,7 @@ const Layout: React.FC = (props: any) => {
 
   return (
     <>
-      <AntLayout>
+      <AntLayout className='my-layout'>
         <Header {...userInfo} />
         <AntLayout className={styles.layoutContent}>
           <Sider width={200}>

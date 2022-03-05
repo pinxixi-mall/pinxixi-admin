@@ -1,5 +1,5 @@
 // 未登录
-export const NOT_LOGIN = 4002
+export const NOT_LOGIN = 401
 
 // token失效
 export const TOKEN_EXPIRED = 403

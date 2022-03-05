@@ -20,9 +20,14 @@ export const getHomeCarousel = (data?: any, options?: any) => {
   return http.get("/admin/home-manage/carousels", data, options);
 };
 
-// 首页轮播图新增/修改
+// 首页轮播图新增
+export const addHomeCarousel = (data?: any) => {
+  return http.post("/admin/home-manage/carousels", data);
+};
+
+// 首页轮播图新修改
 export const updateHomeCarousel = (data?: any) => {
-  return http.post("/admin/updateHomeCarousel", data);
+  return http.put("/admin/home-manage/carousels", data);
 };
 
 // 首页轮播图上、下架
@@ -57,7 +62,7 @@ export const deleteRecommend = (data?: any) => {
 
 // 公共上传
 export const commonUpload = (data?: any) => {
-  return http.post("/common/upload", data, {
+  return http.post("/admin/upload/file", data, {
     header: { "Content-Type": "application/x-www-form-urlencoded" },
   });
 };

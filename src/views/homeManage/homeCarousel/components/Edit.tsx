@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Form, Input, Modal, InputNumber, message, Upload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
-import { updateHomeCarousel, commonUpload } from '@/api'
+import { addHomeCarousel, updateHomeCarousel, commonUpload } from '@/api'
 import { useResetFormOnCloseModal } from '@/utils/common'
 import type { CarouselProps } from '../index'
 const { TextArea } = Input
@@ -55,10 +55,12 @@ const CarouselEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
     setConfirmLoading(true)
     form.validateFields().then(async values => {
       setConfirmLoading(false)
+      let ajaxFn = addHomeCarousel
       if (pageType === 'EDIT') {
-        values.CarouselId = detail.CarouselId
+        values.carouselId = detail.carouselId
+        ajaxFn = updateHomeCarousel
       }
-      await updateHomeCarousel(values)
+      await ajaxFn(values)
       message.success('操作成功')
       onSuccess()
     }, () => {
@@ -82,7 +84,7 @@ const CarouselEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
     formData.append('file', file)
     const { data: { url } } = await commonUpload(formData)
     form.setFieldsValue({
-      imageUrl: url
+      carouselImage: url
     })
     setFileList([
       {
@@ -103,7 +105,7 @@ const CarouselEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
       newFileList.splice(index, 1)
       setFileList(newFileList)
       form.setFieldsValue({
-        imageUrl: ''
+        carouselImage: ''
       })
       return false
     },
@@ -138,19 +140,7 @@ const CarouselEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
     >
       <Form form={form} {...layout} name="control-ref">
         <Form.Item
-          name="desc"
-          label="活动说明"
-          rules={[
-            {
-              required: true,
-              message: '活动说明不能为空'
-            },
-          ]}
-        >
-          <TextArea />
-        </Form.Item>
-        <Form.Item
-          name="imageUrl"
+          name="carouselImage"
           label="图片"
           rules={[
             {
@@ -167,7 +157,13 @@ const CarouselEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
           </Upload>
         </Form.Item>
         <Form.Item
-          name="sort"
+          name="carouselUrl"
+          label="跳转链接"
+        >
+          <TextArea />
+        </Form.Item>
+        <Form.Item
+          name="carouselSort"
           label="排序"
         >
           <InputNumber />
