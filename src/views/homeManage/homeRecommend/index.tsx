@@ -5,7 +5,7 @@ import { Card, Button, Space, SpinProps, Tooltip, Image, Modal, message } from '
 import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import type { SearchFormProps } from '@/components/SearchPannel'
 import Table from '@/components/Table'
-import { getRecommendList, updateRecommend, deleteRecommend } from '@/api'
+import { getRecommends, updateRecommend, deleteRecommend } from '@/api'
 const { useHistory } = require('react-router-dom')
 
 export interface TableProps {
@@ -220,7 +220,7 @@ const HomeRecommend: React.FC = () => {
       >
         <Table
           columns={columns}
-          fetchApi={getRecommendList}
+          fetchApi={getRecommends}
           searchParams={searchParams}
           refreshOutside={refresh}
           handleTableList={handleTableList}

@@ -2,10 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { Card, Button, Table, Space, SpinProps, Tooltip, Image, Modal, message } from 'antd'
 import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/es/table'
-import SearchPannel from '@/components/SearchPannel'
 import CarouselEdit from './components/Edit'
-import { getHomeCarousel, updateCarouselStatus, deleteCarousel } from '@/api'
-import type { SearchFormProps } from '@/components/SearchPannel'
+import { getHomeCarousel, updateHomeCarousel } from '@/api'
 export interface CarouselProps {
   key?: number;
   carouselId?: number;
@@ -34,7 +32,7 @@ const HomeCarousel: React.FC = (props: any) => {
   })
   const [pagination, setPagination] = useState<paginationProps>({
     current: 1,
-    pageSize: 2,
+    pageSize: 5,
     total: 0,
     pageSizeOptions: ['5', '10', '20'],
     showQuickJumper: true,
@@ -84,25 +82,20 @@ const HomeCarousel: React.FC = (props: any) => {
   }
 
   // 刷新
-  const handleRefresh = (): void => {
-    setVisible(false)
-    setRefresh(!refresh)
-  }
-
-  // 搜索
-  const onSearch = (values: any) => {
-    console.log(values);
-    setPagination({
+  const handleRefresh = (isReset: boolean): void => {
+    console.log(1111,isReset);
+    
+    isReset && setPagination({
       ...pagination,
-      current: 1
+      current: 1,
     })
-    setSearchParams(values)
+    setVisible(false)
     setRefresh(!refresh)
   }
 
   // 上、下架
   const onChangeStatus = (record: any) => {
-    const { CarouselId, carouselStatus } = record
+    const { carouselId, carouselStatus } = record
     Modal.confirm({
       title: `${carouselStatus === '0' ? '上架' : '下架'}活动`,
       icon: <ExclamationCircleOutlined />,
@@ -110,7 +103,7 @@ const HomeCarousel: React.FC = (props: any) => {
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await updateCarouselStatus({ CarouselId, carouselStatus: carouselStatus === '0' ? '1' : '0' })
+        await updateHomeCarousel({ carouselId, carouselStatus: carouselStatus === '0' ? '1' : '0' })
         message.success('操作成功')
         setRefresh(!refresh)
       }
@@ -119,7 +112,7 @@ const HomeCarousel: React.FC = (props: any) => {
 
   // 删除
   const onDelete = (record: any) => {
-    const { CarouselId } = record
+    const { carouselId } = record
     Modal.confirm({
       title: '删除活动',
       icon: <ExclamationCircleOutlined />,
@@ -127,7 +120,7 @@ const HomeCarousel: React.FC = (props: any) => {
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await deleteCarousel({ CarouselId })
+        await updateHomeCarousel({ carouselId, isDeleted: 1 })
         message.success('操作成功')
         setRefresh(!refresh)
       }
@@ -152,7 +145,7 @@ const HomeCarousel: React.FC = (props: any) => {
         新增
       </Button>
       <Button shape="round" icon={<SyncOutlined />} className="ml-10"
-        onClick={handleRefresh}
+        onClick={() => handleRefresh(true)}
       >
         刷新
       </Button>
@@ -230,33 +223,8 @@ const HomeCarousel: React.FC = (props: any) => {
     },
   ]
 
-  const searchFormList: Array<SearchFormProps> = [
-    {
-      type: 'INPUT',
-      label: '活动ID',
-      field: 'CarouselId'
-    },
-    {
-      type: 'INPUT',
-      label: '活动说明',
-      field: 'desc',
-    },
-    {
-      type: 'SELECT',
-      label: '状态',
-      field: 'carouselStatus',
-      initialValue: '',
-      options: [
-        { value: '', label: '全部'},
-        { value: '1', label: '上架中'},
-        { value: '0', label: '已下架'}
-      ]
-    }
-  ]
-
   return (
     <>
-      {/* <SearchPannel searchFormList={searchFormList} onSearch={onSearch} /> */}
       <Card
         title="首页轮播列表"
         extra={extra}
@@ -276,7 +244,7 @@ const HomeCarousel: React.FC = (props: any) => {
         pageType={pageType}
         detail={detail}
         onCancel={() => onEditVisible(false)}
-        onSuccess={handleRefresh}
+        onSuccess={() => handleRefresh(false)}
       />
     </>
   );

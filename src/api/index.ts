@@ -25,29 +25,19 @@ export const addHomeCarousel = (data?: any) => {
   return http.post("/admin/home-manage/carousels", data);
 };
 
-// 首页轮播图新修改
+// 首页轮播图更新（修改、上下架、删除）
 export const updateHomeCarousel = (data?: any) => {
   return http.put("/admin/home-manage/carousels", data);
 };
 
-// 首页轮播图上、下架
-export const updateCarouselStatus = (data?: any) => {
-  return http.post("/admin/updateCarouselStatus", data);
-};
-
-// 首页轮播图删除
-export const deleteCarousel = (data?: any) => {
-  return http.delete("/admin/deleteCarousel", data);
-};
-
 // 首页推荐列表
-export const getRecommendList = (data?: any, options?: any) => {
-  return http.get("/admin/recommendList", data, options);
+export const getRecommends = (data?: any, options?: any) => {
+  return http.get("/admin/home-manage/recommends", data, options);
 };
 
 // 首页推荐新增、编辑
 export const updateRecommend = (data?: any) => {
-  return http.post("/admin/updateRecommend", data);
+  return http.post("/admin/home-manage/recommends", data);
 };
 
 // 首页推荐详情
