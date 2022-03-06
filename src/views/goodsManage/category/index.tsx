@@ -1,6 +1,6 @@
 import React from 'react'
 
-const ProductCategory: React.FC = () => {
+const GoodsCategory: React.FC = () => {
   return (
     <div>
       category
@@ -8,4 +8,4 @@ const ProductCategory: React.FC = () => {
   )
 }
 
-export default ProductCategory
+export default GoodsCategory

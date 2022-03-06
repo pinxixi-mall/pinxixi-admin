@@ -5,25 +5,24 @@ import { Card, Button, Space, SpinProps, Tooltip, Image, Modal, message } from '
 import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import type { SearchFormProps } from '@/components/SearchPannel'
 import Table from '@/components/Table'
-import { getRecommends, updateRecommend, deleteRecommend } from '@/api'
+import { getGoods, updateRecommend, deleteRecommend } from '@/api'
 const { useHistory } = require('react-router-dom')
 
 export interface TableProps {
   key?: number;
-  id?: number;
-  desc: string;
+  goodsId?: number;
+  goodsDesc: string;
   goodsImage: string;
-  status?: string,
-  sort?: number;
+  goodsStatus?: string,
 }
 
-const HomeRecommend: React.FC = () => {
+const Goods: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>()
   const [searchParams, setSearchParams] = useState({})
   const [visible, setVisible] = useState<boolean>(false)
   const [pageType, setPageType] = useState<string>()
   const [detail, setDetail] = useState<TableProps>({
-    desc: '',
+    goodsDesc: '',
     goodsImage: ''
   })
   const history = useHistory()
@@ -37,15 +36,15 @@ const HomeRecommend: React.FC = () => {
     //   render: (text: string, record, index) => <a>{index + 1}</a>,
     // },
     {
-      title: '产品ID',
+      title: '商品编号',
       dataIndex: 'goodsId',
-      width: 100,
+      width: 160,
     },
     {
-      title: '图片',
+      title: '商品图片',
       dataIndex: 'goodsImage',
       key: 'goodsImage',
-      width: 120,
+      width: 140,
       render: goodsImage => (
         <Image
           width={60}
@@ -83,15 +82,18 @@ const HomeRecommend: React.FC = () => {
       }
     },
     {
-      title: '排序',
-      dataIndex: 'goodsSort',
-      key: 'goodsSort',
-      width: 120
+      title: '更新时间',
+      dataIndex: 'updateTime',
+      key: 'updateTime',
+      width: 160,
+      render: (text: any, record: any) => {
+        return record.updateTime
+      }
     },
     {
       title: '状态',
-      dataIndex: 'status',
-      key: 'sort',
+      dataIndex: 'goodsStatus',
+      key: 'goodsStatus',
       width: 120,
       render: (text: any, record: any) => {
         return record.status === 0 ? '已下架' : '上架中'
@@ -102,11 +104,11 @@ const HomeRecommend: React.FC = () => {
       key: 'action',
       width: 200,
       render: (text: any, record: any) => {
-        const { status, goodsId } = record
+        const { goodsStatus, goodsId } = record
         return (
           <Space size={0}>
-            <Button type="link" onClick={() => handleRecommendEdit(goodsId)}>编辑</Button>
-            <Button type="link" onClick={() => onChangeStatus(record)}>{status === 0 ? '上架' : '下架'}</Button>
+            <Button type="link" onClick={() => handleGoodsEdit(goodsId)}>编辑</Button>
+            <Button type="link" onClick={() => onChangeStatus(record)}>{goodsStatus === 0 ? '上架' : '下架'}</Button>
             <Button type="link" danger onClick={() => onDelete(record)}>删除</Button>
           </Space>
         )
@@ -117,18 +119,18 @@ const HomeRecommend: React.FC = () => {
   const searchFormList: Array<SearchFormProps> = [
     {
       type: 'INPUT',
-      label: '活动ID',
-      field: 'id'
+      label: '商品编号',
+      field: 'goodsId'
     },
     {
       type: 'INPUT',
-      label: '活动说明',
-      field: 'desc',
+      label: '商品描述',
+      field: 'goodsDesc',
     },
     {
       type: 'SELECT',
       label: '状态',
-      field: 'status',
+      field: 'goodsStatus',
       initialValue: '',
       options: [
         { value: '', label: '全部' },
@@ -158,21 +160,21 @@ const HomeRecommend: React.FC = () => {
   }
 
   // 新增|编辑
-  const handleRecommendEdit = (id?: string): void => {
-    history.push(`/home-manage/recommend-edit?id=${id||''}`)
+  const handleGoodsEdit = (id?: number): void => {
+    history.push(`/goods-manage/goods-edit?id=${id||''}`)
   }
 
   // 上、下架
   const onChangeStatus = (record: any) => {
-    const { goodsId, status } = record
+    const { goodsId, goodsStatus } = record
     Modal.confirm({
-      title: `${status === 0 ? '上架' : '下架'}活动`,
+      title: `${goodsStatus === 0 ? '上架' : '下架'}商品`,
       icon: <ExclamationCircleOutlined />,
-      content: `确定${status === 0 ? '上架' : '下架'}该活动？`,
+      content: `确定${goodsStatus === 0 ? '上架' : '下架'}该商品？`,
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await updateRecommend({ goodsId, status: status === 0 ? 1 : 0 })
+        await updateRecommend({ goodsId, goodsStatus: goodsStatus === 0 ? 1 : 0 })
         message.success('操作成功')
         handleRefresh()
       }
@@ -183,9 +185,9 @@ const HomeRecommend: React.FC = () => {
   const onDelete = (record: any) => {
     const { goodsId } = record
     Modal.confirm({
-      title: '删除活动',
+      title: '删除商品',
       icon: <ExclamationCircleOutlined />,
-      content: `确定删除该活动？`,
+      content: `确定删除该商品？`,
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
@@ -199,7 +201,7 @@ const HomeRecommend: React.FC = () => {
   const extra = (
     <>
       <Button type="primary" shape="round" icon={<PlusOutlined />} className="ml-10"
-        onClick={() => handleRecommendEdit()}
+        onClick={() => handleGoodsEdit()}
       >
         新增
       </Button>
@@ -215,12 +217,12 @@ const HomeRecommend: React.FC = () => {
     <>
       <SearchPannel searchFormList={searchFormList} onSearch={onSearch} />
       <Card
-        title="首页推荐列表"
+        title="商品列表"
         extra={extra}
       >
         <Table
           columns={columns}
-          fetchApi={getRecommends}
+          fetchApi={getGoods}
           searchParams={searchParams}
           refreshOutside={refresh}
           handleTableList={handleTableList}
@@ -230,4 +232,4 @@ const HomeRecommend: React.FC = () => {
   )
 }
 
-export default HomeRecommend
+export default Goods

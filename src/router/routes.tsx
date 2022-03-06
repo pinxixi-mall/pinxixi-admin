@@ -6,8 +6,9 @@ import Dashboard from "@/views/dashboard";
 import HomeCarousel from "@/views/homeManage/homeCarousel";
 import HomeRecommend from "@/views/homeManage/homeRecommend";
 import UserInfo from "@/views/userManage/userInfo";
-import RecommendEdit from "@/views/homeManage/homeRecommend/edit";
-import ProductCategory from "@/views/categoryManage/productCategory";
+import GoodsEdit from "@/views/goodsManage/goods/edit";
+import GoodsCategory from "@/views/goodsManage/category";
+import Goods from "@/views/goodsManage/goods";
 import AllOrder from "@/views/orderManage/allOrder";
 import NotFound from '@/views/404';
 export interface routeType {
@@ -80,33 +81,41 @@ const navRoutes: Array<routeType> = [
         },
         component: HomeRecommend
       },
-      {
-        path: '/home-manage/recommend-edit',
-        name: 'recommend-edit',
-        meta: {
-          title: '编辑',
-          hideMenu: true
-        },
-        component: RecommendEdit
-      },
     ]
   },
   {
-    path: '/category-manage',
-    name: 'category-manage',
+    path: '/goods-manage',
+    name: 'goods-manage',
     meta: {
-      title: '分类管理',
+      title: '商品管理',
       icon: <AppstoreOutlined />
     },
     routes: [
       {
-        path: '/category-manage/product-category',
-        name: 'product-category',
+        path: '/goods-manage/goods',
+        name: 'goods',
+        meta: {
+          title: '商品列表'
+        },
+        component: Goods
+      },
+      {
+        path: '/goods-manage/category',
+        name: 'category',
         meta: {
           title: '商品分类'
         },
-        component: ProductCategory
-      }
+        component: GoodsCategory
+      },
+      {
+        path: '/goods-manage/goods-edit',
+        name: 'goods-edit',
+        meta: {
+          title: '商品编辑',
+          hideMenu: true
+        },
+        component: GoodsEdit
+      },
     ]
   },
   {
