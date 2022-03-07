@@ -1,9 +1,10 @@
 import React, { useState, useEffect, FC, ReactElement, useMemo } from "react"
-import { Button, Form, Input, message } from 'antd'
+import { Button, Form, Input, message, InputNumber, Radio } from 'antd'
 import BodyCard from '@/components/BodyCard'
 import Upload from '@/components/Upload'
 import RichText from '@/components/RichText'
 import { commonUpload, updateGoods, goodsDetial } from '@/api'
+import { goodsTypeList, goodsStatusList } from "@/config/dataList"
 const { useHistory } = require('react-router-dom')
 const url = require('url')
 const { TextArea } = Input
@@ -41,9 +42,9 @@ const GoodsEdit: FC = (pops: any): ReactElement => {
   // 提交
   const onSubmit = async (values: any) => {
     const validateRes = await form.validateFields()
-    goodsId && (validateRes['goodsId'] = goodsId)
+    goodsId && (validateRes['goodsId'] = goodsId * 1)
     // validateRes.detail = validateRes.detail.toHTML()
-    const { code} = await updateGoods(validateRes)
+    await updateGoods(validateRes)
     message.success('操作成功')
     history.push('/goods-manage/goods')
   }
@@ -85,31 +86,37 @@ const GoodsEdit: FC = (pops: any): ReactElement => {
         onRefresh={handleRefresh}
       >
         <Form {...layout} name="basicForm" form={form}>
-          <Form.Item name="goodsName" label="商品名称：" rules={[{ required: true }]}>
+          <Form.Item name="goodsName" label="商品名称：" rules={[{ required: true, message: "商品名称不能为空" }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="goodsCategoryId" label="商品分类：" rules={[{ required: true }]}>
+          <Form.Item name="goodsCategoryId" label="商品分类：" rules={[{ required: true, message: "商品分类不能为空" }]}>
             <Input />
           </Form.Item>
-          <Form.Item name="goodsType" label="商品类型：" rules={[{ required: true }]}>
-            <Input />
+          <Form.Item name="goodsType" label="商品类型：" rules={[{ required: true, message: "商品类型不能为空" }]}>
+          <Radio.Group
+              options={goodsTypeList}
+              optionType="button"
+            />
           </Form.Item>
-          <Form.Item name="goodsDesc" label="商品描述：" rules={[{ required: true }]}>
+          <Form.Item name="goodsDesc" label="商品描述：" rules={[{ required: true, message: "商品描述不能为空" }]}>
             <TextArea rows={3} />
           </Form.Item>
-          <Form.Item name="goodsImage" label="商品主图：" rules={[{ required: true }]}>
+          <Form.Item name="goodsImage" label="商品主图：" rules={[{ required: true, message: "商品主图不能为空" }]}>
             <Upload fileList={fileList} handleUpload={handleUpload} />
           </Form.Item>
-          <Form.Item name="goodsPrice" label="价格：" rules={[{ required: true }]}>
-            <Input />
+          <Form.Item name="goodsPrice" label="价格：" rules={[{ required: true, message: "商品价格不能为空" }]}>
+            <InputNumber />
           </Form.Item>
-          <Form.Item name="goodsStock" label="库存：" rules={[{ required: true }]}>
-            <Input />
+          <Form.Item name="goodsStock" label="库存：" rules={[{ required: true, message: "商品名称不能为空" }]}>
+            <InputNumber />
           </Form.Item>
-          <Form.Item name="goodsStatus" label="状态：" rules={[{ required: true }]}>
-            <Input />
+          <Form.Item name="goodsStatus" label="状态：" rules={[{ required: true, message: "商品状态不能为空" }]}>
+            <Radio.Group
+              options={goodsStatusList}
+              optionType="button"
+            />
           </Form.Item>
-          <Form.Item name="goodsDetail" label="商品详情：" rules={[{ required: true }]}>
+          <Form.Item name="goodsDetail" label="商品详情：" rules={[{ required: true, message: "商品详情不能为空" }]}>
             {/* <RichText onChange={onDetailChange} /> */}
             <Input />
           </Form.Item>

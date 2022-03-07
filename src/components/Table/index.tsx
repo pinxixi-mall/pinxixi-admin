@@ -22,25 +22,33 @@ const Table: FC<TableProps> = (props: TableProps): ReactElement => {
     setRefreshInside(!refreshInside)
   }
 
+  // 父组件修改页码后更新参数
+  useEffect(() => {
+    setPagination({
+      ...pagination,
+      current: searchParams.pageNum
+    })
+  }, [searchParams])
+
   // 请求表格列表数据
   useEffect(() => {
     const getList = async () => {
       const params = {
+        ...searchParams,
         pageNum: pagination.current,
         pageSize: pagination.pageSize,
-        ...searchParams
       }
       setLoading(true)
       try {
-        let { data: { list, pageData } } = await fetchApi(params, { noLoading: true })
+        let { data: { list, pageNum, pageSize, total } } = await fetchApi(params, { noLoading: true })
         const rows = handleTableList ? handleTableList(list) : list
         setTableData(rows)
-        setPageData(pageData)
+        setPageData({ pageNum, pageSize, total })
       } catch (error) { console.log(error) }
       setLoading(false)
     }
     getList()
-  }, [refreshInside, refreshOutside])
+  }, [ fetchApi, refreshInside, refreshOutside])
 
   // 分页操作
   const onPageChange = (pageNum: number, pageSize?: number | undefined) => {

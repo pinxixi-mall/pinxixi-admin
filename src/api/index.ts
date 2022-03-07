@@ -52,7 +52,7 @@ export const deleteRecommend = (data?: any) => {
 
 // 商品列表
 export const getGoods = (data?: any, options?: any) => {
-  return http.get("/admin/goods-manage/goods", data, options);
+  return http.get("/admin/goods-manage/goods-list", data, options);
 };
 
 // 商品修改
@@ -62,7 +62,7 @@ export const updateGoods = (data?: any, options?: any) => {
 
 // 商品详情
 export const goodsDetial = (data?: any, options?: any) => {
-  return http.get("/admin/goods-manage/goods", data, options);
+  return http.get(`/admin/goods-manage/goods/${data.goodsId}`);
 };
 
 // 公共上传

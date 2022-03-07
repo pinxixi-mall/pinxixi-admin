@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import SearchPannel from '@/components/SearchPannel'
 import { ColumnsType } from 'antd/es/table'
-import { Card, Button, Space, SpinProps, Tooltip, Image, Modal, message } from 'antd'
+import { Card, Button, Space, Tooltip, Image, Modal, message } from 'antd'
 import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import type { SearchFormProps } from '@/components/SearchPannel'
 import Table from '@/components/Table'
-import { getGoods, updateRecommend, deleteRecommend } from '@/api'
+import { getGoods, updateGoods, deleteRecommend } from '@/api'
 const { useHistory } = require('react-router-dom')
 
 export interface TableProps {
@@ -19,12 +19,6 @@ export interface TableProps {
 const Goods: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>()
   const [searchParams, setSearchParams] = useState({})
-  const [visible, setVisible] = useState<boolean>(false)
-  const [pageType, setPageType] = useState<string>()
-  const [detail, setDetail] = useState<TableProps>({
-    goodsDesc: '',
-    goodsImage: ''
-  })
   const history = useHistory()
 
   const columns: ColumnsType<TableProps> = [
@@ -147,7 +141,10 @@ const Goods: React.FC = () => {
 
   // 搜索
   const onSearch = (values: any): void => {
-    setSearchParams(values)
+    setSearchParams({
+      ...values,
+      pageNum: 1
+    })
     handleRefresh()
   }
 
@@ -174,7 +171,7 @@ const Goods: React.FC = () => {
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await updateRecommend({ goodsId, goodsStatus: goodsStatus === 0 ? 1 : 0 })
+        await updateGoods({ goodsId, goodsStatus: goodsStatus === 0 ? 1 : 0 })
         message.success('操作成功')
         handleRefresh()
       }
