@@ -52,12 +52,17 @@ export const deleteRecommend = (data?: any) => {
 
 // 商品列表
 export const getGoods = (data?: any, options?: any) => {
-  return http.get("/admin/goods-manage/goods-list", data, options);
+  return http.get("/admin/goods-manage/goods/list", data, options);
+};
+
+// 商品新增
+export const addGoods = (data?: any, options?: any) => {
+  return http.post("/admin/goods-manage/goods", data, options);
 };
 
 // 商品修改
 export const updateGoods = (data?: any, options?: any) => {
-  return http.post("/admin/goods-manage/goods", data, options);
+  return http.put("/admin/goods-manage/goods", data, options);
 };
 
 // 商品详情
