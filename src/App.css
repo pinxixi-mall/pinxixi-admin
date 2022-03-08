@@ -13,6 +13,10 @@
   height: calc(100vh - 70px);
 }
 
+.ant-layout-sider{
+  height: calc(100vh - 70px);
+}
+
 .ant-form-item-control-input-content .ant-input-affix-wrapper{
   line-height: 1;
 }
