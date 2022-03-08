@@ -72,7 +72,7 @@ const Layout: React.FC = (props: any) => {
       <AntLayout className='my-layout'>
         <Header {...userInfo} />
         <AntLayout className={styles.layoutContent}>
-          <Sider width={200}>
+          <Sider width={200} className={styles.siderBar}>
             <Menu
               mode="inline"
               selectedKeys={[history.location.pathname]}

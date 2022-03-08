@@ -80,8 +80,21 @@ const SearchPannel: React.FC<SearchPannelProps> = (props) => {
         className={styles.searchForm}
         onFinish={onFinish}
       >
-        <Row gutter={24}>{getFields()}</Row>
-        <Row>
+        <Row gutter={24}>
+          {getFields()}
+          <span className={styles.operBtn}>
+            <Button className={styles.btn} type="primary" icon={<SearchOutlined />} htmlType="submit">搜索</Button>
+            <Button
+              className={styles.btn}
+              onClick={() => {
+                form.resetFields()
+              }}
+            >
+              重置
+            </Button>
+          </span>
+        </Row>
+        {/* <Row>
           <Col
             span={24}
             style={{
@@ -100,7 +113,7 @@ const SearchPannel: React.FC<SearchPannelProps> = (props) => {
               重置
             </Button>
           </Col>
-        </Row>
+        </Row> */}
       </Form>
     </div>
   );

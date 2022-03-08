@@ -65,6 +65,16 @@ export const updateGoods = (data?: any, options?: any) => {
   return http.put("/admin/goods-manage/goods", data, options);
 };
 
+// 商品状态修改
+export const updateGoodsStatus = (data?: any, options?: any) => {
+  return http.put("/admin/goods-manage/goods/status", data, options);
+};
+
+// 删除商品
+export const deleteGoods = (data?: any, options?: any) => {
+  return http.delete(`/admin/goods-manage/goods/${data.goodsId}`, data, options);
+};
+
 // 商品详情
 export const goodsDetial = (data?: any, options?: any) => {
   return http.get(`/admin/goods-manage/goods/${data.goodsId}`);

@@ -3,7 +3,7 @@ import { Button, Form, Input, message, InputNumber, Radio } from 'antd'
 import BodyCard from '@/components/BodyCard'
 import Upload from '@/components/Upload'
 import RichText from '@/components/RichText'
-import { commonUpload, updateGoods, goodsDetial } from '@/api'
+import { commonUpload, addGoods, updateGoods, goodsDetial } from '@/api'
 import { goodsTypeList, goodsStatusList } from "@/config/dataList"
 const { useHistory } = require('react-router-dom')
 const url = require('url')
@@ -41,11 +41,12 @@ const GoodsEdit: FC = (pops: any): ReactElement => {
 
   // 提交
   const onSubmit = async (values: any) => {
+    // validateRes.detail = validateRes.detail.toHTML()
     const validateRes = await form.validateFields()
     goodsId && (validateRes['goodsId'] = goodsId * 1)
-    // validateRes.detail = validateRes.detail.toHTML()
-    await updateGoods(validateRes)
-    message.success('操作成功')
+    let fetchApi = goodsId ? updateGoods : addGoods
+    const { msg } = await fetchApi(validateRes)
+    message.success(msg)
     history.push('/goods-manage/goods')
   }
 

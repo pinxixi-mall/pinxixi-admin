@@ -53,3 +53,9 @@ export interface UserInfoProps {
   nickName?: string;
   avatar?: string;
 }
+
+// 下拉列表项
+export interface OptionProps {
+  label: string;
+  value: number | string
+}

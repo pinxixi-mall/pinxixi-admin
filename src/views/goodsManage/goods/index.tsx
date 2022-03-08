@@ -5,7 +5,9 @@ import { Card, Button, Space, Tooltip, Image, Modal, message } from 'antd'
 import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import type { SearchFormProps } from '@/components/SearchPannel'
 import Table from '@/components/Table'
-import { getGoods, updateGoods, deleteRecommend } from '@/api'
+import { getGoods, updateGoodsStatus, deleteGoods } from '@/api'
+import { goodsStatusList } from "@/config/dataList"
+import { getLabelByValue } from '@/utils/utils'
 const { useHistory } = require('react-router-dom')
 
 export interface TableProps {
@@ -22,17 +24,14 @@ const Goods: React.FC = () => {
   const history = useHistory()
 
   const columns: ColumnsType<TableProps> = [
-    // {
-    //   title: '序号',
-    //   dataIndex: 'index',
-    //   key: 'index',
-    //   width: 100,
-    //   render: (text: string, record, index) => <a>{index + 1}</a>,
-    // },
     {
       title: '商品编号',
       dataIndex: 'goodsId',
-      width: 160,
+      width: 120,
+    },
+    {
+      title: '商品名称',
+      dataIndex: 'goodsName',
     },
     {
       title: '商品图片',
@@ -67,10 +66,19 @@ const Goods: React.FC = () => {
       width: 120
     },
     {
+      title: '状态',
+      dataIndex: 'goodsStatus',
+      key: 'goodsStatus',
+      width: 100,
+      render: (text: any, record: any) => {
+        return getLabelByValue(record.goodsStatus, goodsStatusList)
+      }
+    },
+    {
       title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTime',
-      width: 160,
+      width: 170,
       render: (text: any, record: any) => {
         return record.createTime
       }
@@ -79,18 +87,9 @@ const Goods: React.FC = () => {
       title: '更新时间',
       dataIndex: 'updateTime',
       key: 'updateTime',
-      width: 160,
+      width: 170,
       render: (text: any, record: any) => {
         return record.updateTime
-      }
-    },
-    {
-      title: '状态',
-      dataIndex: 'goodsStatus',
-      key: 'goodsStatus',
-      width: 120,
-      render: (text: any, record: any) => {
-        return record.status === 0 ? '已下架' : '上架中'
       }
     },
     {
@@ -118,6 +117,11 @@ const Goods: React.FC = () => {
     },
     {
       type: 'INPUT',
+      label: '商品名称',
+      field: 'goodsName',
+    },
+    {
+      type: 'INPUT',
       label: '商品描述',
       field: 'goodsDesc',
     },
@@ -128,8 +132,7 @@ const Goods: React.FC = () => {
       initialValue: '',
       options: [
         { value: '', label: '全部' },
-        { value: 1, label: '上架中' },
-        { value: 0, label: '已下架' }
+        ...goodsStatusList
       ]
     }
   ]
@@ -171,7 +174,7 @@ const Goods: React.FC = () => {
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await updateGoods({ goodsId, goodsStatus: goodsStatus === 0 ? 1 : 0 })
+        await updateGoodsStatus({ goodsId, goodsStatus: goodsStatus === 0 ? 1 : 0 })
         message.success('操作成功')
         handleRefresh()
       }
@@ -188,8 +191,8 @@ const Goods: React.FC = () => {
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await deleteRecommend({ goodsId })
-        message.success('操作成功')
+        const {msg} = await deleteGoods({ goodsId })
+        message.success(msg)
         handleRefresh()
       }
     })
