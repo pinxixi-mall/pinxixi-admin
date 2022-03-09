@@ -118,7 +118,7 @@ class httpRequest {
         hideLoading()
         let err = {
           code: -1,
-          msg: "请求异常",
+          msg: "服务器异常",
           data: {},
         };
         if (options.isUnCheck) {
@@ -134,7 +134,7 @@ class httpRequest {
           error.response.status &&
           error.response.status === 404
         ) {
-          err.msg = "路径地址不正确";
+          err.msg = "请求资源未找到";
         }
         if (
           error.response &&

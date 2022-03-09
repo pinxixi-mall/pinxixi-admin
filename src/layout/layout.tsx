@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Layout as AntLayout, Menu } from 'antd';
+import { Layout as AntLayout, Menu, Image } from 'antd';
 import Header from '@/components/Header'
 import Breadcrumb from '@/components/Breadcrumb'
 import { navRoutes } from '@/router/routes';
@@ -69,10 +69,17 @@ const Layout: React.FC = (props: any) => {
 
   return (
     <>
-      <AntLayout className='my-layout'>
-        <Header {...userInfo} />
+      {/* <AntLayout className='my-layout'> */}
+        {/* <Header {...userInfo} /> */}
         <AntLayout className={styles.layoutContent}>
           <Sider width={200} className={styles.siderBar}>
+            <div className={styles.logo}>
+              <Image
+                className={styles.logoImg}
+                preview={false}
+                src="./img/pxx-logo.png"
+              />
+            </div>
             <Menu
               mode="inline"
               selectedKeys={[history.location.pathname]}
@@ -85,13 +92,14 @@ const Layout: React.FC = (props: any) => {
             </Menu>
           </Sider>
           <AntLayout  className={styles.contentBox}>
+          <Header {...userInfo} />
             <Breadcrumb breads={props.LayoutStore.breadcrumb} />
             <Content className={styles.content}>
               {props.children}
             </Content>
           </AntLayout>
         </AntLayout>
-      </AntLayout>
+      {/* </AntLayout> */}
     </>
   )
 }

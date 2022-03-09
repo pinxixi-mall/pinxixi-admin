@@ -32,12 +32,12 @@ const Header: FC<UserInfoProps> = (props: UserInfoProps) => {
 
   return (
     <AntHeader className={styles.navHeader}>
-      <Image
+      {/* <Image
         className={styles.logo}
         preview={false}
         height={36}
         src="./img/pxx-logo.png"
-      />
+      /> */}
       <div className={styles.headerRight}>
         <span className={styles.userName}>{props.userName}</span>
         <Dropdown overlay={menu} arrow>

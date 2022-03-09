@@ -9,14 +9,6 @@
   background: rgba(0, 0, 0, 0.3);
 }
 
-.ant-layout{
-  height: calc(100vh - 70px);
-}
-
-.ant-layout-sider{
-  height: calc(100vh - 70px);
-}
-
 .ant-select{
   min-width: 120px;
   max-width: 204px;
