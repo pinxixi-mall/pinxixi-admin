@@ -1,48 +1,45 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import SearchPannel from '@/components/SearchPannel'
 import { ColumnsType } from 'antd/es/table'
-import { Card, Button, Space, SpinProps, Tooltip, Image, Modal, message } from 'antd'
+import { Card, Button, Space, Image, Modal, message } from 'antd'
 import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
 import type { SearchFormProps } from '@/components/SearchPannel'
 import Table from '@/components/Table'
-import { getRecommends, updateRecommend, deleteRecommend } from '@/api'
-const { useHistory } = require('react-router-dom')
+import { getRecommends, deleteRecommend } from '@/api'
+import Edit from "./edit"
 
-export interface TableProps {
-  key?: number;
-  id?: number;
-  desc: string;
-  goodsImage: string;
-  status?: string,
-  sort?: number;
+export interface RecommendProps {
+  key?: number | string;
+  recommendId: number;
+  goodsId: number;
+  goodsImage?: string,
+  recommendSort?: number;
 }
 
 const HomeRecommend: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>()
-  const [searchParams, setSearchParams] = useState({})
   const [visible, setVisible] = useState<boolean>(false)
+  const [searchParams, setSearchParams] = useState({})
   const [pageType, setPageType] = useState<string>()
-  const [detail, setDetail] = useState<TableProps>({
-    desc: '',
-    goodsImage: ''
+  const [detail, setDetail] = useState<RecommendProps>({
+    recommendId: 0,
+    goodsId: 0,
   })
-  const history = useHistory()
 
-  const columns: ColumnsType<TableProps> = [
-    // {
-    //   title: '序号',
-    //   dataIndex: 'index',
-    //   key: 'index',
-    //   width: 100,
-    //   render: (text: string, record, index) => <a>{index + 1}</a>,
-    // },
+  const columns: ColumnsType<RecommendProps> = [
     {
-      title: '产品ID',
+      title: '商品编号',
+      key: 'goodsId',
       dataIndex: 'goodsId',
       width: 100,
     },
     {
-      title: '图片',
+      title: '商品名称',
+      key: 'recommendName',
+      dataIndex: 'recommendName',
+    },
+    {
+      title: '商品图片',
       dataIndex: 'goodsImage',
       key: 'goodsImage',
       width: 120,
@@ -55,58 +52,28 @@ const HomeRecommend: React.FC = () => {
       ),
     },
     {
-      title: '商品描述',
-      dataIndex: 'goodsDesc',
-      key: 'goodsDesc',
-      ellipsis: {
-        showTitle: false,
-      },
-      render: desc => (
-        <Tooltip placement="top" title={desc}>
-          {desc}
-        </Tooltip>
-      ),
-    },
-    {
-      title: '价格',
-      dataIndex: 'goodsPrice',
-      key: 'goodsPrice',
+      title: '排序',
+      dataIndex: 'recommendSort',
+      key: 'recommendSort',
       width: 120
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTime',
-      width: 160,
+      width: 180,
       render: (text: any, record: any) => {
         return record.createTime
       }
     },
     {
-      title: '排序',
-      dataIndex: 'goodsSort',
-      key: 'goodsSort',
-      width: 120
-    },
-    {
-      title: '状态',
-      dataIndex: 'status',
-      key: 'sort',
-      width: 120,
-      render: (text: any, record: any) => {
-        return record.status === 0 ? '已下架' : '上架中'
-      }
-    },
-    {
       title: '操作',
       key: 'action',
-      width: 200,
+      width: 140,
       render: (text: any, record: any) => {
-        const { status, goodsId } = record
         return (
           <Space size={0}>
-            <Button type="link" onClick={() => handleRecommendEdit(goodsId)}>编辑</Button>
-            <Button type="link" onClick={() => onChangeStatus(record)}>{status === 0 ? '上架' : '下架'}</Button>
+            <Button type="link" onClick={() => onEdit(true, record)}>编辑</Button>
             <Button type="link" danger onClick={() => onDelete(record)}>删除</Button>
           </Space>
         )
@@ -114,38 +81,32 @@ const HomeRecommend: React.FC = () => {
     },
   ]
 
+  // 搜索面板
   const searchFormList: Array<SearchFormProps> = [
     {
       type: 'INPUT',
-      label: '活动ID',
-      field: 'id'
+      label: '商品编号',
+      field: 'goodsId'
     },
     {
       type: 'INPUT',
-      label: '活动说明',
-      field: 'desc',
+      label: '商品名称',
+      field: 'recommendName',
     },
-    {
-      type: 'SELECT',
-      label: '状态',
-      field: 'status',
-      initialValue: '',
-      options: [
-        { value: '', label: '全部' },
-        { value: 1, label: '上架中' },
-        { value: 0, label: '已下架' }
-      ]
-    }
   ]
 
   // 刷新
   const handleRefresh = (): void => {
+    setVisible(false)
     setRefresh(!refresh)
   }
 
   // 搜索
   const onSearch = (values: any): void => {
-    setSearchParams(values)
+    setSearchParams({
+      ...values,
+      pageNum: 1
+    })
     handleRefresh()
   }
 
@@ -158,25 +119,10 @@ const HomeRecommend: React.FC = () => {
   }
 
   // 新增|编辑
-  const handleRecommendEdit = (id?: string): void => {
-    history.push(`/home-manage/recommend-edit?id=${id||''}`)
-  }
-
-  // 上、下架
-  const onChangeStatus = (record: any) => {
-    const { goodsId, status } = record
-    Modal.confirm({
-      title: `${status === 0 ? '上架' : '下架'}活动`,
-      icon: <ExclamationCircleOutlined />,
-      content: `确定${status === 0 ? '上架' : '下架'}该活动？`,
-      okText: '确认',
-      cancelText: '取消',
-      onOk: async () => {
-        await updateRecommend({ goodsId, status: status === 0 ? 1 : 0 })
-        message.success('操作成功')
-        handleRefresh()
-      }
-    })
+  const onEdit = (show: boolean, data?: RecommendProps): void => {
+    setVisible(show)
+    setPageType(data ? 'EDIT' : 'ADD')
+    data && setDetail(data)
   }
 
   // 删除
@@ -199,7 +145,7 @@ const HomeRecommend: React.FC = () => {
   const extra = (
     <>
       <Button type="primary" shape="round" icon={<PlusOutlined />} className="ml-10"
-        onClick={() => handleRecommendEdit()}
+        onClick={() => onEdit(true)}
       >
         新增
       </Button>
@@ -226,6 +172,13 @@ const HomeRecommend: React.FC = () => {
           handleTableList={handleTableList}
         />
       </Card>
+      <Edit
+        visible={visible}
+        pageType={pageType}
+        detail={detail}
+        onCancel={() => onEdit(false)}
+        onSuccess={ handleRefresh }
+      />
     </>
   )
 }

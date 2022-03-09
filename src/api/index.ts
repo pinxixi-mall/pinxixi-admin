@@ -32,22 +32,22 @@ export const updateHomeCarousel = (data?: any) => {
 
 // 首页推荐列表
 export const getRecommends = (data?: any, options?: any) => {
-  return http.get("/admin/home-manage/recommends", data, options);
+  return http.get("/admin/home-manage/recommend", data, options);
 };
 
-// 首页推荐新增、编辑
+// 首页推荐新增
+export const addRecommend = (data?: any) => {
+  return http.post("/admin/home-manage/recommend", data);
+};
+
+// 首页推荐编辑
 export const updateRecommend = (data?: any) => {
-  return http.post("/admin/home-manage/recommends", data);
-};
-
-// 首页推荐详情
-export const recommendDetail = (data?: any) => {
-  return http.get("/admin/recommendDetail", data);
+  return http.put("/admin/home-manage/recommend", data);
 };
 
 // 首页推荐删除
 export const deleteRecommend = (data?: any) => {
-  return http.delete("/admin/deleteRecommend", data);
+  return http.delete("/admin/home-manage/deleteRecommend", data);
 };
 
 // 商品列表

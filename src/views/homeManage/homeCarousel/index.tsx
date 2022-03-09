@@ -82,9 +82,7 @@ const HomeCarousel: React.FC = (props: any) => {
   }
 
   // 刷新
-  const handleRefresh = (isReset: boolean): void => {
-    console.log(1111,isReset);
-    
+  const handleRefresh = (isReset: boolean): void => {   
     isReset && setPagination({
       ...pagination,
       current: 1,

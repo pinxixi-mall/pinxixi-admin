@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Form, Row, Col, Input, Button, Select } from 'antd'
-import { SearchOutlined  } from '@ant-design/icons'
+import { SearchOutlined, UndoOutlined  } from '@ant-design/icons'
 import styles from './index.module.less'
 const { Option } = Select
 export interface SearchFormProps {
@@ -25,7 +25,7 @@ const SearchPannel: React.FC<SearchPannelProps> = (props) => {
     switch (type) {
       case 'INPUT':
         return (
-          <Col span={8} key={idx}>
+          <Col key={idx}>
             <Form.Item
               name={field}
               label={label}
@@ -37,13 +37,13 @@ const SearchPannel: React.FC<SearchPannelProps> = (props) => {
         )
       case 'SELECT':
         return (
-          <Col span={8} key={idx}>
+          <Col key={idx}>
             <Form.Item
               name={field}
               label={label}
               initialValue={initialValue}
             >
-              <Select>
+              <Select style={{ minWidth: 120 }}>
                 {
                   options.map((option: any, idx: number) => {
                     return <Option value={option.value} key={idx}>{option.label}</Option>
@@ -86,6 +86,7 @@ const SearchPannel: React.FC<SearchPannelProps> = (props) => {
             <Button className={styles.btn} type="primary" icon={<SearchOutlined />} htmlType="submit">搜索</Button>
             <Button
               className={styles.btn}
+              icon={<UndoOutlined />}
               onClick={() => {
                 form.resetFields()
               }}
@@ -94,26 +95,6 @@ const SearchPannel: React.FC<SearchPannelProps> = (props) => {
             </Button>
           </span>
         </Row>
-        {/* <Row>
-          <Col
-            span={24}
-            style={{
-              textAlign: 'right',
-            }}
-          >
-            <Button type="primary" icon={<SearchOutlined />} htmlType="submit">搜索</Button>
-            <Button
-              style={{
-                margin: '0 8px',
-              }}
-              onClick={() => {
-                form.resetFields()
-              }}
-            >
-              重置
-            </Button>
-          </Col>
-        </Row> */}
       </Form>
     </div>
   );

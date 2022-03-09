@@ -1,113 +1,112 @@
-import React, { useState, useEffect, FC, ReactElement, useMemo } from "react"
-import { Button, Form, Input, message } from 'antd'
-import { SyncOutlined } from '@ant-design/icons'
-import BodyCard from '@/components/BodyCard'
-import Upload from '@/components/Upload'
-import RichText from '@/components/RichText'
-import { commonUpload, updateRecommend, recommendDetail } from '@/api'
-import BraftEditor from 'braft-editor'
-const { useHistory } = require('react-router-dom')
-const url = require('url')
+import React, { useEffect, useState } from 'react'
+import { Form, Input, Modal, InputNumber, message } from 'antd'
+import { addRecommend, updateRecommend } from '@/api'
+import { useResetFormOnCloseModal } from '@/utils/common'
+import type { RecommendProps } from '../index'
+const { TextArea } = Input
+interface ModalFormProps {
+  visible: boolean;
+  pageType?: string;
+  detail: RecommendProps,
+  onCancel: Function;
+  onSuccess: () => void;
+}
 
-const RecommendEdit: FC = (pops: any): ReactElement => {
-  const [recommendId, setRecommendId] = useState<number>()
-  const [refresh, setRefresh] = useState(false)
+const RecommendEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onSuccess, pageType }) => {
+  const [confirmLoading, setConfirmLoading] = useState(false)
   const [form] = Form.useForm()
-  const [fileList, setFileList] = useState<any[]>([])
-  const history = useHistory()
 
   const layout = {
-    labelCol: { span: 4 },
-    wrapperCol: { span: 14 },
+    labelCol: {
+      span: 6,
+    },
+    wrapperCol: {
+      span: 16,
+    },
   }
 
-  // 初始化
+  // 重置表单
+  useResetFormOnCloseModal({
+    form,
+    visible,
+  })
+
   useEffect(() => {
-    const { id } = url.parse(history.location.search, true).query
-    setRecommendId(id)
-    const getDetail = async (id: string) => {
-      const { data } = await recommendDetail({ recommendId: id })
-      form.setFieldsValue(data)
-      setFileList([
-        {
-          name: 'image.png',
-          status: 'done',
-          url: data.imageUrl
-        }
-      ])
+    if (!visible) {
+      return
     }
-    id && getDetail(id)
-  }, [refresh])
+    if (pageType === 'EDIT') {
+      form.setFieldsValue(detail)
+    }
+  }, [visible])
 
   // 提交
-  const onSubmit = async (values: any) => {
-    const validateRes = await form.validateFields()
-    recommendId && (validateRes['recommendId'] = recommendId)
-    validateRes.detail = validateRes.detail.toHTML()
-    const { code} = await updateRecommend(validateRes)
-    message.success('操作成功')
-    history.push('/product-manage/home-recomend')
-  }
-
-  // 图片上传
-  const handleUpload = async (file: any) => {
-    const formData = new FormData()
-    formData.append('file', file)
-    const { data: { url } } = await commonUpload(formData)
-    form.setFieldsValue({
-      imageUrl: url
-    })
-    setFileList([
-      {
-        name: 'image.png',
-        status: 'done',
-        url
+  const handleOk = () => {
+    setConfirmLoading(true)
+    form.validateFields().then(async values => {
+      setConfirmLoading(false)
+      let ajaxFn = addRecommend
+      if (pageType === 'EDIT') {
+        values.goodsId = detail.goodsId
+        ajaxFn = updateRecommend
       }
-    ])
-  }
-
-  // 详情更新
-  const onDetailChange = (value: any) => {
-    console.log(111,value);
-    form.setFieldsValue({
-      detail: value
+      await ajaxFn(values)
+      message.success('操作成功')
+      onSuccess()
+    }, () => {
+      setConfirmLoading(false)
+      message.error('操作失败')
     })
-  }
-
-  // 刷新
-  const handleRefresh = () => {
-    setRefresh(!refresh)
   }
 
   return (
-    <>
-      <BodyCard
-        onSubmit={onSubmit}
-        onRefresh={handleRefresh}
-      >
-        <Form {...layout} name="basicForm" form={form}>
-          <Form.Item name="description" label="活动标题：" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="imageUrl" label="活动图片：" rules={[{ required: true }]}>
-            <Upload fileList={fileList} handleUpload={handleUpload} />
-          </Form.Item>
-          <Form.Item name="detail" label="活动详情：" rules={[{ required: true }]}>
-            <RichText onChange={onDetailChange} />
-          </Form.Item>
-          <Form.Item name="price" label="价格：" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="sort" label="排序：" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item name="status" label="状态：" rules={[{ required: true }]}>
-            <Input />
-          </Form.Item>
-        </Form>
-      </BodyCard>
-    </>
-  )
+    <Modal
+      title={pageType === 'ADD' ? '新增' : '编辑'}
+      visible={visible}
+      onOk={handleOk}
+      confirmLoading={confirmLoading}
+      onCancel={() => onCancel()}
+    >
+      <Form form={form} {...layout} name="control-ref">
+        <Form.Item
+          name="goodsId"
+          label="商品编号"
+          rules={[
+            {
+              required: true,
+              message: '编号不能为空'
+            }
+          ]}
+        >
+          <InputNumber />
+        </Form.Item>
+        <Form.Item
+          name="recommendName"
+          label="推荐商品名称"
+          rules={[
+            {
+              required: true,
+              message: '名称不能为空'
+            }
+          ]}
+        >
+          <TextArea />
+        </Form.Item>
+        <Form.Item
+          name="recommendUrl"
+          label="跳转链接"
+        >
+          <TextArea />
+        </Form.Item>
+        <Form.Item
+          name="recommendSort"
+          label="排序"
+        >
+          <InputNumber />
+        </Form.Item>
+      </Form>
+    </Modal>
+  );
 }
 
 export default RecommendEdit

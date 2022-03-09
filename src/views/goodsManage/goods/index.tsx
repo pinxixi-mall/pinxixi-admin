@@ -27,17 +27,18 @@ const Goods: React.FC = () => {
     {
       title: '商品编号',
       dataIndex: 'goodsId',
-      width: 120,
     },
     {
       title: '商品名称',
       dataIndex: 'goodsName',
+      ellipsis: {
+        showTitle: false,
+      },
     },
     {
       title: '商品图片',
       dataIndex: 'goodsImage',
       key: 'goodsImage',
-      width: 140,
       render: goodsImage => (
         <Image
           width={60}
