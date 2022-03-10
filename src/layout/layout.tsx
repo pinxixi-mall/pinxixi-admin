@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Layout as AntLayout, Menu, Image } from 'antd';
 import Header from '@/components/Header'
+import Footer from '@/components/Footer'
 import Breadcrumb from '@/components/Breadcrumb'
 import { navRoutes } from '@/router/routes';
 import type { routeType } from '@/router/routes'
@@ -46,7 +47,7 @@ const Layout: React.FC = (props: any) => {
       if (menu.routes) {
         return (
           <SubMenu key={menu.path} icon={menu.meta.icon} title={menu.meta.title || '未设置'}>
-            { createMenu(menu.routes)}
+            {createMenu(menu.routes)}
           </SubMenu>
         )
       } else {
@@ -69,37 +70,39 @@ const Layout: React.FC = (props: any) => {
 
   return (
     <>
-      {/* <AntLayout className='my-layout'> */}
-        {/* <Header {...userInfo} /> */}
-        <AntLayout className={styles.layoutContent}>
-          <Sider width={200} className={styles.siderBar}>
-            <div className={styles.logo}>
-              <Image
-                className={styles.logoImg}
-                preview={false}
-                src="./img/pxx-logo.png"
-              />
-            </div>
-            <Menu
-              mode="inline"
-              selectedKeys={[history.location.pathname]}
-              openKeys={props.LayoutStore.openKeys}
-              style={{ height: '100%', borderRight: 0 }}
-              onClick={onMenuClick}
-              onOpenChange={onOpenChange}
-            >
-              {menus}
-            </Menu>
-          </Sider>
-          <AntLayout  className={styles.contentBox}>
+      <AntLayout className={styles.layoutContent}>
+        <Sider width={200} className={styles.siderBar}>
+          <div className={styles.logo}>
+            <Image
+              className={styles.logoImg}
+              preview={false}
+              src="./img/pxx-logo.png"
+            />
+          </div>
+          <Menu
+            mode="inline"
+            selectedKeys={[history.location.pathname]}
+            openKeys={props.LayoutStore.openKeys}
+            style={{ height: '100%', borderRight: 0 }}
+            onClick={onMenuClick}
+            onOpenChange={onOpenChange}
+          >
+            {menus}
+          </Menu>
+        </Sider>
+        <AntLayout>
           <Header {...userInfo} />
+          <AntLayout className={styles.contentBox}>
             <Breadcrumb breads={props.LayoutStore.breadcrumb} />
             <Content className={styles.content}>
-              {props.children}
+              <div style={{ paddingBottom: '20px' }}>
+                {props.children}
+              </div>
             </Content>
           </AntLayout>
+          <Footer />
         </AntLayout>
-      {/* </AntLayout> */}
+      </AntLayout>
     </>
   )
 }

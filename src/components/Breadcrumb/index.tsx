@@ -7,7 +7,7 @@ type breadsProps = {
 
 const Breadcrumb = (props: breadsProps) => {
   return (
-    <BreadcrumbAnt style={{ padding: '10px 24px 0' }}>
+    <BreadcrumbAnt style={{ padding: '10px 24px' }}>
       {
         props.breads.map(bread => <BreadcrumbAnt.Item key={bread}>{bread}</BreadcrumbAnt.Item>)
       }
