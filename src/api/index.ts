@@ -80,6 +80,11 @@ export const goodsDetial = (data?: any, options?: any) => {
   return http.get(`/admin/goods-manage/goods/${data.goodsId}`);
 };
 
+// 商品分类列表
+export const getGoodsCategorys = (data?: any, options?: any) => {
+  return http.get("/admin/goods-manage/category/list", data, options);
+};
+
 // 公共上传
 export const commonUpload = (data?: any) => {
   return http.post("/admin/upload/file", data, {
