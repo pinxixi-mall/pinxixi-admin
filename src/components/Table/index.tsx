@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactElement, FC } from 'react'
+import { useState, useEffect, ReactElement, FC } from 'react'
 import { Table as AntTable, SpinProps } from 'antd'
 import { PaginationProps, TableProps } from '@/types'
 
@@ -12,6 +12,7 @@ const Table: FC<TableProps> = (props: TableProps): ReactElement => {
     pageSizeOptions: ['5', '10', '20'],
     showQuickJumper: true,
     showSizeChanger: true,
+    position: ['none', pagi.hide ? 'none' : 'bottomRight'],
     ...pagi
   })
   const [loading, setLoading] = useState<boolean | SpinProps | undefined>(false)
@@ -33,17 +34,33 @@ const Table: FC<TableProps> = (props: TableProps): ReactElement => {
   // 请求表格列表数据
   useEffect(() => {
     const getList = async () => {
-      const params = {
-        ...searchParams,
+      const pagiParam = {
         pageNum: pagination.current,
         pageSize: pagination.pageSize,
       }
+      const params = pagi.hide 
+      ? {
+        ...searchParams,
+      }
+      : {
+        ...searchParams,
+        ...pagiParam,        
+      }
+      
       setLoading(true)
       try {
-        let { data: { list, pageNum, pageSize, total } } = await fetchApi(params, { noLoading: true })
-        const rows = handleTableList ? handleTableList(list) : list
+        let rows = []
+        let { data } = await fetchApi(params, { noLoading: true })
+        if (!pagi.hide) {
+          // 有分页
+          const { list, pageNum, pageSize, total } = data
+          rows = handleTableList ? handleTableList(list) : list
+          setPageData({ pageNum, pageSize, total })
+        } else {
+          // 无分页
+          rows = handleTableList ? handleTableList(data) : data
+        }
         setTableData(rows)
-        setPageData({ pageNum, pageSize, total })
       } catch (error) { console.log(error) }
       setLoading(false)
     }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Children, useState } from 'react'
 import SearchPannel from '@/components/SearchPannel'
 import { ColumnsType } from 'antd/es/table'
 import { Card, Button, Space, Modal, message } from 'antd'
@@ -38,13 +38,13 @@ const HomeRecommend: React.FC = () => {
     },
     {
       title: '排序',
-      dataIndex: 'categorySort',
       key: 'categorySort',
+      dataIndex: 'categorySort',
     },
     {
       title: '创建时间',
-      dataIndex: 'createTime',
       key: 'createTime',
+      dataIndex: 'createTime',
       render: (text: any, record: any) => {
         return record.createTime
       }
@@ -87,18 +87,29 @@ const HomeRecommend: React.FC = () => {
   // 搜索
   const onSearch = (values: any): void => {
     setSearchParams({
-      ...values,
-      pageNum: 1
+      ...values
     })
     handleRefresh()
   }
 
-  // 处理表格返回数据
+  // 处理表格返回数据：每项加key
   const handleTableList = (list: any[]): any[] => {
-    return list.map((it: any) => ({
-      ...it,
-      key: it.categoryId
-    }))
+    let newList = list.slice(0)
+    addKey(newList)
+
+    function addKey(list: Array<any>): void {
+      list.forEach((it: any, index: number) => {
+        list[index] = {
+          ...it,
+          key: it.categoryId
+        }
+        if (it.children) {
+          addKey(it.children)
+        }
+      })
+    }
+
+    return newList
   }
 
   // 新增|编辑
@@ -153,6 +164,7 @@ const HomeRecommend: React.FC = () => {
           searchParams={searchParams}
           refreshOutside={refresh}
           handleTableList={handleTableList}
+          pagination={{ hide: true }}
         />
       </Card>
       <Edit
@@ -160,7 +172,7 @@ const HomeRecommend: React.FC = () => {
         pageType={pageType}
         detail={detail}
         onCancel={() => onEdit(false)}
-        onSuccess={ handleRefresh }
+        onSuccess={handleRefresh}
       />
     </>
   )

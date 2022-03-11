@@ -8,6 +8,8 @@ export interface PaginationProps {
   pageSizeOptions?: string[];
   showQuickJumper?: boolean;
   showSizeChanger?: boolean;
+  position?: TablePaginationPosition[];
+  hide?: boolean;
   updateTable?(): void;
 }
 
