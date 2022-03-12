@@ -192,7 +192,7 @@ const Goods: React.FC = () => {
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        const {msg} = await deleteGoods({ goodsId })
+        const {msg} = await deleteGoods(goodsId)
         message.success(msg)
         handleRefresh()
       }

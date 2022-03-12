@@ -71,18 +71,33 @@ export const updateGoodsStatus = (data?: any, options?: any) => {
 };
 
 // 删除商品
-export const deleteGoods = (data?: any, options?: any) => {
-  return http.delete(`/admin/goods-manage/goods/${data.goodsId}`, data, options);
+export const deleteGoods = (goodsId: number) => {
+  return http.delete(`/admin/goods-manage/goods/${goodsId}`);
 };
 
 // 商品详情
-export const goodsDetial = (data?: any, options?: any) => {
-  return http.get(`/admin/goods-manage/goods/${data.goodsId}`);
+export const goodsDetial = (goodsId: number) => {
+  return http.get(`/admin/goods-manage/goods/${goodsId}`);
 };
 
 // 商品分类列表
 export const getGoodsCategorys = (data?: any, options?: any) => {
   return http.get("/admin/goods-manage/category/list", data, options);
+};
+
+// 新增商品分类
+export const addGoodsCategory = (data?: any, options?: any) => {
+  return http.post("/admin/goods-manage/category", data, options);
+};
+
+// 修改商品分类
+export const updateGoodsCategory = (data?: any, options?: any) => {
+  return http.put("/admin/goods-manage/category", data, options);
+};
+
+// 根据级别查询商品分类
+export const getGoodsCategoryByLevel = (data: any) => {
+  return http.get(`/admin/goods-manage/category/level`, data);
 };
 
 // 公共上传

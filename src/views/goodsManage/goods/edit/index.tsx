@@ -25,8 +25,8 @@ const GoodsEdit: FC = (pops: any): ReactElement => {
   useEffect(() => {
     const { id } = url.parse(history.location.search, true).query
     setGoodsId(id)
-    const getDetail = async (id: string) => {
-      const { data } = await goodsDetial({ goodsId: id })
+    const getDetail = async (id: number) => {
+      const { data } = await goodsDetial(id)
       form.setFieldsValue(data)
       setFileList([
         {

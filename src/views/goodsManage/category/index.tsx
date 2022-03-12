@@ -7,11 +7,14 @@ import type { SearchFormProps } from '@/components/SearchPannel'
 import Table from '@/components/Table'
 import { getGoodsCategorys, deleteRecommend } from '@/api'
 import Edit from "./edit"
+import { getLabelByValue } from '@/utils/utils'
+import { goodsCategoryLevelList } from '@/config/dataList'
 
 export interface CategoryProps {
   key?: number | string;
   categoryId: number;
   categoryName: string;
+  parentId?: number;
   categorySort?: number;
 }
 
@@ -37,6 +40,14 @@ const HomeRecommend: React.FC = () => {
       dataIndex: 'categoryName',
     },
     {
+      title: '分类级别',
+      key: 'categoryLevel',
+      dataIndex: 'categoryLevel',
+      render: (text: any, record: any) => {
+        return  getLabelByValue(record.categoryLevel, goodsCategoryLevelList)
+      }
+    },
+    {
       title: '排序',
       key: 'categorySort',
       dataIndex: 'categorySort',
@@ -44,10 +55,7 @@ const HomeRecommend: React.FC = () => {
     {
       title: '创建时间',
       key: 'createTime',
-      dataIndex: 'createTime',
-      render: (text: any, record: any) => {
-        return record.createTime
-      }
+      dataIndex: 'createTime'
     },
     {
       title: '操作',
