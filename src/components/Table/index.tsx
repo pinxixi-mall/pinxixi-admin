@@ -7,7 +7,7 @@ const Table: FC<TableProps> = (props: TableProps): ReactElement => {
   const [refreshInside, setRefreshInside] = useState<boolean>()
   const [pagination, setPagination] = useState<PaginationProps>({
     current: 1,
-    pageSize: 5,
+    pageSize: pagi.hide ? 0 : 5,
     total: 0,
     pageSizeOptions: ['5', '10', '20'],
     showQuickJumper: true,
@@ -38,13 +38,9 @@ const Table: FC<TableProps> = (props: TableProps): ReactElement => {
         pageNum: pagination.current,
         pageSize: pagination.pageSize,
       }
-      const params = pagi.hide 
-      ? {
-        ...searchParams,
-      }
-      : {
-        ...searchParams,
-        ...pagiParam,        
+      let params = { ...searchParams }
+      if (!pagi.hide) {
+        Object.assign(params, pagiParam)
       }
       
       setLoading(true)

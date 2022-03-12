@@ -1,6 +1,6 @@
 import { FC } from 'react'
-import { Layout as AntLayout, Avatar, Image, Dropdown, Menu  } from 'antd';
-import { UserOutlined, PoweroffOutlined } from '@ant-design/icons';
+import { Layout as AntLayout, Avatar, Dropdown, Menu, Input  } from 'antd';
+import { UserOutlined, PoweroffOutlined, SearchOutlined } from '@ant-design/icons';
 import styles from './index.module.less'
 import { logout } from '@/api'
 import { UserInfoProps } from "@/types"
@@ -24,7 +24,7 @@ const Header: FC<UserInfoProps> = (props: UserInfoProps) => {
 
   const menu = (
     <Menu>
-      <Menu.Item icon={<UserOutlined />} key="/user-manage/user-info" onClick={toUserInfo}>个人信息</Menu.Item>
+      <Menu.Item icon={<UserOutlined />} key="/user-manage/user-info" onClick={toUserInfo}>用户信息</Menu.Item>
       <Menu.Divider key="divider" />
       <Menu.Item icon={<PoweroffOutlined />} key="/login" onClick={handleLogout}>退出登录</Menu.Item>
     </Menu>
@@ -32,6 +32,9 @@ const Header: FC<UserInfoProps> = (props: UserInfoProps) => {
 
   return (
     <AntHeader className={styles.navHeader}>
+      <div className={styles.headerLeft}>
+        <Input placeholder="搜索" prefix={<SearchOutlined />} />
+      </div>
       <div className={styles.headerRight}>
         <span className={styles.userName}>{props.userName}</span>
         <Dropdown overlay={menu} arrow>

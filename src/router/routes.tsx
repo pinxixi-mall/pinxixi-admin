@@ -130,7 +130,7 @@ const navRoutes: Array<routeType> = [
         path: '/order-manage/all-order',
         name: 'all-order',
         meta: {
-          title: '所有订单'
+          title: '订单列表'
         },
         component: AllOrder
       }
@@ -148,7 +148,7 @@ const navRoutes: Array<routeType> = [
         path: '/user-manage/user-info',
         name: 'user-info',
         meta: {
-          title: '个人信息'
+          title: '用户信息'
         },
         component: UserInfo
       }

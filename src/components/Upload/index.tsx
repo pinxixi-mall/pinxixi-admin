@@ -1,5 +1,5 @@
 import { FC, ReactElement } from 'react'
-import { Form, Input, Modal, InputNumber, message, Upload as AntUpload } from 'antd'
+import { message, Upload as AntUpload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { UploadProps } from '@/types'
 

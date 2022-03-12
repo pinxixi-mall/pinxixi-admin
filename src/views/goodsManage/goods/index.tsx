@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import SearchPannel from '@/components/SearchPannel'
 import { ColumnsType } from 'antd/es/table'
 import { Card, Button, Space, Tooltip, Image, Modal, message } from 'antd'
-import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined, RetweetOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons'
 import type { SearchFormProps } from '@/components/SearchPannel'
 import Table from '@/components/Table'
 import { getGoods, updateGoodsStatus, deleteGoods } from '@/api'
@@ -27,6 +27,7 @@ const Goods: React.FC = () => {
     {
       title: '商品编号',
       dataIndex: 'goodsId',
+      width: 140
     },
     {
       title: '商品名称',
@@ -39,6 +40,7 @@ const Goods: React.FC = () => {
       title: '商品图片',
       dataIndex: 'goodsImage',
       key: 'goodsImage',
+      width: 160,
       render: goodsImage => (
         <Image
           width={60}
@@ -96,14 +98,14 @@ const Goods: React.FC = () => {
     {
       title: '操作',
       key: 'action',
-      width: 200,
+      width: 280,
       render: (text: any, record: any) => {
         const { goodsStatus, goodsId } = record
         return (
           <Space size={0}>
-            <Button type="link" onClick={() => handleGoodsEdit(goodsId)}>编辑</Button>
-            <Button type="link" onClick={() => onChangeStatus(record)}>{goodsStatus === 0 ? '上架' : '下架'}</Button>
-            <Button type="link" danger onClick={() => onDelete(record)}>删除</Button>
+            <Button type="link" icon={<FormOutlined />} onClick={() => handleGoodsEdit(goodsId)}>编辑</Button>
+            <Button type="link" icon={<RetweetOutlined />} onClick={() => onChangeStatus(record)}>{goodsStatus === 0 ? '上架' : '下架'}</Button>
+            <Button type="link" icon={<DeleteOutlined />} danger onClick={() => onDelete(record)}>删除</Button>
           </Space>
         )
       },

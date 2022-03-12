@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import SearchPannel from '@/components/SearchPannel'
 import { ColumnsType } from 'antd/es/table'
 import { Card, Button, Space, Image, Modal, message } from 'antd'
-import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined, FormOutlined, DeleteOutlined  } from '@ant-design/icons'
 import type { SearchFormProps } from '@/components/SearchPannel'
 import Table from '@/components/Table'
 import { getRecommends, deleteRecommend } from '@/api'
@@ -73,8 +73,8 @@ const HomeRecommend: React.FC = () => {
       render: (text: any, record: any) => {
         return (
           <Space size={0}>
-            <Button type="link" onClick={() => onEdit(true, record)}>编辑</Button>
-            <Button type="link" danger onClick={() => onDelete(record)}>删除</Button>
+            <Button type="link" icon={<FormOutlined />} onClick={() => onEdit(true, record)}>编辑</Button>
+            <Button type="link" icon={<DeleteOutlined />} danger onClick={() => onDelete(record)}>删除</Button>
           </Space>
         )
       },

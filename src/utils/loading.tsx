@@ -15,7 +15,7 @@ const startLoading = () => {
 
 const endLoading = () => {
   const loading = document.getElementById('loading-box')
-  loading &&  document.body.removeChild(loading)
+  loading && document.body.removeChild(loading)
 };
 
 export const showLoading = () => {
@@ -26,9 +26,7 @@ export const showLoading = () => {
 };
 
 export const hideLoading = () => {
-    if (loadingCount <= 0) {
-        return;
-    }
+    if (loadingCount <= 0) return;
     loadingCount -= 1;
     if (loadingCount === 0) {
         endLoading();

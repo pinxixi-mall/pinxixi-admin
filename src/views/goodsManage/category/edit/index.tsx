@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Input, Modal, InputNumber, message, Select, TreeSelect } from 'antd'
+import { Form, Input, Modal, InputNumber, message, Select } from 'antd'
 import { addGoodsCategory, updateGoodsCategory, getGoodsCategoryByLevel } from '@/api'
 import { useResetFormOnCloseModal } from '@/utils/common'
 import type { CategoryProps } from '../index'
 import { goodsCategoryLevelList } from '@/config/dataList'
-const { TextArea } = Input
 const { Option } = Select
-const { TreeNode } = TreeSelect;
 
 interface ModalFormProps {
   visible: boolean;
@@ -52,19 +50,26 @@ const CategoryEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
   const onLevelChange = async (level: number) => {
     setCategoryLevel1List([])
     setCategoryLevel2List([])
-    //TODO 清空一二级
+    // 清空一二级
+    form.setFieldsValue({
+      categoryId1: null,
+      categoryId2: null
+    })
     if (level === 1) {
       // 新增一级分类不需要查询父级分类
       return
     }
     // 新增二、三级先查出一级列表
     const { data } = await getGoodsCategoryByLevel({ categoryLevel: 1 })
-    setCategoryLevel1List(data) 
+    setCategoryLevel1List(data)
   }
 
   // 一级查二级
   const onLevel1Change = async (categoryId: number) => {
-    //TODO 清空二级
+    // 清空二级
+    form.setFieldsValue({
+      categoryId2: null
+    })
     const { data: list2 } = await getGoodsCategoryByLevel({ parentId: categoryId })
     setCategoryLevel2List(list2)
   }
@@ -74,13 +79,28 @@ const CategoryEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
     setConfirmLoading(true)
     form.validateFields().then(async values => {
       setConfirmLoading(false)
+      // 编辑参数
+      let params = {
+        categoryLevel: values.categoryLevel,
+        parentId: 0, // 一级分类父级ID是0
+        categoryName: values.categoryName,
+        categorySort: values.categorySort,
+      }
+      // 如果是2、3级分类，取其上一级的分类ID
+      if (values.categoryLevel === 2) {
+        // 新增二级取一级分类id
+        params.parentId = values.categoryId1
+      } else if (values.categoryLevel === 3) {
+        // 新增三级取二级分类id
+        params.parentId = values.categoryId2
+      }
       let ajaxFn = addGoodsCategory
       if (pageType === 'EDIT') {
-        values.categoryId = detail.categoryId
+        params = values
         ajaxFn = updateGoodsCategory
       }
-      await ajaxFn(values)
-      message.success('操作成功')
+      const { msg } = await ajaxFn(params)
+      message.success(msg)
       onSuccess()
     }, () => {
       setConfirmLoading(false)
@@ -98,43 +118,15 @@ const CategoryEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
     >
       <Form form={form} {...layout} name="control-ref">
         {
-          pageType === 'EDIT' && 
+          pageType === 'EDIT' &&
           <Form.Item
             name="categoryId"
             label="分类编号"
-            
+
           >
             <Input disabled={true} />
           </Form.Item>
         }
-        {/* <Form.Item
-          name="categoryLevel"
-          label="分类级别"
-          rules={[
-            {
-              required: true,
-              message: '分类级别不能为空'
-            }
-          ]}
-        >
-          <TreeSelect
-            showSearch
-            style={{ width: '100%' }}
-            dropdownStyle={{ maxHeight: 400, overflow: 'auto' }}
-            placeholder="选择分类级别"
-            allowClear
-          >
-            <TreeNode value="parent 1" title="parent 1">
-              <TreeNode value="parent 1-0" title="parent 1-0">
-                <TreeNode value="leaf1" title="my leaf" />
-                <TreeNode value="leaf2" title="your leaf" />
-              </TreeNode>
-              <TreeNode value="parent 1-1" title="parent 1-1">
-                <TreeNode value="sss" title={<b style={{ color: '#08c' }}>sss</b>} />
-              </TreeNode>
-            </TreeNode>
-          </TreeSelect>
-        </Form.Item> */}
         <Form.Item
           name="categoryLevel"
           label="分类级别"
@@ -148,7 +140,7 @@ const CategoryEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
           <Select disabled={pageType === 'EDIT'} onChange={onLevelChange}>
             {
               goodsCategoryLevelList.map(c => (
-                <Option value={c.value}>{c.label}</Option>
+                <Option value={c.value} key={c.value}>{c.label}</Option>
               ))
             }
           </Select>
@@ -164,7 +156,7 @@ const CategoryEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
                 label="一级分类"
                 rules={[{ required: true }]}
               >
-                <Select disabled={pageType === 'EDIT'} onChange={onLevel1Change}>
+                <Select disabled={pageType === 'EDIT'} onChange={onLevel1Change} placeholder="选择一级分类">
                   {
                     categoryLevel1List.map(c => (
                       <Option value={c.categoryId} key={c.categoryId}>{c.categoryName}</Option>
@@ -186,7 +178,7 @@ const CategoryEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
                 label="二级分类"
                 rules={[{ required: true }]}
               >
-                <Select disabled={pageType === 'EDIT'}>
+                <Select disabled={pageType === 'EDIT'} placeholder="选择二级分类">
                   {
                     categoryLevel2List.map(c => (
                       <Option value={c.categoryId} key={c.categoryId}>{c.categoryName}</Option>
@@ -196,26 +188,7 @@ const CategoryEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
               </Form.Item>
             )
           }
-
         </Form.Item>
-        {/* <Form.Item
-          name="parentId"
-          label="二级分类"
-          rules={[
-            {
-              required: true,
-              message: '二级分类不能为空'
-            }
-          ]}
-        >
-          <Select disabled={pageType === 'EDIT'}>
-            {
-              categoryLevel2List.map(c => (
-                <Option value={c.categoryId}>{c.categoryName}</Option>
-              ))
-            }
-          </Select>
-        </Form.Item> */}
         <Form.Item
           name="categoryName"
           label="分类名称"

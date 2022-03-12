@@ -1,11 +1,11 @@
-import React, { Children, useState } from 'react'
+import React, { useState } from 'react'
 import SearchPannel from '@/components/SearchPannel'
 import { ColumnsType } from 'antd/es/table'
 import { Card, Button, Space, Modal, message } from 'antd'
-import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons'
 import type { SearchFormProps } from '@/components/SearchPannel'
 import Table from '@/components/Table'
-import { getGoodsCategorys, deleteRecommend } from '@/api'
+import { getGoodsCategorys, deleteGoodsCategory } from '@/api'
 import Edit from "./edit"
 import { getLabelByValue } from '@/utils/utils'
 import { goodsCategoryLevelList } from '@/config/dataList'
@@ -18,7 +18,7 @@ export interface CategoryProps {
   categorySort?: number;
 }
 
-const HomeRecommend: React.FC = () => {
+const GoodsCategory: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>()
   const [visible, setVisible] = useState<boolean>(false)
   const [searchParams, setSearchParams] = useState({})
@@ -64,8 +64,8 @@ const HomeRecommend: React.FC = () => {
       render: (text: any, record: any) => {
         return (
           <Space size={0}>
-            <Button type="link" onClick={() => onEdit(true, record)}>编辑</Button>
-            <Button type="link" danger onClick={() => onDelete(record)}>删除</Button>
+            <Button type="link" icon={<FormOutlined />} onClick={() => onEdit(true, record)}>编辑</Button>
+            <Button type="link" icon={<DeleteOutlined />} danger onClick={() => onDelete(record)}>删除</Button>
           </Space>
         )
       },
@@ -137,7 +137,7 @@ const HomeRecommend: React.FC = () => {
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await deleteRecommend({ categoryId })
+        await deleteGoodsCategory(categoryId)
         message.success('操作成功')
         handleRefresh()
       }
@@ -186,4 +186,4 @@ const HomeRecommend: React.FC = () => {
   )
 }
 
-export default HomeRecommend
+export default GoodsCategory

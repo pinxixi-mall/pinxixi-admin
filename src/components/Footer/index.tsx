@@ -11,7 +11,7 @@ const Footer: FC = () => {
         color: '#666',
         background: '#fff',
         borderTop: '1px solid #eee',
-        zIndex: 1
+        zIndex: 0
     }
 
     return (

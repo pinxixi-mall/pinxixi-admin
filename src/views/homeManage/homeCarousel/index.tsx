@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Button, Table, Space, SpinProps, Tooltip, Image, Modal, message } from 'antd'
-import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined } from '@ant-design/icons'
+import { Card, Button, Table, Space, SpinProps, Image, Modal, message } from 'antd'
+import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined, RetweetOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/es/table'
 import CarouselEdit from './components/Edit'
 import { getHomeCarousel, updateHomeCarousel } from '@/api'
@@ -212,9 +212,9 @@ const HomeCarousel: React.FC = (props: any) => {
         const { carouselStatus } = record
         return (
           <Space size={0}>
-            <Button type="link" onClick={() => onEditVisible(true, record)}>编辑</Button>
-            <Button type="link" onClick={() => onChangeStatus(record)}>{carouselStatus === '0' ? '上架' : '下架'}</Button>
-            <Button type="link" danger onClick={() => onDelete(record)}>删除</Button>
+            <Button type="link" icon={<FormOutlined />} onClick={() => onEditVisible(true, record)}>编辑</Button>
+            <Button type="link" icon={<RetweetOutlined />} onClick={() => onChangeStatus(record)}>{carouselStatus === '0' ? '上架' : '下架'}</Button>
+            <Button type="link" icon={<DeleteOutlined />} danger onClick={() => onDelete(record)}>删除</Button>
           </Space>
         )
       },
