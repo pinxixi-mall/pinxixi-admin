@@ -134,6 +134,7 @@ const CarouselEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
     <Modal
       title={pageType === 'ADD' ? '新增' : '编辑'}
       visible={visible}
+      maskClosable={false}
       onOk={handleOk}
       confirmLoading={confirmLoading}
       onCancel={() => onCancel()}

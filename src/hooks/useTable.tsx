@@ -36,6 +36,4 @@ const useTable = (options?: PaginationProps, updateTable?: () => void) => {
   return [pagination, setPageData, onPageChange]
 }
 
-export {
-  useTable
-}
+export default useTable

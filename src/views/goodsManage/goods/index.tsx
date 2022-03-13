@@ -20,14 +20,14 @@ export interface TableProps {
 
 const Goods: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>()
-  const [searchParams, setSearchParams] = useState({})
+  const [queryParams, setSearchParams] = useState({})
   const history = useHistory()
 
   const columns: ColumnsType<TableProps> = [
     {
       title: '商品编号',
       dataIndex: 'goodsId',
-      width: 140
+      width: 120
     },
     {
       title: '商品名称',
@@ -40,7 +40,7 @@ const Goods: React.FC = () => {
       title: '商品图片',
       dataIndex: 'goodsImage',
       key: 'goodsImage',
-      width: 160,
+      width: 140,
       render: goodsImage => (
         <Image
           width={60}
@@ -81,7 +81,7 @@ const Goods: React.FC = () => {
       title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTime',
-      width: 170,
+      width: 190,
       render: (text: any, record: any) => {
         return record.createTime
       }
@@ -90,7 +90,7 @@ const Goods: React.FC = () => {
       title: '更新时间',
       dataIndex: 'updateTime',
       key: 'updateTime',
-      width: 170,
+      width: 190,
       render: (text: any, record: any) => {
         return record.updateTime
       }
@@ -226,7 +226,7 @@ const Goods: React.FC = () => {
         <Table
           columns={columns}
           fetchApi={getGoods}
-          searchParams={searchParams}
+          queryParams={queryParams}
           refreshOutside={refresh}
           handleTableList={handleTableList}
         />

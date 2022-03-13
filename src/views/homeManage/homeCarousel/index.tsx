@@ -38,12 +38,12 @@ const HomeCarousel: React.FC = (props: any) => {
     showQuickJumper: true,
     showSizeChanger: true
   })
-  const [searchParams, setSearchParams] = useState({})
+  const [queryParams, setSearchParams] = useState({})
 
   useEffect(() => {
     const getList = async () => {
       const params = {
-        ...searchParams,
+        ...queryParams,
         pageNum: pagination.current,
         pageSize: pagination.pageSize
       }

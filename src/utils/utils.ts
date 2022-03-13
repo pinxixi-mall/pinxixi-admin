@@ -1,5 +1,5 @@
 import Cookies from 'js-cookie'
-import { TOKEN_KEY } from '../config/base'
+import { TOKEN_KEY } from '../config'
 import { OptionProps } from '@/types'
 
 export const setCookie = (key: string, value: string): void => {

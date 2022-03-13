@@ -19,7 +19,7 @@ export interface RecommendProps {
 const HomeRecommend: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>()
   const [visible, setVisible] = useState<boolean>(false)
-  const [searchParams, setSearchParams] = useState({})
+  const [queryParams, setSearchParams] = useState({})
   const [pageType, setPageType] = useState<string>()
   const [detail, setDetail] = useState<RecommendProps>({
     recommendId: 0,
@@ -34,22 +34,22 @@ const HomeRecommend: React.FC = () => {
       width: 100,
     },
     {
-      title: '商品名称',
-      key: 'recommendName',
-      dataIndex: 'recommendName',
-    },
-    {
       title: '商品图片',
       dataIndex: 'goodsImage',
       key: 'goodsImage',
       width: 120,
       render: goodsImage => (
         <Image
-          width={60}
-          height={60}
-          src={goodsImage}
+        width={60}
+        height={60}
+        src={goodsImage}
         />
       ),
+    },
+    {
+      title: '推荐描述',
+      key: 'recommendName',
+      dataIndex: 'recommendName',
     },
     {
       title: '排序',
@@ -61,7 +61,7 @@ const HomeRecommend: React.FC = () => {
       title: '创建时间',
       dataIndex: 'createTime',
       key: 'createTime',
-      width: 180,
+      width: 190,
       render: (text: any, record: any) => {
         return record.createTime
       }
@@ -69,7 +69,7 @@ const HomeRecommend: React.FC = () => {
     {
       title: '操作',
       key: 'action',
-      width: 140,
+      width: 160,
       render: (text: any, record: any) => {
         return (
           <Space size={0}>
@@ -167,7 +167,7 @@ const HomeRecommend: React.FC = () => {
         <Table
           columns={columns}
           fetchApi={getRecommends}
-          searchParams={searchParams}
+          queryParams={queryParams}
           refreshOutside={refresh}
           handleTableList={handleTableList}
         />

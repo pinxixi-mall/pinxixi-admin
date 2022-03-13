@@ -21,7 +21,7 @@ export interface CategoryProps {
 const GoodsCategory: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>()
   const [visible, setVisible] = useState<boolean>(false)
-  const [searchParams, setSearchParams] = useState({})
+  const [queryParams, setSearchParams] = useState({})
   const [pageType, setPageType] = useState<string>()
   const [detail, setDetail] = useState<CategoryProps>({
     categoryId: 0,
@@ -51,11 +51,19 @@ const GoodsCategory: React.FC = () => {
       title: '排序',
       key: 'categorySort',
       dataIndex: 'categorySort',
+      width: 100,
     },
     {
       title: '创建时间',
       key: 'createTime',
-      dataIndex: 'createTime'
+      dataIndex: 'createTime',
+      width: 190
+    },
+    {
+      title: '更新时间',
+      key: 'updateTime',
+      dataIndex: 'updateTime',
+      width: 190
     },
     {
       title: '操作',
@@ -169,7 +177,7 @@ const GoodsCategory: React.FC = () => {
         <Table
           columns={columns}
           fetchApi={getGoodsCategorys}
-          searchParams={searchParams}
+          queryParams={queryParams}
           refreshOutside={refresh}
           handleTableList={handleTableList}
           pagination={{ hide: true }}

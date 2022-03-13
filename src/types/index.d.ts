@@ -16,7 +16,7 @@ export interface PaginationProps {
 export interface TableProps {
   columns: {}[]; // 表头
   fetchApi?: any; // 表格列表api
-  searchParams?: any; // 搜索参数
+  queryParams?: any; // 搜索参数
   refreshOutside?: boolean; // 从父组件刷新
   handleTableList?(list: any[]): any[]; // 处理表格数据
   pagination?: PaginationProps;

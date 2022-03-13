@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Input, Modal, InputNumber, message, Select } from 'antd'
+import { Form, Input, Modal, InputNumber, message, Select, ConfigProvider } from 'antd'
 import { addGoodsCategory, updateGoodsCategory, getGoodsCategoryByLevel } from '@/api'
 import { useResetFormOnCloseModal } from '@/utils/common'
 import type { CategoryProps } from '../index'
 import { goodsCategoryLevelList } from '@/config/dataList'
+import { validateMessages } from '@/config'
 const { Option } = Select
-
 interface ModalFormProps {
   visible: boolean;
   pageType?: string;
@@ -112,102 +112,103 @@ const CategoryEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
     <Modal
       title={pageType === 'ADD' ? '新增' : '编辑'}
       visible={visible}
+      maskClosable={false}
       onOk={handleOk}
       confirmLoading={confirmLoading}
       onCancel={() => onCancel()}
     >
-      <Form form={form} {...layout} name="control-ref">
-        {
-          pageType === 'EDIT' &&
-          <Form.Item
-            name="categoryId"
-            label="分类编号"
+      <ConfigProvider form={{ validateMessages }}>
+        <Form form={form} {...layout} name="control-ref">
+          {
+            pageType === 'EDIT' &&
+            <Form.Item
+              name="categoryId"
+              label="分类编号"
 
+            >
+              <Input disabled={true} />
+            </Form.Item>
+          }
+          <Form.Item
+            name="categoryLevel"
+            label="分类级别"
+            rules={[
+              {
+                required: true,
+              }
+            ]}
           >
-            <Input disabled={true} />
+            <Select disabled={pageType === 'EDIT'} onChange={onLevelChange}>
+              {
+                goodsCategoryLevelList.map(c => (
+                  <Option value={c.value} key={c.value}>{c.label}</Option>
+                ))
+              }
+            </Select>
           </Form.Item>
-        }
-        <Form.Item
-          name="categoryLevel"
-          label="分类级别"
-          rules={[
-            {
-              required: true,
-              message: '分类级别不能为空'
+          <Form.Item
+            noStyle
+            shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
+          >
+            {({ getFieldValue }) =>
+              [2, 3].includes(getFieldValue('categoryLevel')) && (
+                <Form.Item
+                  name="categoryId1"
+                  label="一级分类"
+                  rules={[{ required: true }]}
+                >
+                  <Select disabled={pageType === 'EDIT'} onChange={onLevel1Change} placeholder="选择一级分类">
+                    {
+                      categoryLevel1List.map(c => (
+                        <Option value={c.categoryId} key={c.categoryId}>{c.categoryName}</Option>
+                      ))
+                    }
+                  </Select>
+                </Form.Item>
+              )
             }
-          ]}
-        >
-          <Select disabled={pageType === 'EDIT'} onChange={onLevelChange}>
-            {
-              goodsCategoryLevelList.map(c => (
-                <Option value={c.value} key={c.value}>{c.label}</Option>
-              ))
+          </Form.Item>
+          <Form.Item
+            noStyle
+            shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
+          >
+            {({ getFieldValue }) =>
+              getFieldValue('categoryLevel') === 3 && (
+                <Form.Item
+                  name="categoryId2"
+                  label="二级分类"
+                  rules={[{ required: true }]}
+                >
+                  <Select disabled={pageType === 'EDIT'} placeholder="选择二级分类">
+                    {
+                      categoryLevel2List.map(c => (
+                        <Option value={c.categoryId} key={c.categoryId}>{c.categoryName}</Option>
+                      ))
+                    }
+                  </Select>
+                </Form.Item>
+              )
             }
-          </Select>
-        </Form.Item>
-        <Form.Item
-          noStyle
-          shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
-        >
-          {({ getFieldValue }) =>
-            [2, 3].includes(getFieldValue('categoryLevel')) && (
-              <Form.Item
-                name="categoryId1"
-                label="一级分类"
-                rules={[{ required: true }]}
-              >
-                <Select disabled={pageType === 'EDIT'} onChange={onLevel1Change} placeholder="选择一级分类">
-                  {
-                    categoryLevel1List.map(c => (
-                      <Option value={c.categoryId} key={c.categoryId}>{c.categoryName}</Option>
-                    ))
-                  }
-                </Select>
-              </Form.Item>
-            )
-          }
-        </Form.Item>
-        <Form.Item
-          noStyle
-          shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
-        >
-          {({ getFieldValue }) =>
-            getFieldValue('categoryLevel') === 3 && (
-              <Form.Item
-                name="categoryId2"
-                label="二级分类"
-                rules={[{ required: true }]}
-              >
-                <Select disabled={pageType === 'EDIT'} placeholder="选择二级分类">
-                  {
-                    categoryLevel2List.map(c => (
-                      <Option value={c.categoryId} key={c.categoryId}>{c.categoryName}</Option>
-                    ))
-                  }
-                </Select>
-              </Form.Item>
-            )
-          }
-        </Form.Item>
-        <Form.Item
-          name="categoryName"
-          label="分类名称"
-          rules={[
-            {
-              required: true,
-              message: '分类名称不能为空'
-            }
-          ]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item
-          name="categorySort"
-          label="排序"
-        >
-          <InputNumber />
-        </Form.Item>
-      </Form>
+          </Form.Item>
+          <Form.Item
+            name="categoryName"
+            label="分类名称"
+            rules={[
+              {
+                required: true,
+              }
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="categorySort"
+            label="排序"
+          >
+            <InputNumber />
+          </Form.Item>
+        </Form>
+      </ConfigProvider>
     </Modal>
   );
 }

@@ -1,19 +1,24 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Input, Modal, InputNumber, message } from 'antd'
+import { Form, Input, Modal, InputNumber, message, ConfigProvider } from 'antd'
 import { addRecommend, updateRecommend } from '@/api'
 import { useResetFormOnCloseModal } from '@/utils/common'
 import type { RecommendProps } from '../index'
-const { TextArea } = Input
+import { validateMessages } from '@/config'
+import GoodsModal from '../goodsModal'
+const { TextArea, Search } = Input
+
 interface ModalFormProps {
   visible: boolean;
   pageType?: string;
   detail: RecommendProps,
-  onCancel: Function;
-  onSuccess: () => void;
+  onCancel(): void;
+  onSuccess(): void;
 }
 
 const RecommendEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onSuccess, pageType }) => {
   const [confirmLoading, setConfirmLoading] = useState(false)
+  const [treeData, setTreeData] = useState([])
+  const [goodsVisible, setGoodsVisable] = useState<boolean>(false)
   const [form] = Form.useForm()
 
   const layout = {
@@ -40,6 +45,10 @@ const RecommendEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, on
     }
   }, [visible])
 
+  const onGoodsModalVisable = () => {
+    setGoodsVisable(true)
+  }
+
   // 提交
   const handleOk = () => {
     setConfirmLoading(true)
@@ -59,53 +68,79 @@ const RecommendEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, on
     })
   }
 
+  const handleGoodsSelected = () => {
+
+  }
+
   return (
-    <Modal
-      title={pageType === 'ADD' ? '新增' : '编辑'}
-      visible={visible}
-      onOk={handleOk}
-      confirmLoading={confirmLoading}
-      onCancel={() => onCancel()}
-    >
-      <Form form={form} {...layout} name="control-ref">
-        <Form.Item
-          name="goodsId"
-          label="商品编号"
-          rules={[
-            {
-              required: true,
-              message: '编号不能为空'
-            }
-          ]}
-        >
-          <InputNumber />
-        </Form.Item>
-        <Form.Item
-          name="recommendName"
-          label="推荐商品名称"
-          rules={[
-            {
-              required: true,
-              message: '名称不能为空'
-            }
-          ]}
-        >
-          <TextArea />
-        </Form.Item>
-        <Form.Item
-          name="recommendUrl"
-          label="跳转链接"
-        >
-          <TextArea />
-        </Form.Item>
-        <Form.Item
-          name="recommendSort"
-          label="排序"
-        >
-          <InputNumber />
-        </Form.Item>
-      </Form>
-    </Modal>
+    <>
+      <Modal
+        title={pageType === 'ADD' ? '新增' : '编辑'}
+        visible={visible}
+        maskClosable={false}
+        onOk={handleOk}
+        confirmLoading={confirmLoading}
+        onCancel={() => onCancel()}
+      >
+        <ConfigProvider form={{ validateMessages }}>
+          <Form form={form} {...layout} name="control-ref">
+            <Form.Item
+              name="goodsName"
+              label="商品名称"
+              rules={[{ required: true }]}
+            >
+              <Search
+                placeholder="请选择"
+                enterButton="选择"
+                readOnly
+                onSearch={onGoodsModalVisable}
+              />
+            </Form.Item>
+            <Form.Item
+              name="goodsId"
+              label="商品编号"
+              rules={[{ required: true }]}
+            >
+              <InputNumber />
+            </Form.Item>
+            <Form.Item
+              name="goodsImage"
+              label="商品图片"
+              rules={[{ required: true }]}
+            >
+              <InputNumber />
+            </Form.Item>
+            <Form.Item
+              name="recommendName"
+              label="推荐描述"
+              rules={[{ required: true }]}
+            >
+              <TextArea />
+            </Form.Item>
+            <Form.Item
+              name="recommendUrl"
+              label="跳转链接"
+            >
+              <TextArea />
+            </Form.Item>
+            <Form.Item
+              name="recommendSort"
+              label="排序"
+            >
+              <InputNumber />
+            </Form.Item>
+          </Form>
+        </ConfigProvider>
+      </Modal>
+      {
+        goodsVisible && <GoodsModal
+          visible={goodsVisible}
+          goodsId={form.getFieldValue("goodsId")}
+          onCancel={() => setGoodsVisable(false)}
+          onSuccess={handleGoodsSelected}
+        />
+      }
+    </>
   );
 }
 

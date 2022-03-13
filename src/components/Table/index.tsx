@@ -1,9 +1,9 @@
 import { useState, useEffect, ReactElement, FC } from 'react'
-import { Table as AntTable, SpinProps } from 'antd'
+import { Table as AntTable, SpinProps, Radio } from 'antd'
 import { PaginationProps, TableProps } from '@/types'
 
 const Table: FC<TableProps> = (props: TableProps): ReactElement => {
-  const { columns, fetchApi, searchParams = {}, refreshOutside, handleTableList, pagination: pagi = {} } = props
+  const { columns, fetchApi, queryParams = {}, refreshOutside, handleTableList, pagination: pagi = {} } = props
   const [refreshInside, setRefreshInside] = useState<boolean>()
   const [pagination, setPagination] = useState<PaginationProps>({
     current: 1,
@@ -27,9 +27,9 @@ const Table: FC<TableProps> = (props: TableProps): ReactElement => {
   useEffect(() => {
     setPagination({
       ...pagination,
-      current: searchParams.pageNum
+      current: queryParams.pageNum
     })
-  }, [searchParams])
+  }, [queryParams])
 
   // 请求表格列表数据
   useEffect(() => {
@@ -38,7 +38,7 @@ const Table: FC<TableProps> = (props: TableProps): ReactElement => {
         pageNum: pagination.current,
         pageSize: pagination.pageSize,
       }
-      let params = { ...searchParams }
+      let params = { ...queryParams }
       if (!pagi.hide) {
         Object.assign(params, pagiParam)
       }
@@ -84,11 +84,25 @@ const Table: FC<TableProps> = (props: TableProps): ReactElement => {
     })
   }
 
+  const rowSelection = {
+    onChange: (selectedRowKeys: React.Key[], selectedRows: TableProps[]) => {
+      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+    },
+    // getCheckboxProps: (record: DataType) => ({
+    //   disabled: record.name === 'Disabled User', // Column configuration not to be checked
+    //   name: record.name,
+    // }),
+  };
+
   return (
     <AntTable<TableProps>
       columns={columns}
       dataSource={tableData}
       loading={loading}
+      rowSelection={{
+        // type: "",
+        ...rowSelection,
+      }}
       pagination={{
         ...pagination,
         onChange: onPageChange
