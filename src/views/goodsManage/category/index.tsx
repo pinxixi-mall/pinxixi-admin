@@ -3,14 +3,14 @@ import SearchPannel from '@/components/SearchPannel'
 import { ColumnsType } from 'antd/es/table'
 import { Card, Button, Space, Modal, message } from 'antd'
 import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons'
-import type { SearchFormProps } from '@/components/SearchPannel'
+import type { SearchItemType } from '@/types'
 import Table from '@/components/Table'
 import { getGoodsCategorys, deleteGoodsCategory } from '@/api'
 import Edit from "./edit"
 import { getLabelByValue } from '@/utils/utils'
 import { goodsCategoryLevelList } from '@/config/dataList'
 
-export interface CategoryProps {
+export interface CategoryType {
   key?: number | string;
   categoryId: number;
   categoryName: string;
@@ -21,14 +21,14 @@ export interface CategoryProps {
 const GoodsCategory: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>()
   const [visible, setVisible] = useState<boolean>(false)
-  const [queryParams, setSearchParams] = useState({})
+  const [queryParams, setQueryParams] = useState({})
   const [pageType, setPageType] = useState<string>()
-  const [detail, setDetail] = useState<CategoryProps>({
+  const [detail, setDetail] = useState<CategoryType>({
     categoryId: 0,
     categoryName: '',
   })
 
-  const columns: ColumnsType<CategoryProps> = [
+  const columns: ColumnsType<CategoryType> = [
     {
       title: '分类编号',
       key: 'categoryId',
@@ -81,7 +81,7 @@ const GoodsCategory: React.FC = () => {
   ]
 
   // 搜索面板
-  const searchFormList: Array<SearchFormProps> = [
+  const searchFormList: Array<SearchItemType> = [
     {
       type: 'INPUT',
       label: '分类编号',
@@ -102,7 +102,7 @@ const GoodsCategory: React.FC = () => {
 
   // 搜索
   const onSearch = (values: any): void => {
-    setSearchParams({
+    setQueryParams({
       ...values
     })
     handleRefresh()
@@ -129,7 +129,7 @@ const GoodsCategory: React.FC = () => {
   }
 
   // 新增|编辑
-  const onEdit = (show: boolean, data?: CategoryProps): void => {
+  const onEdit = (show: boolean, data?: CategoryType): void => {
     setVisible(show)
     setPageType(data ? 'EDIT' : 'ADD')
     data && setDetail(data)

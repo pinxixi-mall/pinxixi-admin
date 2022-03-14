@@ -1,11 +1,11 @@
 import { useState, useEffect, ReactElement, FC } from 'react'
 import { Table as AntTable, SpinProps, Radio } from 'antd'
-import { PaginationProps, TableProps } from '@/types'
+import { PaginationType, TableType } from '@/types'
 
-const Table: FC<TableProps> = (props: TableProps): ReactElement => {
-  const { columns, fetchApi, queryParams = {}, refreshOutside, handleTableList, pagination: pagi = {} } = props
+const Table: FC<TableType> = (props: TableType): ReactElement => {
+  const { columns, fetchApi, queryParams = {}, refreshOutside, handleTableList, pagination: pagi = {}, rowSelection } = props
   const [refreshInside, setRefreshInside] = useState<boolean>()
-  const [pagination, setPagination] = useState<PaginationProps>({
+  const [pagination, setPagination] = useState<PaginationType>({
     current: 1,
     pageSize: pagi.hide ? 0 : 5,
     total: 0,
@@ -16,7 +16,7 @@ const Table: FC<TableProps> = (props: TableProps): ReactElement => {
     ...pagi
   })
   const [loading, setLoading] = useState<boolean | SpinProps | undefined>(false)
-  const [tableData, setTableData] = useState<TableProps[]>([])
+  const [tableData, setTableData] = useState<TableType[]>([])
 
   // 内部刷新
   const handleRefresh = (): void => {
@@ -84,25 +84,12 @@ const Table: FC<TableProps> = (props: TableProps): ReactElement => {
     })
   }
 
-  const rowSelection = {
-    onChange: (selectedRowKeys: React.Key[], selectedRows: TableProps[]) => {
-      console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
-    },
-    // getCheckboxProps: (record: DataType) => ({
-    //   disabled: record.name === 'Disabled User', // Column configuration not to be checked
-    //   name: record.name,
-    // }),
-  };
-
   return (
-    <AntTable<TableProps>
+    <AntTable<TableType>
       columns={columns}
       dataSource={tableData}
       loading={loading}
-      rowSelection={{
-        // type: "",
-        ...rowSelection,
-      }}
+      rowSelection={rowSelection}
       pagination={{
         ...pagination,
         onChange: onPageChange

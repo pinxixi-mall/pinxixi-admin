@@ -9,7 +9,7 @@ import UserInfo from "@/views/userManage/userInfo";
 import GoodsEdit from "@/views/goodsManage/goods/edit";
 import GoodsCategory from "@/views/goodsManage/category";
 import Goods from "@/views/goodsManage/goods";
-import AllOrder from "@/views/orderManage/allOrder";
+import Orders from "@/views/orderManage/orders";
 import NotFound from '@/views/404';
 export interface routeType {
   path: string;
@@ -19,7 +19,7 @@ export interface routeType {
     icon?: any,
     hideMenu?: boolean
   };
-  render?: Function;
+  render?(): void;
   component?: React.FC;
   routes?: Array<routeType>;
   children?: Array<routeType>;
@@ -132,7 +132,7 @@ const navRoutes: Array<routeType> = [
         meta: {
           title: '订单列表'
         },
-        component: AllOrder
+        component: Orders
       }
     ]
   },

@@ -8,8 +8,8 @@ interface RequestProps {
 
 const useRequest = (options: RequestProps) => {
     const { fetchApi, params, deps } = options
-    const [loading, setLoading] = useState(false)
-    const [res, setRes] = useState(null)
+    const [loading, setLoading] = useState<boolean>(false)
+    const [res, setRes] = useState<any>(Object)
     
 
     useEffect(() => {

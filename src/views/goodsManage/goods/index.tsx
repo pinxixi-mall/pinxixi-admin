@@ -3,14 +3,14 @@ import SearchPannel from '@/components/SearchPannel'
 import { ColumnsType } from 'antd/es/table'
 import { Card, Button, Space, Tooltip, Image, Modal, message } from 'antd'
 import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined, RetweetOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons'
-import type { SearchFormProps } from '@/components/SearchPannel'
+import type { SearchItemType } from '@/types'
 import Table from '@/components/Table'
 import { getGoods, updateGoodsStatus, deleteGoods } from '@/api'
 import { goodsStatusList } from "@/config/dataList"
 import { getLabelByValue } from '@/utils/utils'
 const { useHistory } = require('react-router-dom')
 
-export interface TableProps {
+export interface GoodsType {
   key?: number;
   goodsId?: number;
   goodsDesc: string;
@@ -20,10 +20,10 @@ export interface TableProps {
 
 const Goods: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>()
-  const [queryParams, setSearchParams] = useState({})
+  const [queryParams, setQueryParams] = useState({})
   const history = useHistory()
 
-  const columns: ColumnsType<TableProps> = [
+  const columns: ColumnsType<GoodsType> = [
     {
       title: '商品编号',
       dataIndex: 'goodsId',
@@ -69,6 +69,12 @@ const Goods: React.FC = () => {
       width: 120
     },
     {
+      title: '商品库存',
+      dataIndex: 'goodsStock',
+      key: 'goodsStock',
+      width: 120
+    },
+    {
       title: '状态',
       dataIndex: 'goodsStatus',
       key: 'goodsStatus',
@@ -84,15 +90,6 @@ const Goods: React.FC = () => {
       width: 190,
       render: (text: any, record: any) => {
         return record.createTime
-      }
-    },
-    {
-      title: '更新时间',
-      dataIndex: 'updateTime',
-      key: 'updateTime',
-      width: 190,
-      render: (text: any, record: any) => {
-        return record.updateTime
       }
     },
     {
@@ -112,7 +109,7 @@ const Goods: React.FC = () => {
     },
   ]
 
-  const searchFormList: Array<SearchFormProps> = [
+  const searchFormList: Array<SearchItemType> = [
     {
       type: 'INPUT',
       label: '商品编号',
@@ -147,7 +144,7 @@ const Goods: React.FC = () => {
 
   // 搜索
   const onSearch = (values: any): void => {
-    setSearchParams({
+    setQueryParams({
       ...values,
       pageNum: 1
     })

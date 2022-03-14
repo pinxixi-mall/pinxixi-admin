@@ -1,9 +1,9 @@
 import { FC, ReactElement } from 'react'
 import { message, Upload as AntUpload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
-import { UploadProps } from '@/types'
+import { UploadType } from '@/types'
 
-const Upload: FC<UploadProps> = ({ fileList, handleRemove, handleUpload }): ReactElement => {
+const Upload: FC<UploadType> = ({ fileList, handleRemove, handleUpload }): ReactElement => {
 
   const onbeforeUpload = (file: any): boolean => {
     let flag = true

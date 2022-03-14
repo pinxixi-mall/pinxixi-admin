@@ -1,11 +1,11 @@
 import React, { FC } from 'react'
 import { PageHeader, Button } from 'antd'
 import { SyncOutlined } from '@ant-design/icons'
-import { BodyCardProps } from '@/types'
+import { BodyCardType } from '@/types'
 import styles from './index.module.less'
 const { useHistory } = require('react-router-dom')
 
-const BodyCard: FC<BodyCardProps> = (props) => {
+const BodyCard: FC<BodyCardType> = (props) => {
   const { title, subTitle, extra, children, onSubmit, onRefresh } = props
   const history = useHistory()
 

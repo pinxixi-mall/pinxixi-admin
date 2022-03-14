@@ -3,12 +3,12 @@ import { Layout as AntLayout, Avatar, Dropdown, Menu, Input  } from 'antd';
 import { UserOutlined, PoweroffOutlined, SearchOutlined } from '@ant-design/icons';
 import styles from './index.module.less'
 import { logout } from '@/api'
-import { UserInfoProps } from "@/types"
+import { UserInfoType } from "@/types"
 import { setToken } from '@/utils/utils'
 const { useHistory } = require('react-router-dom')
 const { Header: AntHeader } = AntLayout;
 
-const Header: FC<UserInfoProps> = (props: UserInfoProps) => {
+const Header: FC<UserInfoType> = (props: UserInfoType) => {
   const history = useHistory()
 
   const toUserInfo = ({ key }: { key: string }) => {    
@@ -37,7 +37,7 @@ const Header: FC<UserInfoProps> = (props: UserInfoProps) => {
       </div>
       <div className={styles.headerRight}>
         <span className={styles.userName}>{props.userName}</span>
-        <Dropdown overlay={menu} arrow>
+        <Dropdown overlay={menu} placement="bottomRight" arrow>
           <Avatar size="large" src={props.avatar} icon={<UserOutlined />} />
         </Dropdown>
       </div>

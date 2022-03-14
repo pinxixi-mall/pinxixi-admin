@@ -3,7 +3,7 @@ import { Tooltip, Image, Modal, Radio } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { getGoods } from '@/api'
 import { useResetFormOnCloseModal } from '@/utils/common'
-import { TableProps } from '@/views/goodsManage/goods'
+import { GoodsType } from '@/views/goodsManage/goods'
 import { getLabelByValue } from '@/utils/utils'
 import { goodsStatusList } from '@/config/dataList'
 import Table from '@/components/Table'
@@ -13,15 +13,16 @@ interface ModalFormProps {
     visible: boolean;
     goodsId: number;
     onCancel(): void;
-    onSuccess(): void;
+    onSuccess(goods: GoodsType): void;
 }
 
 const GoodsModal: React.FC<ModalFormProps> = ({ visible, onCancel, goodsId, onSuccess }) => {
     const [confirmLoading, setConfirmLoading] = useState<boolean>()
     const [refresh, setRefresh] = useState<boolean>()
-    const [queryParams, setSearchParams] = useState({})
+    const [queryParams, setQueryParams] = useState({})
+    const [selectedGoods, setSelectedGoods] = useState<GoodsType>()
 
-    const columns: ColumnsType<TableProps> = [
+    const columns: ColumnsType<GoodsType> = [
         {
             title: '商品编号',
             dataIndex: 'goodsId',
@@ -96,7 +97,16 @@ const GoodsModal: React.FC<ModalFormProps> = ({ visible, onCancel, goodsId, onSu
 
     // 提交
     const handleOk = () => {
-        onSuccess()
+        selectedGoods && onSuccess(selectedGoods)
+        onCancel()
+    }
+
+    const rowSelection = {
+        type: "radio",
+        onChange: (selectedRowKeys: React.Key[], selectedRows: GoodsType[]) => {
+            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            setSelectedGoods(selectedRows[0])
+        }, 
     }
 
     return (
@@ -115,6 +125,7 @@ const GoodsModal: React.FC<ModalFormProps> = ({ visible, onCancel, goodsId, onSu
                 queryParams={queryParams}
                 refreshOutside={refresh}
                 handleTableList={handleTableList}
+                rowSelection={rowSelection}
             />
         </Modal>
     );

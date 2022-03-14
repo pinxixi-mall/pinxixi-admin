@@ -21,7 +21,7 @@ export interface paginationProps {
   showSizeChanger?: boolean;
 }
 
-const HomeCarousel: React.FC = (props: any) => {
+const Orders: React.FC = (props: any) => {
   const [loading, setLoading] = useState<boolean | SpinProps | undefined>(false)
   const [tableData, setTableData] = useState<CarouselProps[]>([])
   const [visible, setVisible] = useState<boolean>(false)
@@ -137,11 +137,6 @@ const HomeCarousel: React.FC = (props: any) => {
 
   const extra = (
     <>
-      <Button type="primary" shape="round" icon={<PlusOutlined />} className="ml-10"
-        onClick={() => onEditVisible(true)}
-      >
-        新增
-      </Button>
       <Button shape="round" icon={<SyncOutlined />} className="ml-10"
         onClick={() => handleRefresh(true)}
       >
@@ -152,38 +147,52 @@ const HomeCarousel: React.FC = (props: any) => {
 
   const columns: ColumnsType<CarouselProps> = [
     {
-      title: '序号',
+      title: '订单号',
       dataIndex: 'index',
       key: 'index',
       width: 100,
       render: (text: string, record, index) => <a>{index + 1}</a>,
     },
     {
-      title: '轮播图',
-      dataIndex: 'carouselImage',
-      key: 'carouselImage',
-      width: 200,
-      render: carouselImage => (
-        <Image
-          width={100}
-          height={50}
-          src={carouselImage}
-        />
-      ),
-    },
-    {
-      title: '排序',
+      title: '订单总价',
       dataIndex: 'carouselSort',
       key: 'carouselSort',
       width: 120
     },
     {
-      title: '状态',
+      title: '订单状态',
       dataIndex: 'carouselStatus',
       key: 'carouselStatus',
       width: 120,
       render: (text: any, record: any) => {
         return record.carouselStatus === '0' ? '已下架' : '上架中'
+      }
+    },
+    {
+      title: '支付状态',
+      dataIndex: 'carouselStatus',
+      key: 'carouselStatus',
+      width: 120,
+      render: (text: any, record: any) => {
+        return record.carouselStatus === '0' ? '已下架' : '上架中'
+      }
+    },
+    {
+      title: '支付方式',
+      dataIndex: 'carouselStatus',
+      key: 'carouselStatus',
+      width: 120,
+      render: (text: any, record: any) => {
+        return record.carouselStatus === '0' ? '已下架' : '上架中'
+      }
+    },
+    {
+      title: '支付时间',
+      dataIndex: 'updateTime',
+      key: 'updateTime',
+      width: 160,
+      render: (text: any, record: any) => {
+        return record.updateTime
       }
     },
     {
@@ -196,15 +205,6 @@ const HomeCarousel: React.FC = (props: any) => {
       }
     },
     {
-      title: '更新时间',
-      dataIndex: 'updateTime',
-      key: 'updateTime',
-      width: 160,
-      render: (text: any, record: any) => {
-        return record.updateTime
-      }
-    },
-    {
       title: '操作',
       key: 'action',
       width: 200,
@@ -212,9 +212,8 @@ const HomeCarousel: React.FC = (props: any) => {
         const { carouselStatus } = record
         return (
           <Space size={0}>
-            <Button type="link" icon={<FormOutlined />} onClick={() => onEditVisible(true, record)}>编辑</Button>
-            <Button type="link" icon={<RetweetOutlined />} onClick={() => onChangeStatus(record)}>{carouselStatus === '0' ? '上架' : '下架'}</Button>
-            <Button type="link" icon={<DeleteOutlined />} danger onClick={() => onDelete(record)}>删除</Button>
+            <Button type="link" icon={<RetweetOutlined />} onClick={() => onChangeStatus(record)}>详情</Button>
+            <Button type="link" icon={<DeleteOutlined />} danger onClick={() => onDelete(record)}>关闭订单</Button>
           </Space>
         )
       },
@@ -224,7 +223,7 @@ const HomeCarousel: React.FC = (props: any) => {
   return (
     <>
       <Card
-        title="首页轮播列表"
+        title="订单列表"
         extra={extra}
       >
         <Table<CarouselProps>
@@ -248,4 +247,4 @@ const HomeCarousel: React.FC = (props: any) => {
   );
 }
 
-export default HomeCarousel
+export default Orders

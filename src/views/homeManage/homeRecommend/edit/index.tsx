@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import { Form, Input, Modal, InputNumber, message, ConfigProvider } from 'antd'
+import { Form, Input, Modal, InputNumber, message, ConfigProvider, Image } from 'antd'
 import { addRecommend, updateRecommend } from '@/api'
 import { useResetFormOnCloseModal } from '@/utils/common'
 import type { RecommendProps } from '../index'
 import { validateMessages } from '@/config'
 import GoodsModal from '../goodsModal'
+import { GoodsType } from '@/views/goodsManage/goods'
 const { TextArea, Search } = Input
 
 interface ModalFormProps {
@@ -68,8 +69,9 @@ const RecommendEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, on
     })
   }
 
-  const handleGoodsSelected = () => {
-
+  // 商品选择回显
+  const handleGoodsSelected = (goods: GoodsType) => {
+    form.setFieldsValue(goods);
   }
 
   return (
@@ -101,17 +103,23 @@ const RecommendEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, on
               label="商品编号"
               rules={[{ required: true }]}
             >
-              <InputNumber />
+              <Input readOnly />
             </Form.Item>
             <Form.Item
-              name="goodsImage"
               label="商品图片"
-              rules={[{ required: true }]}
+              shouldUpdate={(prevValues, curValues) => prevValues.goodsImage !== curValues.goodsImage}
             >
-              <InputNumber />
+              {({ getFieldValue }) => {
+                const src = getFieldValue('goodsImage')
+                console.log(src);
+                
+                return (
+                  <Image src={src} width={140}/>
+                )
+              }}
             </Form.Item>
             <Form.Item
-              name="recommendName"
+              name="recommendDesc"
               label="推荐描述"
               rules={[{ required: true }]}
             >
@@ -127,7 +135,7 @@ const RecommendEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, on
               name="recommendSort"
               label="排序"
             >
-              <InputNumber />
+              <InputNumber min={0}/>
             </Form.Item>
           </Form>
         </ConfigProvider>

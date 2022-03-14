@@ -2,14 +2,8 @@ import React, { ReactNode } from 'react';
 import { Form, Row, Col, Input, Button, Select } from 'antd'
 import { SearchOutlined, UndoOutlined  } from '@ant-design/icons'
 import styles from './index.module.less'
+import type { SearchItemType } from '@/types'
 const { Option } = Select
-export interface SearchFormProps {
-  type: string;
-  label: string;
-  field: string;
-  initialValue?: string | number | undefined;
-  options?: object[]
-}
 
 export interface SearchPannelProps {
   searchFormList: Array<any>;
@@ -20,8 +14,8 @@ const SearchPannel: React.FC<SearchPannelProps> = (props) => {
   const { searchFormList, onSearch } = props
   const [form] = Form.useForm();
 
-  const getItemNode = (item: any, idx: number) => {
-    const { type, field, label, options, initialValue } = item
+  const getItemNode = (item: SearchItemType, idx: number) => {
+    const { type, field, label, options, initialValue, placeholder } = item
     switch (type) {
       case 'INPUT':
         return (
@@ -31,7 +25,7 @@ const SearchPannel: React.FC<SearchPannelProps> = (props) => {
               label={label}
               initialValue={initialValue}
             >
-              <Input placeholder={`请输入${label}`} allowClear />
+              <Input placeholder={placeholder || `请输入${label}`} allowClear />
             </Form.Item>
           </Col>
         )
@@ -45,7 +39,7 @@ const SearchPannel: React.FC<SearchPannelProps> = (props) => {
             >
               <Select style={{ minWidth: 120 }}>
                 {
-                  options.map((option: any, idx: number) => {
+                  options && options.map((option: any, idx: number) => {
                     return <Option value={option.value} key={idx}>{option.label}</Option>
                   })
                 }

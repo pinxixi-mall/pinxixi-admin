@@ -8,7 +8,7 @@ import type { routeType } from '@/router/routes'
 import { inject, observer } from 'mobx-react'
 import styles from './index.module.less'
 import { setMenuAndBreadcurmb } from '@/utils/common'
-import { UserInfoProps } from "@/types"
+import { UserInfoType } from "@/types"
 const { useHistory, useLocation } = require('react-router-dom')
 const { SubMenu } = Menu
 const { Content, Sider } = AntLayout
@@ -16,7 +16,7 @@ const { Content, Sider } = AntLayout
 const Layout: React.FC = (props: any) => {
   const history = useHistory()
   const { pathname } = useLocation()
-  let [userInfo, setUserInfo] = useState<UserInfoProps>()
+  let [userInfo, setUserInfo] = useState<UserInfoType>()
   let [menus, setMenus] = useState<Array<React.ReactElement>>([])
 
   useEffect(() => {

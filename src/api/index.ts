@@ -46,8 +46,8 @@ export const updateRecommend = (data?: any) => {
 };
 
 // 首页推荐删除
-export const deleteRecommend = (data?: any) => {
-  return http.delete(`/admin/home-manage/deleteRecommend`, data);
+export const deleteRecommend = (id?: number) => {
+  return http.delete(`/admin/home-manage/recommend/${id}`);
 };
 
 // 商品列表

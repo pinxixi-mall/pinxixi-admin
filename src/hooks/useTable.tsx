@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { PaginationProps } from '@/types'
+import { PaginationType } from '@/types'
 
-const useTable = (options?: PaginationProps, updateTable?: () => void) => {
+const useTable = (options?: PaginationType, updateTable?: () => void) => {
   const [pagination, setPagination] = useState<any>({
     current: 1,
     pageSize: 5,

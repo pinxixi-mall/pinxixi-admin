@@ -37,3 +37,8 @@
 .mr-20{
   margin-right: 20px;
 }
+
+/* 商品-编辑：富文本编辑器 */
+.rich-text .bf-content{
+  height: 300px;
+}

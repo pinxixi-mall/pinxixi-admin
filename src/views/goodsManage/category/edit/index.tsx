@@ -2,24 +2,25 @@ import React, { useEffect, useState } from 'react'
 import { Form, Input, Modal, InputNumber, message, Select, ConfigProvider } from 'antd'
 import { addGoodsCategory, updateGoodsCategory, getGoodsCategoryByLevel } from '@/api'
 import { useResetFormOnCloseModal } from '@/utils/common'
-import type { CategoryProps } from '../index'
+import type { CategoryType } from '../index'
 import { goodsCategoryLevelList } from '@/config/dataList'
 import { validateMessages } from '@/config'
 const { Option } = Select
-interface ModalFormProps {
+
+interface ModalFormType {
   visible: boolean;
   pageType?: string;
-  detail: CategoryProps,
+  detail: CategoryType,
   onCancel: Function;
   onSuccess: () => void;
 }
 
-const CategoryEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onSuccess, pageType }) => {
+const CategoryEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSuccess, pageType }) => {
   const [confirmLoading, setConfirmLoading] = useState(false)
   // 一级分类
-  const [categoryLevel1List, setCategoryLevel1List] = useState<Array<CategoryProps>>([])
+  const [categoryLevel1List, setCategoryLevel1List] = useState<Array<CategoryType>>([])
   // 二级分类
-  const [categoryLevel2List, setCategoryLevel2List] = useState<Array<CategoryProps>>([])
+  const [categoryLevel2List, setCategoryLevel2List] = useState<Array<CategoryType>>([])
   const [form] = Form.useForm()
 
   const layout = {
@@ -148,7 +149,7 @@ const CategoryEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
           </Form.Item>
           <Form.Item
             noStyle
-            shouldUpdate={(prevValues, currentValues) => prevValues.gender !== currentValues.gender}
+            shouldUpdate={(prevValues, currentValues) => prevValues.categoryLevel !== currentValues.categoryLevel}
           >
             {({ getFieldValue }) =>
               [2, 3].includes(getFieldValue('categoryLevel')) && (
@@ -205,7 +206,7 @@ const CategoryEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onS
             name="categorySort"
             label="排序"
           >
-            <InputNumber />
+            <InputNumber min={0}/>
           </Form.Item>
         </Form>
       </ConfigProvider>

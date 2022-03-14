@@ -3,7 +3,7 @@ import SearchPannel from '@/components/SearchPannel'
 import { ColumnsType } from 'antd/es/table'
 import { Card, Button, Space, Image, Modal, message } from 'antd'
 import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined, FormOutlined, DeleteOutlined  } from '@ant-design/icons'
-import type { SearchFormProps } from '@/components/SearchPannel'
+import type { SearchItemType } from '@/types'
 import Table from '@/components/Table'
 import { getRecommends, deleteRecommend } from '@/api'
 import Edit from "./edit"
@@ -19,7 +19,7 @@ export interface RecommendProps {
 const HomeRecommend: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>()
   const [visible, setVisible] = useState<boolean>(false)
-  const [queryParams, setSearchParams] = useState({})
+  const [queryParams, setQueryParams] = useState({})
   const [pageType, setPageType] = useState<string>()
   const [detail, setDetail] = useState<RecommendProps>({
     recommendId: 0,
@@ -27,6 +27,11 @@ const HomeRecommend: React.FC = () => {
   })
 
   const columns: ColumnsType<RecommendProps> = [
+    {
+      title: '推荐描述',
+      key: 'recommendDesc',
+      dataIndex: 'recommendDesc',
+    },
     {
       title: '商品编号',
       key: 'goodsId',
@@ -47,9 +52,10 @@ const HomeRecommend: React.FC = () => {
       ),
     },
     {
-      title: '推荐描述',
-      key: 'recommendName',
-      dataIndex: 'recommendName',
+      title: '商品价格',
+      key: 'goodsPrice',
+      dataIndex: 'goodsPrice',
+      width: 120
     },
     {
       title: '排序',
@@ -82,16 +88,18 @@ const HomeRecommend: React.FC = () => {
   ]
 
   // 搜索面板
-  const searchFormList: Array<SearchFormProps> = [
+  const searchFormList: Array<SearchItemType> = [
     {
       type: 'INPUT',
       label: '商品编号',
-      field: 'goodsId'
+      field: 'goodsId',
+      placeholder: '商品编号(精确)'
     },
     {
       type: 'INPUT',
-      label: '商品名称',
-      field: 'recommendName',
+      label: '推荐描述',
+      field: 'recommendDesc',
+      placeholder: '推荐描述(模糊)'
     },
   ]
 
@@ -103,7 +111,7 @@ const HomeRecommend: React.FC = () => {
 
   // 搜索
   const onSearch = (values: any): void => {
-    setSearchParams({
+    setQueryParams({
       ...values,
       pageNum: 1
     })
@@ -127,7 +135,7 @@ const HomeRecommend: React.FC = () => {
 
   // 删除
   const onDelete = (record: any) => {
-    const { goodsId } = record
+    const { recommendId } = record
     Modal.confirm({
       title: '删除活动',
       icon: <ExclamationCircleOutlined />,
@@ -135,7 +143,7 @@ const HomeRecommend: React.FC = () => {
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await deleteRecommend({ goodsId })
+        await deleteRecommend(recommendId)
         message.success('操作成功')
         handleRefresh()
       }
