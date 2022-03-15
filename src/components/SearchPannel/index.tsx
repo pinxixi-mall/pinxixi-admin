@@ -39,7 +39,7 @@ const SearchPannel: React.FC<SearchPannelProps> = (props) => {
             >
               <Select style={{ minWidth: 120 }}>
                 {
-                  options && options.map((option: any, idx: number) => {
+                  options?.map((option: any, idx: number) => {
                     return <Option value={option.value} key={idx}>{option.label}</Option>
                   })
                 }

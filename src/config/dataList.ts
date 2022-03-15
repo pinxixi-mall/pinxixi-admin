@@ -16,3 +16,28 @@ export const goodsCategoryLevelList = [
   { label: "二级分类", value: 2 },
   { label: "三级分类", value: 3 },
 ]
+
+// 订单状态
+export const orderStatuslList = [
+  { label: "待支付", value: 0 },
+  { label: "已支付", value: 1 },
+  { label: "已发货", value: 2 },
+  { label: "交易成功", value: 3 },
+  { label: "手动关闭", value: 4 },
+  { label: "超时关闭", value: 5 },
+  { label: "商家关闭", value: 6 },
+  { label: "已删除", value: 99 },
+]
+
+// 支付状态
+export const paymentStatuslList = [
+  { label: "待支付", value: 0 },
+  { label: "支付成功", value: 1 },
+  { label: "支付失败", value: 2 },
+]
+
+// 支付方式
+export const paymentTypelList = [
+  { label: "支付宝", value: 1 },
+  { label: "微信", value: 2 },
+]

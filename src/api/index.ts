@@ -105,6 +105,16 @@ export const getGoodsCategoryByLevel = (data: any) => {
   return http.get(`/admin/goods-manage/category/level`, data);
 };
 
+// 订单列表
+export const getOrders = (data: any) => {
+  return http.get(`/admin/order-manage/order/list`, data);
+};
+
+// 订单列表
+export const updateOrder = (data: any) => {
+  return http.post(`/admin/order-manage/order`, data);
+};
+
 // 公共上传
 export const commonUpload = (data?: any) => {
   return http.post(`/admin/upload/file`, data, {

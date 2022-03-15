@@ -1,0 +1,66 @@
+@import url('../../style/variable.less');
+
+.tag{
+    .tagItem{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 14px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: @box-shadow;
+        border-left: 3px solid #1488ee;
+        .tagIcon{
+            width: 50px;
+            height: 50px;
+            text-align: center;
+            line-height: 50px;
+            font-size: 28px;
+            color: #fff;
+            border-radius: 50px;
+        }
+    }
+    .order{
+        border-color: #1488ee;
+        .tagIcon{
+            background: linear-gradient(45deg, #90d5f5, #1488ee);
+        }
+    }
+    .income{
+        border-color: #e9445d;
+        .tagIcon{
+            background: linear-gradient(45deg, #fa81a7, #e9445d);
+        }
+    }
+    .guest{
+        border-color: #ff7a4e;
+        .tagIcon{
+            background: linear-gradient(45deg, #fcda31, #ff7a4e);
+        }
+    }
+    .transfer{
+        border-color: #61b977;
+        .tagIcon{
+            background: linear-gradient(45deg, #12ec86, #61b977);
+        }
+    }
+}
+
+.overview{
+    .card{
+        border-radius: 8px;
+        box-shadow: @box-shadow;
+        padding: 10px;
+        background-color: #fff;
+        margin: 20px 0;
+        header{
+            padding: 10px;
+            color: #333;
+            font-weight: bold;
+        }
+        .salesChart{
+            // width: 500px;
+            height: 400px;
+        }
+    }
+}

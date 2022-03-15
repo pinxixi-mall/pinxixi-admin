@@ -4,7 +4,8 @@ import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined, RetweetOutlined,
 import { ColumnsType } from 'antd/es/table'
 import CarouselEdit from './components/Edit'
 import { getHomeCarousel, updateHomeCarousel } from '@/api'
-export interface CarouselProps {
+import { PaginationType } from '@/types'
+export interface CarouselType {
   key?: number;
   carouselId?: number;
   carouselImage: string;
@@ -12,25 +13,17 @@ export interface CarouselProps {
   carouselSort?: number;
 }
 
-export interface paginationProps {
-  current: number;
-  pageSize: number | undefined;
-  total: number;
-  pageSizeOptions?: string[];
-  showQuickJumper?: boolean;
-  showSizeChanger?: boolean;
-}
 
 const HomeCarousel: React.FC = (props: any) => {
   const [loading, setLoading] = useState<boolean | SpinProps | undefined>(false)
-  const [tableData, setTableData] = useState<CarouselProps[]>([])
+  const [tableData, setTableData] = useState<CarouselType[]>([])
   const [visible, setVisible] = useState<boolean>(false)
   const [pageType, setPageType] = useState<string>()
   const [refresh, setRefresh] = useState<boolean>()
-  const [detail, setDetail] = useState<CarouselProps>({
+  const [detail, setDetail] = useState<CarouselType>({
     carouselImage: ''
   })
-  const [pagination, setPagination] = useState<paginationProps>({
+  const [pagination, setPagination] = useState<PaginationType>({
     current: 1,
     pageSize: 5,
     total: 0,
@@ -69,7 +62,7 @@ const HomeCarousel: React.FC = (props: any) => {
   }, [refresh])
 
   // 新增|编辑
-  const onEditVisible = (show: boolean, data?: CarouselProps): void => {
+  const onEditVisible = (show: boolean, data?: CarouselType): void => {
     setVisible(show)
     setPageType(data ? 'EDIT' : 'ADD')
     if (data) {
@@ -150,7 +143,7 @@ const HomeCarousel: React.FC = (props: any) => {
     </>
   )
 
-  const columns: ColumnsType<CarouselProps> = [
+  const columns: ColumnsType<CarouselType> = [
     {
       title: '序号',
       dataIndex: 'index',
@@ -227,7 +220,7 @@ const HomeCarousel: React.FC = (props: any) => {
         title="首页轮播列表"
         extra={extra}
       >
-        <Table<CarouselProps>
+        <Table<CarouselType>
           columns={columns}
           dataSource={tableData}
           loading={loading}

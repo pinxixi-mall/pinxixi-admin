@@ -3,17 +3,17 @@ import { Form, Input, Modal, InputNumber, message, Upload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { addHomeCarousel, updateHomeCarousel, commonUpload } from '@/api'
 import { useResetFormOnCloseModal } from '@/utils/common'
-import type { CarouselProps } from '../index'
+import type { CarouselType } from '../index'
 const { TextArea } = Input
-interface ModalFormProps {
+interface ModalFormType {
   visible: boolean;
   pageType?: string;
-  detail: CarouselProps,
+  detail: CarouselType,
   onCancel: Function;
   onSuccess: () => void;
 }
 
-const CarouselEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onSuccess, pageType }) => {
+const CarouselEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSuccess, pageType }) => {
   const [confirmLoading, setConfirmLoading] = useState(false)
   const [form] = Form.useForm()
   const [fileList, setFileList] = useState<Array<any>>([])

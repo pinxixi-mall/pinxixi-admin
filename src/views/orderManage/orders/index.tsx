@@ -1,36 +1,29 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Button, Table, Space, SpinProps, Image, Modal, message } from 'antd'
-import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined, RetweetOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons'
+import { Card, Button, Table, Space, SpinProps, Modal, message } from 'antd'
+import { SyncOutlined, ExclamationCircleOutlined, RetweetOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/es/table'
-import CarouselEdit from './components/Edit'
-import { getHomeCarousel, updateHomeCarousel } from '@/api'
-export interface CarouselProps {
+import { getOrders, updateOrder } from '@/api'
+import { PaginationType } from '@/types'
+import { getLabelByValue } from '@/utils/utils'
+import { orderStatuslList, paymentStatuslList, paymentTypelList } from '@/config/dataList'
+export interface OrderType {
   key?: number;
-  carouselId?: number;
-  carouselImage: string;
-  carouselStatus?: string,
-  carouselSort?: number;
-}
-
-export interface paginationProps {
-  current: number;
-  pageSize: number | undefined;
-  total: number;
-  pageSizeOptions?: string[];
-  showQuickJumper?: boolean;
-  showSizeChanger?: boolean;
+  orderId?: number;
+  orderImage: string;
+  orderStatus?: string,
+  orderSort?: number;
 }
 
 const Orders: React.FC = (props: any) => {
   const [loading, setLoading] = useState<boolean | SpinProps | undefined>(false)
-  const [tableData, setTableData] = useState<CarouselProps[]>([])
+  const [tableData, setTableData] = useState<OrderType[]>([])
   const [visible, setVisible] = useState<boolean>(false)
   const [pageType, setPageType] = useState<string>()
   const [refresh, setRefresh] = useState<boolean>()
-  const [detail, setDetail] = useState<CarouselProps>({
-    carouselImage: ''
+  const [detail, setDetail] = useState<OrderType>({
+    orderImage: ''
   })
-  const [pagination, setPagination] = useState<paginationProps>({
+  const [pagination, setPagination] = useState<PaginationType>({
     current: 1,
     pageSize: 5,
     total: 0,
@@ -49,10 +42,10 @@ const Orders: React.FC = (props: any) => {
       }
       setLoading(true)
       try {
-        let { data: { list, pageNum, pageSize, total } } = await getHomeCarousel(params, { noLoading: true })
+        let { data: { list, pageNum, pageSize, total } } = await getOrders(params)
         const rows = list.map((it: any) => ({
           ...it,
-          key: it.carouselId
+          key: it.orderId
         }))
         setTableData(rows)
         setPagination({
@@ -69,14 +62,14 @@ const Orders: React.FC = (props: any) => {
   }, [refresh])
 
   // 新增|编辑
-  const onEditVisible = (show: boolean, data?: CarouselProps): void => {
+  const onEditVisible = (show: boolean, data?: OrderType): void => {
     setVisible(show)
     setPageType(data ? 'EDIT' : 'ADD')
     if (data) {
       setDetail(data)
     } else {
       setDetail({
-        carouselImage: '',
+        orderImage: '',
       })
     }
   }
@@ -92,16 +85,16 @@ const Orders: React.FC = (props: any) => {
   }
 
   // 上、下架
-  const onChangeStatus = (record: any) => {
-    const { carouselId, carouselStatus } = record
+  const toDetail = (record: any) => {
+    const { orderId, orderStatus } = record
     Modal.confirm({
-      title: `${carouselStatus === '0' ? '上架' : '下架'}活动`,
+      title: `${orderStatus === '0' ? '上架' : '下架'}活动`,
       icon: <ExclamationCircleOutlined />,
-      content: `确定${carouselStatus === '0' ? '上架' : '下架'}该活动？`,
+      content: `确定${orderStatus === '0' ? '上架' : '下架'}该活动？`,
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await updateHomeCarousel({ carouselId, carouselStatus: carouselStatus === '0' ? '1' : '0' })
+        await updateOrder({ orderId, orderStatus: orderStatus === '0' ? '1' : '0' })
         message.success('操作成功')
         setRefresh(!refresh)
       }
@@ -109,16 +102,16 @@ const Orders: React.FC = (props: any) => {
   }
 
   // 删除
-  const onDelete = (record: any) => {
-    const { carouselId } = record
+  const onOrderClose = (record: any) => {
+    const { orderId } = record
     Modal.confirm({
-      title: '删除活动',
+      title: '关闭订单',
       icon: <ExclamationCircleOutlined />,
-      content: `确定删除该活动？`,
+      content: `确定关闭该订单？`,
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await updateHomeCarousel({ carouselId, isDeleted: 1 })
+        await updateOrder({ orderId, isDeleted: 1 })
         message.success('操作成功')
         setRefresh(!refresh)
       }
@@ -145,51 +138,50 @@ const Orders: React.FC = (props: any) => {
     </>
   )
 
-  const columns: ColumnsType<CarouselProps> = [
+  const columns: ColumnsType<OrderType> = [
     {
       title: '订单号',
-      dataIndex: 'index',
-      key: 'index',
-      width: 100,
-      render: (text: string, record, index) => <a>{index + 1}</a>,
+      dataIndex: 'orderNo',
+      key: 'orderNo',
+      width: 120,
     },
     {
       title: '订单总价',
-      dataIndex: 'carouselSort',
-      key: 'carouselSort',
+      dataIndex: 'orderPrice',
+      key: 'orderPrice',
       width: 120
     },
     {
       title: '订单状态',
-      dataIndex: 'carouselStatus',
-      key: 'carouselStatus',
+      dataIndex: 'orderStatus',
+      key: 'orderStatus',
       width: 120,
       render: (text: any, record: any) => {
-        return record.carouselStatus === '0' ? '已下架' : '上架中'
+        return getLabelByValue(record.orderStatus, orderStatuslList)
       }
     },
     {
       title: '支付状态',
-      dataIndex: 'carouselStatus',
-      key: 'carouselStatus',
+      dataIndex: 'paymentStatus',
+      key: 'paymentStatus',
       width: 120,
       render: (text: any, record: any) => {
-        return record.carouselStatus === '0' ? '已下架' : '上架中'
+        return getLabelByValue(record.paymentStatus, paymentStatuslList)
       }
     },
     {
       title: '支付方式',
-      dataIndex: 'carouselStatus',
-      key: 'carouselStatus',
+      dataIndex: 'paymentType',
+      key: 'paymentType',
       width: 120,
       render: (text: any, record: any) => {
-        return record.carouselStatus === '0' ? '已下架' : '上架中'
+        return getLabelByValue(record.paymentType, paymentTypelList)
       }
     },
     {
       title: '支付时间',
-      dataIndex: 'updateTime',
-      key: 'updateTime',
+      dataIndex: 'paymentTime',
+      key: 'paymentTime',
       width: 160,
       render: (text: any, record: any) => {
         return record.updateTime
@@ -209,11 +201,11 @@ const Orders: React.FC = (props: any) => {
       key: 'action',
       width: 200,
       render: (text: any, record: any) => {
-        const { carouselStatus } = record
+        const { orderStatus } = record
         return (
           <Space size={0}>
-            <Button type="link" icon={<RetweetOutlined />} onClick={() => onChangeStatus(record)}>详情</Button>
-            <Button type="link" icon={<DeleteOutlined />} danger onClick={() => onDelete(record)}>关闭订单</Button>
+            <Button type="link" icon={<RetweetOutlined />} onClick={() => toDetail(record)}>订单详情</Button>
+            <Button type="link" icon={<DeleteOutlined />} danger onClick={() => onOrderClose(record)}>关闭订单</Button>
           </Space>
         )
       },
@@ -226,7 +218,7 @@ const Orders: React.FC = (props: any) => {
         title="订单列表"
         extra={extra}
       >
-        <Table<CarouselProps>
+        <Table<OrderType>
           columns={columns}
           dataSource={tableData}
           loading={loading}
@@ -236,13 +228,6 @@ const Orders: React.FC = (props: any) => {
           }}
         />
       </Card>
-      <CarouselEdit
-        visible={visible}
-        pageType={pageType}
-        detail={detail}
-        onCancel={() => onEditVisible(false)}
-        onSuccess={() => handleRefresh(false)}
-      />
     </>
   );
 }
