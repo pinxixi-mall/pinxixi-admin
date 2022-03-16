@@ -1,14 +1,20 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Row, Col, Card, Avatar, Tabs, Form, Input, Button, ConfigProvider } from 'antd'
 import {  } from '@ant-design/icons'
 import styles from './index.module.less'
 import { useForm } from 'antd/es/form/Form'
 import { validateMessages } from '@/config'
+import { useRequest } from '@/hooks'
+import { getUserInfo } from '@/api'
 const { TabPane } = Tabs
 
 const UserInfo: React.FC = () => {
+  const [userInfo, setUserInfo] = useState()
   const [editForm] = useForm()
   const [resetForm] = useForm()
+  const [loading, res] = useRequest({
+    fetchApi: getUserInfo
+  })
 
   const layout = {
     labelCol: { span: 6 },
@@ -18,6 +24,10 @@ const UserInfo: React.FC = () => {
   const tailLayout = {
     wrapperCol: { offset: 6, span: 14 },
   }
+
+  useEffect(() => {
+
+  }, [])
 
   // 信息修改
   const onEditFinish = () => {

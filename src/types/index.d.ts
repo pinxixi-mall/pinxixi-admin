@@ -52,9 +52,10 @@ export type VerifyCodeType = {
 // 用户信息
 export interface UserInfoType {
   userId?: number;
+  avatar?: string;
   userName?: string;
   nickName?: string;
-  avatar?: string;
+  email?: string;
 }
 
 // 下拉列表项
