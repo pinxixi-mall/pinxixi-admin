@@ -13,8 +13,7 @@ export interface CarouselType {
   carouselSort?: number;
 }
 
-
-const HomeCarousel: React.FC = (props: any) => {
+const HomeCarousel: React.FC = () => {
   const [loading, setLoading] = useState<boolean | SpinProps | undefined>(false)
   const [tableData, setTableData] = useState<CarouselType[]>([])
   const [visible, setVisible] = useState<boolean>(false)

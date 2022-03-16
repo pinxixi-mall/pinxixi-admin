@@ -1,28 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { Card, Button, Table, Space, SpinProps, Modal, message } from 'antd'
-import { SyncOutlined, ExclamationCircleOutlined, RetweetOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons'
+import { Card, Button, Space, SpinProps, Modal, message } from 'antd'
+import { SyncOutlined, ExclamationCircleOutlined, RetweetOutlined, DeleteOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/es/table'
 import { getOrders, updateOrder } from '@/api'
-import { PaginationType } from '@/types'
+import { PaginationType, OrderType } from '@/types'
 import { getLabelByValue } from '@/utils/utils'
 import { orderStatuslList, paymentStatuslList, paymentTypelList } from '@/config/dataList'
-export interface OrderType {
-  key?: number;
-  orderId?: number;
-  orderImage: string;
-  orderStatus?: string,
-  orderSort?: number;
-}
+import Table from '@/components/Table'
 
-const Orders: React.FC = (props: any) => {
-  const [loading, setLoading] = useState<boolean | SpinProps | undefined>(false)
-  const [tableData, setTableData] = useState<OrderType[]>([])
-  const [visible, setVisible] = useState<boolean>(false)
-  const [pageType, setPageType] = useState<string>()
+const Orders: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>()
-  const [detail, setDetail] = useState<OrderType>({
-    orderImage: ''
-  })
   const [pagination, setPagination] = useState<PaginationType>({
     current: 1,
     pageSize: 5,
@@ -33,54 +20,12 @@ const Orders: React.FC = (props: any) => {
   })
   const [queryParams, setQueryParams] = useState({})
 
-  useEffect(() => {
-    const getList = async () => {
-      const params = {
-        ...queryParams,
-        pageNum: pagination.current,
-        pageSize: pagination.pageSize
-      }
-      setLoading(true)
-      try {
-        let { data: { list, pageNum, pageSize, total } } = await getOrders(params)
-        const rows = list.map((it: any) => ({
-          ...it,
-          key: it.orderId
-        }))
-        setTableData(rows)
-        setPagination({
-          ...pagination,
-          current: pageNum,
-          pageSize,
-          total
-        })
-      } catch (error) { console.log(error);
-      }
-      setLoading(false)
-    }
-    getList()
-  }, [refresh])
-
-  // 新增|编辑
-  const onEditVisible = (show: boolean, data?: OrderType): void => {
-    setVisible(show)
-    setPageType(data ? 'EDIT' : 'ADD')
-    if (data) {
-      setDetail(data)
-    } else {
-      setDetail({
-        orderImage: '',
-      })
-    }
-  }
-
   // 刷新
   const handleRefresh = (isReset: boolean): void => {   
     isReset && setPagination({
       ...pagination,
       current: 1,
     })
-    setVisible(false)
     setRefresh(!refresh)
   }
 
@@ -146,12 +91,6 @@ const Orders: React.FC = (props: any) => {
       width: 120,
     },
     {
-      title: '订单总价',
-      dataIndex: 'orderPrice',
-      key: 'orderPrice',
-      width: 120
-    },
-    {
       title: '订单状态',
       dataIndex: 'orderStatus',
       key: 'orderStatus',
@@ -159,6 +98,12 @@ const Orders: React.FC = (props: any) => {
       render: (text: any, record: any) => {
         return getLabelByValue(record.orderStatus, orderStatuslList)
       }
+    },
+    {
+      title: '订单总价',
+      dataIndex: 'orderPrice',
+      key: 'orderPrice',
+      width: 120
     },
     {
       title: '支付状态',
@@ -212,20 +157,26 @@ const Orders: React.FC = (props: any) => {
     },
   ]
 
+  // 处理表格返回数据
+  const handleTableList = (list: any[]): any[] => {
+    return list.map((it: any) => ({
+      ...it,
+      key: it.goodsId
+    }))
+  }
+
   return (
     <>
       <Card
         title="订单列表"
         extra={extra}
       >
-        <Table<OrderType>
+        <Table
           columns={columns}
-          dataSource={tableData}
-          loading={loading}
-          pagination={{
-            ...pagination,
-            onChange: onPageChange,
-          }}
+          fetchApi={getOrders}
+          queryParams={queryParams}
+          refreshOutside={refresh}
+          handleTableList={handleTableList}
         />
       </Card>
     </>

@@ -72,3 +72,14 @@ export interface SearchItemType {
   options?: any[];
   placeholder?: string
 }
+
+// 订单
+export interface OrderType {
+  key?: number;
+  orderId?: number;
+  orderNo: number | null;
+  orderStatus?: string;
+  paymentStatus?: number;
+  paymentType?: number;
+  paymentTime?: string;
+}
