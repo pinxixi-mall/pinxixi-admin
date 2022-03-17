@@ -93,8 +93,8 @@ const HomeCarousel: React.FC = () => {
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await updateHomeCarousel({ carouselId, carouselStatus: carouselStatus === '0' ? '1' : '0' })
-        message.success('操作成功')
+        const { msg } = await updateHomeCarousel({ carouselId, carouselStatus: carouselStatus === '0' ? '1' : '0' })
+        message.success(msg)
         setRefresh(!refresh)
       }
     })

@@ -3,14 +3,13 @@ import { useEffect, useState } from "react"
 interface RequestProps {
     fetchApi(params: any): any;
     params?: {};
-    deps?: Array<any>;
+    deps?: any[];
 }
 
 const useRequest = (options: RequestProps) => {
-    const { fetchApi, params, deps } = options
+    const { fetchApi, params, deps = [] } = options
     const [loading, setLoading] = useState<boolean>(false)
-    const [res, setRes] = useState<any>(Object)
-    
+    const [res, setRes] = useState<any>(null)
 
     useEffect(() => {
         const fetch = async () => {

@@ -2,10 +2,9 @@ import { useEffect, FC, ReactElement, useState } from "react";
 import { Form, Input, Button, Checkbox, Image } from "antd";
 import { UserOutlined, LockOutlined, EyeTwoTone, EyeInvisibleOutlined, SafetyCertificateOutlined } from "@ant-design/icons";
 import styles from "./index.module.less";
-import { login, getUserInfo } from '@/api'
+import { login } from '@/api'
 import { setToken } from '@/utils/utils'
 import VerifyCode from "@/components/VerifyCode"
-// import VerifyCode from "@/components/verify-code-react"
 const { useHistory } = require('react-router-dom')
 const url = require('url')
 
@@ -36,8 +35,6 @@ const Login: FC = (): ReactElement => {
     const { redirect } = url.parse(history.location.search, true).query
     const { data: { token } } = await login(values)
     setToken(token)
-    const { data: userInfo } = await getUserInfo()
-    sessionStorage.setItem('userInfo', JSON.stringify(userInfo))
     history.push(redirect || '/dashboard')
   }
 

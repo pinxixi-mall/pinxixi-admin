@@ -18,7 +18,6 @@ interface ModalFormProps {
 
 const RecommendEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, onSuccess, pageType }) => {
   const [confirmLoading, setConfirmLoading] = useState(false)
-  const [treeData, setTreeData] = useState([])
   const [goodsVisible, setGoodsVisable] = useState<boolean>(false)
   const [form] = Form.useForm()
 

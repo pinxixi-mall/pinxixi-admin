@@ -1,16 +1,15 @@
 import { FC, ReactElement } from 'react'
-import { message, Upload as AntUpload } from 'antd'
+import { message, Upload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
 import { UploadType } from '@/types'
 import { IMAGE_MAX_SIZE } from '@/config'
 
 /**
- * 目前只支持图片上传
+ * 图片上传
  * @param param0 
  * @returns 
  */
-const Upload: FC<UploadType> = (props: UploadType): ReactElement => {
-  const { className, fileList, accept = '.png,.jpeg,.jpg', handleRemove, handleUpload } = props
+const ImageUpload: FC<UploadType> = ({ className, fileList, handleRemove, handleUpload }): ReactElement => {
 
   const onbeforeUpload = (file: any): boolean => {
     let flag = true
@@ -25,7 +24,7 @@ const Upload: FC<UploadType> = (props: UploadType): ReactElement => {
   const uploadProps: {} = {
     listType: "picture-card",
     maxCount: 1,
-    accept,
+    accept: '.png,.jpeg,.jpg',
     showUploadList: false,
     onRemove: (file: any) => {
       const index = fileList.indexOf(file)
@@ -58,12 +57,14 @@ const Upload: FC<UploadType> = (props: UploadType): ReactElement => {
   }
 
   return (
-    <AntUpload {...uploadProps} className={className}>
-      <div>
-        {fileList.length === 1 ? <img src={fileList[0].url} alt="avatar" style={{ width: '100%' }} /> : <UploadOutlined />}
-      </div>
-    </AntUpload>
+    <>
+      <Upload {...uploadProps} className={className}>
+        <div>
+          {fileList.length === 1 ? <img src={fileList[0].url} alt="avatar" style={{ width: '100%' }} /> : <UploadOutlined />}
+        </div>
+      </Upload>
+    </>
   )
 }
 
-export default Upload
+export default ImageUpload

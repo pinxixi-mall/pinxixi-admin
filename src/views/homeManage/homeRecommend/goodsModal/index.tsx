@@ -1,13 +1,11 @@
-import React, { useEffect, useState } from 'react'
-import { Tooltip, Image, Modal, Radio } from 'antd'
+import React, { useState } from 'react'
+import { Tooltip, Image, Modal } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { getGoods } from '@/api'
-import { useResetFormOnCloseModal } from '@/utils/common'
 import { GoodsType } from '@/views/goodsManage/goods'
 import { getLabelByValue } from '@/utils/utils'
 import { goodsStatusList } from '@/config/dataList'
 import Table from '@/components/Table'
-import { useRequest } from '@/hooks'
 
 interface ModalFormProps {
     visible: boolean;
@@ -18,7 +16,6 @@ interface ModalFormProps {
 
 const GoodsModal: React.FC<ModalFormProps> = ({ visible, onCancel, goodsId, onSuccess }) => {
     const [confirmLoading, setConfirmLoading] = useState<boolean>()
-    const [refresh, setRefresh] = useState<boolean>()
     const [queryParams, setQueryParams] = useState({})
     const [selectedGoods, setSelectedGoods] = useState<GoodsType>()
 
@@ -123,7 +120,6 @@ const GoodsModal: React.FC<ModalFormProps> = ({ visible, onCancel, goodsId, onSu
                 columns={columns}
                 fetchApi={getGoods}
                 queryParams={queryParams}
-                refreshOutside={refresh}
                 handleTableList={handleTableList}
                 rowSelection={rowSelection}
             />

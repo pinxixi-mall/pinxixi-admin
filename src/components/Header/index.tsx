@@ -5,6 +5,7 @@ import styles from './index.module.less'
 import { logout } from '@/api'
 import { UserInfoType } from "@/types"
 import { setToken } from '@/utils/utils'
+import stores from '@/store';
 const { useHistory } = require('react-router-dom')
 const { Header: AntHeader } = AntLayout;
 
@@ -19,6 +20,7 @@ const Header: FC<UserInfoType> = (props: UserInfoType) => {
     await logout()
     sessionStorage.removeItem('userInfo')
     setToken(null)
+    stores.UserInfoStore.setInfo(null)
     history.push(key)
   }
 

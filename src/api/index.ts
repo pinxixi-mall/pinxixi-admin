@@ -1,3 +1,4 @@
+import { UserInfoType } from '@/types';
 import http from '@/utils/request';
 
 // 登录
@@ -12,7 +13,17 @@ export const logout = () => {
 
 // 用户信息
 export const getUserInfo = () => {
-  return http.get(`/admin/userInfo`);
+  return http.get(`/admin/user`);
+};
+
+// 修改用户信息
+export const updateUserInfo = (data: UserInfoType) => {
+  return http.put(`/admin/user`, data);
+};
+
+// 重置密码
+export const resetPassword = (data: any) => {
+  return http.put(`/admin/user/reset`, data);
 };
 
 // 轮播图列表

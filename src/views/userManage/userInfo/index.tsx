@@ -1,42 +1,68 @@
-import React, { useEffect, useState } from 'react'
-import { Row, Col, Card, Avatar, Tabs, Form, Input, Button, ConfigProvider } from 'antd'
-import {  } from '@ant-design/icons'
+import { FC } from 'react'
+import { Row, Col, Card, Tabs, Form, Input, Button, ConfigProvider, message } from 'antd'
 import styles from './index.module.less'
 import { useForm } from 'antd/es/form/Form'
 import { validateMessages } from '@/config'
-import { useRequest } from '@/hooks'
-import { getUserInfo } from '@/api'
+import { commonUpload, resetPassword, updateUserInfo } from '@/api'
+import { UserInfoType } from '@/types'
+import Upload from '@/components/Upload';
+import stores from '@/store'
+import { inject, observer } from 'mobx-react'
+import { setToken } from '@/utils/utils'
+const { useHistory } = require('react-router-dom')
+
 const { TabPane } = Tabs
 
-const UserInfo: React.FC = () => {
-  const [userInfo, setUserInfo] = useState()
+const UserInfo: FC = (props: any) => {
+  const history = useHistory()
   const [editForm] = useForm()
   const [resetForm] = useForm()
-  const [loading, res] = useRequest({
-    fetchApi: getUserInfo
-  })
+  const userInfo = props.UserInfoStore.getInfo || {}
+
+  editForm.setFieldsValue(userInfo)
 
   const layout = {
     labelCol: { span: 6 },
     wrapperCol: { span: 14 },
   }
-
   const tailLayout = {
     wrapperCol: { offset: 6, span: 14 },
   }
 
-  useEffect(() => {
-
-  }, [])
-
   // 信息修改
-  const onEditFinish = () => {
-
+  const onEditFinish = async (values: UserInfoType) => {
+    await editForm.validateFields()
+    const { msg } = await updateUserInfo(values)
+    message.success(msg)
+    refreshUser(values)
   }
 
   // 密码重置
-  const onResetFinish = () => {
+  const onResetFinish = async (values: any) => {
+    await editForm.validateFields()
+    const { msg } = await resetPassword(values)
+    message.success(msg)
+    sessionStorage.removeItem('userInfo')
+    setToken(null)
+    stores.UserInfoStore.setInfo(null)
+    history.push('/login')
+  }
 
+   // 头像修改
+   const handleAvatarUpload = async (file: any) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    const { data: { url } } = await commonUpload(formData)
+    await updateUserInfo({ avatar: url })
+    refreshUser({
+      ...userInfo,
+      avatar: url
+    })
+  }
+
+  // 刷新用户信息
+  const refreshUser = (data: UserInfoType) => {
+    stores.UserInfoStore.setInfo(data)
   }
 
   return (
@@ -45,21 +71,21 @@ const UserInfo: React.FC = () => {
         <Col span={10}>
           <Card className={styles.info}>
             <div className={styles.avatar}>
-              <Avatar size={100} src="https://gw.alipayobjects.com/zos/rmsportal/JiqGstEfoWAOHiTxclqi.png" />
-              <p className={styles.name}>admin</p>
+              <Upload className={styles.avatarUploader} fileList={[{url: userInfo.avatar}]} handleUpload={handleAvatarUpload} />
+              <div className={styles.name}>{userInfo.userName}</div>
             </div>
-            <p className={styles.itemRow}>
-              <p>昵 称</p>
-              <p>666</p>
-            </p>
-            <p className={styles.itemRow}>
-              <p>手机号</p>
-              <p>19999999999</p>
-            </p>
-            <p className={styles.itemRow}>
-              <p>邮 箱</p>
-              <p>123456@qq.com</p>
-            </p>
+            <div className={styles.itemRow}>
+              <div>昵 称</div>
+              <div>{userInfo.nickName}</div>
+            </div>
+            <div className={styles.itemRow}>
+              <div>手机号</div>
+              <div>{userInfo.phone}</div>
+            </div>
+            <div className={styles.itemRow}>
+              <div>邮 箱</div>
+              <div>{userInfo.email}</div>
+            </div>
           </Card>
         </Col>
         <Col span={14}>
@@ -72,12 +98,12 @@ const UserInfo: React.FC = () => {
                       <Input />
                     </Form.Item>
                     <Form.Item name="phone" label="手机号" rules={[{ required: true }]}>
-                      <Input />
+                      <Input maxLength={11}/>
                     </Form.Item>
                     <Form.Item name="email" label="邮 箱" rules={[{ required: true }]}>
                       <Input />
                     </Form.Item>
-                    <Form.Item {...tailLayout} style={{marginTop: '40px'}}>
+                    <Form.Item {...tailLayout} style={{ marginTop: '40px' }}>
                       <Button type="primary" htmlType="submit">保 存</Button>
                     </Form.Item>
                   </Form>
@@ -95,7 +121,7 @@ const UserInfo: React.FC = () => {
                     <Form.Item name="confirmPassword" label="确认密码" rules={[{ required: true }]}>
                       <Input type="password" />
                     </Form.Item>
-                    <Form.Item {...tailLayout} style={{marginTop: '40px'}}>
+                    <Form.Item {...tailLayout} style={{ marginTop: '40px' }}>
                       <Button type="primary" htmlType="submit">保 存</Button>
                     </Form.Item>
                   </Form>
@@ -109,4 +135,4 @@ const UserInfo: React.FC = () => {
   )
 }
 
-export default UserInfo
+export default inject('UserInfoStore')(observer(UserInfo))

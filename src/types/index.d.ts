@@ -32,7 +32,9 @@ export interface BodyCardType {
 }
 
 export interface UploadType {
+  className?: any;
   fileList: any[];
+  accept?: string;
   handleRemove?(newFileList: any): void;
   handleUpload?(file: any): void;
 }
@@ -55,6 +57,7 @@ export interface UserInfoType {
   avatar?: string;
   userName?: string;
   nickName?: string;
+  phone?: string;
   email?: string;
 }
 

@@ -8,7 +8,8 @@ import type { routeType } from '@/router/routes'
 import { inject, observer } from 'mobx-react'
 import styles from './index.module.less'
 import { setMenuAndBreadcurmb } from '@/utils/common'
-import { UserInfoType } from "@/types"
+import { getUserInfo } from '@/api';
+import stores from '@/store';
 const { useHistory, useLocation } = require('react-router-dom')
 const { SubMenu } = Menu
 const { Content, Sider } = AntLayout
@@ -16,11 +17,16 @@ const { Content, Sider } = AntLayout
 const Layout: React.FC = (props: any) => {
   const history = useHistory()
   const { pathname } = useLocation()
-  let [userInfo, setUserInfo] = useState<UserInfoType>()
   let [menus, setMenus] = useState<Array<React.ReactElement>>([])
 
   useEffect(() => {
-    setUserInfo(JSON.parse(sessionStorage.getItem('userInfo') || '{}'))
+    const getUser = async () => {
+      const { data } = await getUserInfo()
+      sessionStorage.setItem('userInfo', JSON.stringify(data))
+      stores.UserInfoStore.setInfo(data)
+    }
+    getUser()
+
     initPage() // useEffect里调用外面定义的函数会警告，加下面注释可屏蔽
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
@@ -91,7 +97,7 @@ const Layout: React.FC = (props: any) => {
           </Menu>
         </Sider>
         <AntLayout>
-          <Header {...userInfo} />
+          <Header {...stores.UserInfoStore.getInfo} />
           <AntLayout className={styles.contentBox}>
             <Breadcrumb breads={props.LayoutStore.breadcrumb} />
             <Content className={styles.content}>

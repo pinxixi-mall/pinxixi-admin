@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Card, Button, Space, SpinProps, Modal, message } from 'antd'
 import { SyncOutlined, ExclamationCircleOutlined, RetweetOutlined, DeleteOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/es/table'

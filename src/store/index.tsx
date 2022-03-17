@@ -1,5 +1,8 @@
 import { observable, computed, action, makeObservable } from 'mobx'
 
+/**
+ * 布局信息
+ */
 class LayoutStore {
   // 面包屑
   breadcrumb: string[] = []
@@ -32,8 +35,32 @@ class LayoutStore {
   }
 }
 
+/**
+ * 用户信息
+ */
+class UserInfoStore {
+  info: object | null = null
+  
+  get getInfo(): object | null {
+    return this.info
+  }
+
+  setInfo(data: object | null) {
+    this.info = data
+  }
+
+  constructor() {
+    makeObservable(this, {
+      info: observable,
+      getInfo: computed,
+      setInfo: action,
+    })
+  }
+}
+
 const stores = {
-  LayoutStore: new LayoutStore()
+  LayoutStore: new LayoutStore(),
+  UserInfoStore: new UserInfoStore()
 }
 
 export default stores
