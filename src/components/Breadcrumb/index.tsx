@@ -1,11 +1,11 @@
-import React from 'react'
 import { Breadcrumb as BreadcrumbAnt } from 'antd'
 
-type breadsProps = {
+type BreadsProps = {
   breads: Array<string>
 }
 
-const Breadcrumb = (props: breadsProps) => {
+const Breadcrumb = (props: BreadsProps) => {
+
   return (
     <BreadcrumbAnt style={{ padding: '10px 24px' }}>
       {

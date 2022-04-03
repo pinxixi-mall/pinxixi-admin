@@ -3,13 +3,13 @@ import { Layout as AntLayout, Avatar, Dropdown, Menu, Input, Badge, Divider  } f
 import { UserOutlined, PoweroffOutlined, SearchOutlined, BellOutlined, MessageOutlined } from '@ant-design/icons';
 import styles from './index.module.less'
 import { logout } from '@/api'
-import { UserInfoType } from "@/types"
+import { UserInfo } from "@/types"
 import { setToken } from '@/utils/utils'
 import stores from '@/store';
 const { useHistory } = require('react-router-dom')
 const { Header: AntHeader } = AntLayout;
 
-const Header: FC<UserInfoType> = (props: UserInfoType) => {
+const Header: FC<UserInfo> = (props: UserInfo) => {
   const history = useHistory()
 
   const toUserInfo = ({ key }: { key: string }) => {    

@@ -54,8 +54,8 @@ const Dashboard: React.FC = () => {
   const distributedRef = useRef<any>(null)
   const distributedChartRef = useRef<any>(null)
 
-  const [refresh, setRefresh] = useState<boolean>()
-  const [queryParams, setQueryParams] = useState({})
+  const [refresh] = useState<boolean>()
+  const [queryParams] = useState({})
 
   // 销售概况
   useEffect(() => {
@@ -196,15 +196,21 @@ const Dashboard: React.FC = () => {
 
   const columns: ColumnsType<OrderType> = [
     {
-      title: '订单号',
+      title: '订单编号',
       dataIndex: 'orderNo',
-      key: 'orderNo',
       width: 120,
+    },
+    {
+      title: '下单时间',
+      dataIndex: 'createTime',
+      width: 160,
+      render: (text: any, record: any) => {
+        return record.createTime
+      }
     },
     {
       title: '订单状态',
       dataIndex: 'orderStatus',
-      key: 'orderStatus',
       width: 120,
       render: (text: any, record: any) => {
         return getLabelByValue(record.orderStatus, orderStatuslList)
@@ -213,13 +219,12 @@ const Dashboard: React.FC = () => {
     {
       title: '订单总价',
       dataIndex: 'orderPrice',
-      key: 'orderPrice',
-      width: 120
+      width: 120,
+      render: value => `￥${value.toFixed(2)}`
     },
     {
       title: '支付状态',
       dataIndex: 'paymentStatus',
-      key: 'paymentStatus',
       width: 120,
       render: (text: any, record: any) => {
         return getLabelByValue(record.paymentStatus, paymentStatuslList)
@@ -228,43 +233,24 @@ const Dashboard: React.FC = () => {
     {
       title: '支付方式',
       dataIndex: 'paymentType',
-      key: 'paymentType',
       width: 120,
       render: (text: any, record: any) => {
-        return getLabelByValue(record.paymentType, paymentTypelList)
+        return getLabelByValue(record.paymentType, paymentTypelList) || '-'
       }
     },
     {
       title: '支付时间',
       dataIndex: 'paymentTime',
-      key: 'paymentTime',
       width: 160,
       render: (text: any, record: any) => {
-        return record.updateTime
+        return record.paymentTime || '-'
       }
     },
-    {
-      title: '创建时间',
-      dataIndex: 'createTime',
-      key: 'createTime',
-      width: 160,
-      render: (text: any, record: any) => {
-        return record.createTime
-      }
-    }
   ]
-
-  // 处理表格返回数据
-  const handleTableList = (list: any[]): any[] => {
-    return list.map((it: any) => ({
-      ...it,
-      key: it.goodsId
-    }))
-  }
 
   return (
     <div>
-      <Row className={styles.row} gutter={20}>
+      <Row className={styles.row} gutter={20} style={{marginTop: '20px'}}>
         <Col span={6}>
           <div className={`${styles.tagItem} ${styles.order}`}>
             <Statistic
@@ -343,11 +329,12 @@ const Dashboard: React.FC = () => {
           <div className={styles.card}>
             <header>最新订单</header>
             <Table
+              rowKey='orderId'
               columns={columns}
               fetchApi={getOrders}
               queryParams={queryParams}
               refreshOutside={refresh}
-              handleTableList={handleTableList}
+              pagination={{noPagination: true}}
             />
           </div>
         </Col>

@@ -1,12 +1,12 @@
 import React, { FC } from 'react'
 import { PageHeader, Button } from 'antd'
 import { SyncOutlined } from '@ant-design/icons'
-import { BodyCardType } from '@/types'
+import { BodyCardProps } from '@/types'
 import styles from './index.module.less'
 const { useHistory } = require('react-router-dom')
 
-const BodyCard: FC<BodyCardType> = (props) => {
-  const { title, subTitle, extra, children, onSubmit, onRefresh } = props
+const BodyCard: FC<BodyCardProps> = (props) => {
+  const { title, subTitle, extra, children, showFooter = true, onSubmit, onRefresh } = props
   const history = useHistory()
 
   const goBack = () => {
@@ -32,7 +32,8 @@ const BodyCard: FC<BodyCardType> = (props) => {
       <div className={styles.main}>
         {children}
       </div>
-      <div className={styles.footer}>
+      {
+        showFooter && <div className={styles.footer}>
         <Button onClick={goBack}>
           取消
         </Button>
@@ -40,6 +41,7 @@ const BodyCard: FC<BodyCardType> = (props) => {
           保存
         </Button>
       </div>
+      }
     </div>
   )
 }

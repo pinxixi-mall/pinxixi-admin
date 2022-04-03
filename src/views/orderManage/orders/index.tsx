@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
-import { Card, Button, Space, SpinProps, Modal, message } from 'antd'
-import { SyncOutlined, ExclamationCircleOutlined, RetweetOutlined, DeleteOutlined } from '@ant-design/icons'
+import { Card, Button, Space, Modal, message } from 'antd'
+import { SyncOutlined, ExclamationCircleOutlined, FileTextOutlined, CloseOutlined } from '@ant-design/icons'
 import { ColumnsType } from 'antd/es/table'
 import { getOrders, updateOrder } from '@/api'
 import { PaginationType, OrderType } from '@/types'
 import { getLabelByValue } from '@/utils/utils'
 import { orderStatuslList, paymentStatuslList, paymentTypelList } from '@/config/dataList'
 import Table from '@/components/Table'
+const { useHistory } = require('react-router-dom')
 
 const Orders: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>()
@@ -18,7 +19,8 @@ const Orders: React.FC = () => {
     showQuickJumper: true,
     showSizeChanger: true
   })
-  const [queryParams, setQueryParams] = useState({})
+  const [queryParams] = useState({})
+  const history = useHistory()
 
   // 刷新
   const handleRefresh = (isReset: boolean): void => {   
@@ -29,21 +31,10 @@ const Orders: React.FC = () => {
     setRefresh(!refresh)
   }
 
-  // 上、下架
+  // 详情
   const toDetail = (record: any) => {
-    const { orderId, orderStatus } = record
-    Modal.confirm({
-      title: `${orderStatus === '0' ? '上架' : '下架'}活动`,
-      icon: <ExclamationCircleOutlined />,
-      content: `确定${orderStatus === '0' ? '上架' : '下架'}该活动？`,
-      okText: '确认',
-      cancelText: '取消',
-      onOk: async () => {
-        await updateOrder({ orderId, orderStatus: orderStatus === '0' ? '1' : '0' })
-        message.success('操作成功')
-        setRefresh(!refresh)
-      }
-    })
+    const { orderId } = record
+    history.push(`/order-manage/order-detail/${orderId}`)
   }
 
   // 删除
@@ -56,21 +47,11 @@ const Orders: React.FC = () => {
       okText: '确认',
       cancelText: '取消',
       onOk: async () => {
-        await updateOrder({ orderId, isDeleted: 1 })
+        await updateOrder({ orderId, orderStatus: 5 })
         message.success('操作成功')
         setRefresh(!refresh)
       }
     })
-  }
-
-  // 分页
-  const onPageChange = (page: number, pageSize?: number | undefined) => {
-    setPagination({
-      ...pagination,
-      current: page,
-      pageSize
-    })
-    setRefresh(!refresh)
   }
 
   const extra = (
@@ -87,14 +68,12 @@ const Orders: React.FC = () => {
     {
       title: '订单号',
       dataIndex: 'orderNo',
-      key: 'orderNo',
       width: 120,
     },
     {
       title: '订单状态',
       dataIndex: 'orderStatus',
-      key: 'orderStatus',
-      width: 120,
+      width: 100,
       render: (text: any, record: any) => {
         return getLabelByValue(record.orderStatus, orderStatuslList)
       }
@@ -102,14 +81,13 @@ const Orders: React.FC = () => {
     {
       title: '订单总价',
       dataIndex: 'orderPrice',
-      key: 'orderPrice',
-      width: 120
+      width: 140,
+      render: value => `￥${value.toFixed(2)}`
     },
     {
       title: '支付状态',
       dataIndex: 'paymentStatus',
-      key: 'paymentStatus',
-      width: 120,
+      width: 100,
       render: (text: any, record: any) => {
         return getLabelByValue(record.paymentStatus, paymentStatuslList)
       }
@@ -117,53 +95,41 @@ const Orders: React.FC = () => {
     {
       title: '支付方式',
       dataIndex: 'paymentType',
-      key: 'paymentType',
-      width: 120,
+      width: 100,
       render: (text: any, record: any) => {
-        return getLabelByValue(record.paymentType, paymentTypelList)
+        return getLabelByValue(record.paymentType, paymentTypelList) || '-'
       }
     },
     {
       title: '支付时间',
       dataIndex: 'paymentTime',
-      key: 'paymentTime',
-      width: 160,
       render: (text: any, record: any) => {
-        return record.updateTime
+        return record.paymentTime || '-'
       }
     },
     {
-      title: '创建时间',
+      title: '下单时间',
       dataIndex: 'createTime',
-      key: 'createTime',
-      width: 160,
       render: (text: any, record: any) => {
         return record.createTime
       }
     },
     {
       title: '操作',
-      key: 'action',
-      width: 200,
+      width: 100,
       render: (text: any, record: any) => {
         const { orderStatus } = record
         return (
           <Space size={0}>
-            <Button type="link" icon={<RetweetOutlined />} onClick={() => toDetail(record)}>订单详情</Button>
-            <Button type="link" icon={<DeleteOutlined />} danger onClick={() => onOrderClose(record)}>关闭订单</Button>
+            <Button type="link" icon={<FileTextOutlined />} onClick={() => toDetail(record)}>详情</Button>
+            {
+              orderStatus === 0 && <Button type="link" icon={<CloseOutlined />} danger onClick={() => onOrderClose(record)}>关闭</Button>
+            }
           </Space>
         )
       },
     },
   ]
-
-  // 处理表格返回数据
-  const handleTableList = (list: any[]): any[] => {
-    return list.map((it: any) => ({
-      ...it,
-      key: it.goodsId
-    }))
-  }
 
   return (
     <>
@@ -172,11 +138,11 @@ const Orders: React.FC = () => {
         extra={extra}
       >
         <Table
+          rowKey='orderId'
           columns={columns}
           fetchApi={getOrders}
           queryParams={queryParams}
           refreshOutside={refresh}
-          handleTableList={handleTableList}
         />
       </Card>
     </>

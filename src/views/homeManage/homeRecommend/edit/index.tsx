@@ -5,7 +5,7 @@ import { useResetFormOnCloseModal } from '@/utils/common'
 import type { RecommendProps } from '../index'
 import { validateMessages } from '@/config'
 import GoodsModal from '../goodsModal'
-import { GoodsType } from '@/views/goodsManage/goods'
+import { GoodsType } from '@/types'
 const { TextArea, Search } = Input
 
 interface ModalFormProps {
@@ -110,8 +110,6 @@ const RecommendEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, on
             >
               {({ getFieldValue }) => {
                 const src = getFieldValue('goodsImage')
-                console.log(src);
-                
                 return (
                   <Image src={src} width={140}/>
                 )

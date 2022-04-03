@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Tooltip, Image, Modal } from 'antd'
 import { ColumnsType } from 'antd/es/table'
 import { getGoods } from '@/api'
-import { GoodsType } from '@/views/goodsManage/goods'
+import { GoodsType } from '@/types'
 import { getLabelByValue } from '@/utils/utils'
 import { goodsStatusList } from '@/config/dataList'
 import Table from '@/components/Table'
@@ -15,8 +15,8 @@ interface ModalFormProps {
 }
 
 const GoodsModal: React.FC<ModalFormProps> = ({ visible, onCancel, goodsId, onSuccess }) => {
-    const [confirmLoading, setConfirmLoading] = useState<boolean>()
-    const [queryParams, setQueryParams] = useState({})
+    const [confirmLoading] = useState<boolean>()
+    const [queryParams] = useState({})
     const [selectedGoods, setSelectedGoods] = useState<GoodsType>()
 
     const columns: ColumnsType<GoodsType> = [
@@ -84,14 +84,6 @@ const GoodsModal: React.FC<ModalFormProps> = ({ visible, onCancel, goodsId, onSu
         },
     ]
 
-    // 处理表格返回数据
-    const handleTableList = (list: any[]): any[] => {
-        return list.map((it: any) => ({
-            ...it,
-            key: it.goodsId
-        }))
-    }
-
     // 提交
     const handleOk = () => {
         selectedGoods && onSuccess(selectedGoods)
@@ -117,10 +109,10 @@ const GoodsModal: React.FC<ModalFormProps> = ({ visible, onCancel, goodsId, onSu
             width={1000}
         >
             <Table
+                rowKey='goodsId'
                 columns={columns}
                 fetchApi={getGoods}
                 queryParams={queryParams}
-                handleTableList={handleTableList}
                 rowSelection={rowSelection}
             />
         </Modal>

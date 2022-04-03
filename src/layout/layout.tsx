@@ -99,7 +99,9 @@ const Layout: React.FC = (props: any) => {
         <AntLayout>
           <Header {...stores.UserInfoStore.getInfo} />
           <AntLayout className={styles.contentBox}>
-            <Breadcrumb breads={props.LayoutStore.breadcrumb} />
+            {
+              !['/dashboard'].includes(pathname) && <Breadcrumb breads={props.LayoutStore.breadcrumb} />
+            }
             <Content className={styles.content}>
               <div style={{ paddingBottom: '20px' }}>
                 {props.children}

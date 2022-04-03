@@ -2,9 +2,9 @@
 import BraftEditor from 'braft-editor'
 import 'braft-editor/dist/index.css'
 import { FC } from 'react'
-import { RichTextType } from '@/types'
+import { RichTextProps } from '@/types'
 
-const RichText: FC<RichTextType> = ({ value = '', onChange }) => {
+const RichText: FC<RichTextProps> = ({ value = '', onChange }) => {
 
   const handleEditorChange = (text: any) => {
     onChange(text)

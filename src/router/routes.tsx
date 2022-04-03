@@ -10,6 +10,7 @@ import GoodsEdit from "@/views/goodsManage/goods/edit";
 import GoodsCategory from "@/views/goodsManage/category";
 import Goods from "@/views/goodsManage/goods";
 import Orders from "@/views/orderManage/orders";
+import OrderDetail from "@/views/orderManage/detail";
 import NotFound from '@/views/404';
 export interface routeType {
   path: string;
@@ -133,6 +134,15 @@ const navRoutes: Array<routeType> = [
           title: '订单列表'
         },
         component: Orders
+      },
+      {
+        path: '/order-manage/order-detail/:orderId',
+        name: 'order-detail',
+        meta: {
+          title: '订单详情',
+          hideMenu: true
+        },
+        component: OrderDetail
       }
     ]
   },

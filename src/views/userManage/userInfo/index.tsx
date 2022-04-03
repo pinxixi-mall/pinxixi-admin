@@ -4,7 +4,7 @@ import styles from './index.module.less'
 import { useForm } from 'antd/es/form/Form'
 import { validateMessages } from '@/config'
 import { commonUpload, resetPassword, updateUserInfo } from '@/api'
-import { UserInfoType } from '@/types'
+import { UserInfo } from '@/types'
 import Upload from '@/components/Upload';
 import stores from '@/store'
 import { inject, observer } from 'mobx-react'
@@ -13,7 +13,7 @@ const { useHistory } = require('react-router-dom')
 
 const { TabPane } = Tabs
 
-const UserInfo: FC = (props: any) => {
+const UserInfoFC: FC = (props: any) => {
   const history = useHistory()
   const [editForm] = useForm()
   const [resetForm] = useForm()
@@ -30,7 +30,7 @@ const UserInfo: FC = (props: any) => {
   }
 
   // 信息修改
-  const onEditFinish = async (values: UserInfoType) => {
+  const onEditFinish = async (values: UserInfo) => {
     await editForm.validateFields()
     const { msg } = await updateUserInfo(values)
     message.success(msg)
@@ -61,7 +61,7 @@ const UserInfo: FC = (props: any) => {
   }
 
   // 刷新用户信息
-  const refreshUser = (data: UserInfoType) => {
+  const refreshUser = (data: UserInfo) => {
     stores.UserInfoStore.setInfo(data)
   }
 
@@ -135,4 +135,4 @@ const UserInfo: FC = (props: any) => {
   )
 }
 
-export default inject('UserInfoStore')(observer(UserInfo))
+export default inject('UserInfoStore')(observer(UserInfoFC))

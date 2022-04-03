@@ -4,7 +4,7 @@ import BodyCard from '@/components/BodyCard'
 import Upload from '@/components/Upload'
 import RichText from '@/components/RichText'
 import { commonUpload, addGoods, updateGoods, goodsDetial, getGoodsCategorys } from '@/api'
-import { goodsTypeList, goodsStatusList } from "@/config/dataList"
+import { goodsStatusList } from "@/config/dataList"
 import { validateMessages } from "@/config"
 import { useRequest } from "@/hooks"
 const { useHistory } = require('react-router-dom')
@@ -56,7 +56,7 @@ const GoodsEdit: FC = (): ReactElement => {
   }, [res])
 
   // 提交
-  const onSubmit = async (values: any) => {
+  const onSubmit = async () => {
     const validateRes = await form.validateFields()
     validateRes.goodsDetail = validateRes.goodsDetail.toHTML()
     goodsId && (validateRes['goodsId'] = goodsId * 1)
@@ -92,7 +92,11 @@ const GoodsEdit: FC = (): ReactElement => {
 
   // 刷新
   const handleRefresh = () => {
-    setRefresh(!refresh)
+    if (goodsId) {
+      setRefresh(!refresh)
+    } else {
+      form.resetFields()
+    }
   }
 
   // 手动渲染树形菜单

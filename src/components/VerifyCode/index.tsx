@@ -1,6 +1,6 @@
 import { FC, ReactElement, useEffect, useRef, useState } from 'react'
 
-type VerifyCodeType = {
+type VerifyCodeProps = {
   width?: number; // 验证码图片宽度
   height?: number; // 验证码图片高度
   letters?: string; // 验证码字符集
@@ -10,7 +10,7 @@ type VerifyCodeType = {
   change(code: string): void; // 验证码改变事件
 }
 
-const VerifyCode: FC<VerifyCodeType> = (props: VerifyCodeType) : ReactElement => {
+const VerifyCode: FC<VerifyCodeProps> = (props: VerifyCodeProps) : ReactElement => {
   const TEXTS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
   const LINES = 6 // 干扰线数量
   const DOTS = 50 // 干扰点数量

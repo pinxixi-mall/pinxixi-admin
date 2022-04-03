@@ -1,22 +1,22 @@
 import { useState, useEffect, ReactElement, FC } from 'react'
-import { Table as AntTable, SpinProps, Radio } from 'antd'
-import { PaginationType, TableType } from '@/types'
+import { Table as AntTable, SpinProps } from 'antd'
+import { PaginationType, TableProps } from '@/types'
 
-const Table: FC<TableType> = (props: TableType): ReactElement => {
-  const { columns, fetchApi, queryParams = {}, refreshOutside, handleTableList, pagination: pagi = {}, rowSelection } = props
+const Table: FC<TableProps> = (props: TableProps): ReactElement => {
+  const { columns, rowKey, fetchApi, queryParams = {}, refreshOutside, handleTableList, pagination: pagi = {}, rowSelection } = props
   const [refreshInside, setRefreshInside] = useState<boolean>()
   const [pagination, setPagination] = useState<PaginationType>({
     current: 1,
-    pageSize: pagi.hide ? 0 : 5,
+    pageSize: 5,
     total: 0,
     pageSizeOptions: ['5', '10', '20'],
     showQuickJumper: true,
     showSizeChanger: true,
-    position: ['none', pagi.hide ? 'none' : 'bottomRight'],
+    position: ['none', pagi.noPagination ? 'none' : 'bottomRight'],
     ...pagi
   })
   const [loading, setLoading] = useState<boolean | SpinProps | undefined>(false)
-  const [tableData, setTableData] = useState<TableType[]>([])
+  const [tableData, setTableData] = useState<TableProps[]>([])
 
   // 内部刷新
   const handleRefresh = (): void => {
@@ -39,7 +39,7 @@ const Table: FC<TableType> = (props: TableType): ReactElement => {
         pageSize: pagination.pageSize,
       }
       let params = { ...queryParams }
-      if (!pagi.hide) {
+      if (!pagi.hidePagination) {
         Object.assign(params, pagiParam)
       }
       
@@ -47,7 +47,7 @@ const Table: FC<TableType> = (props: TableType): ReactElement => {
       try {
         let rows = []
         let { data } = await fetchApi(params, { noLoading: true })
-        if (!pagi.hide) {
+        if (!pagi.hidePagination) {
           // 有分页
           const { list, pageNum, pageSize, total } = data
           rows = handleTableList ? handleTableList(list) : list
@@ -85,8 +85,9 @@ const Table: FC<TableType> = (props: TableType): ReactElement => {
   }
 
   return (
-    <AntTable<TableType>
+    <AntTable<TableProps>
       columns={columns}
+      rowKey={rowKey}
       dataSource={tableData}
       loading={loading}
       rowSelection={rowSelection}

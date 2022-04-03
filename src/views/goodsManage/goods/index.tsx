@@ -3,20 +3,12 @@ import SearchPannel from '@/components/SearchPannel'
 import { ColumnsType } from 'antd/es/table'
 import { Card, Button, Space, Tooltip, Image, Modal, message } from 'antd'
 import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined, RetweetOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons'
-import type { SearchItemType } from '@/types'
+import type { SearchItemType, GoodsType } from '@/types'
 import Table from '@/components/Table'
 import { getGoods, updateGoodsStatus, deleteGoods } from '@/api'
 import { goodsStatusList } from "@/config/dataList"
 import { getLabelByValue } from '@/utils/utils'
 const { useHistory } = require('react-router-dom')
-
-export interface GoodsType {
-  key?: number;
-  goodsId?: number;
-  goodsDesc: string;
-  goodsImage: string;
-  goodsStatus?: string,
-}
 
 const Goods: React.FC = () => {
   const [refresh, setRefresh] = useState<boolean>()
@@ -27,7 +19,7 @@ const Goods: React.FC = () => {
     {
       title: '商品编号',
       dataIndex: 'goodsId',
-      width: 120
+      width: 100
     },
     {
       title: '商品名称',
@@ -35,12 +27,16 @@ const Goods: React.FC = () => {
       ellipsis: {
         showTitle: false,
       },
+      render: desc => (
+        <Tooltip placement="top" title={desc}>
+          {desc}
+        </Tooltip>
+      ),
     },
     {
       title: '商品图片',
       dataIndex: 'goodsImage',
-      key: 'goodsImage',
-      width: 140,
+      width: 100,
       render: goodsImage => (
         <Image
           width={60}
@@ -52,7 +48,6 @@ const Goods: React.FC = () => {
     {
       title: '商品描述',
       dataIndex: 'goodsDesc',
-      key: 'goodsDesc',
       ellipsis: {
         showTitle: false,
       },
@@ -65,19 +60,15 @@ const Goods: React.FC = () => {
     {
       title: '价格',
       dataIndex: 'goodsPrice',
-      key: 'goodsPrice',
-      width: 120
+      render: value => `￥${value.toFixed(2)}`
     },
     {
       title: '商品库存',
       dataIndex: 'goodsStock',
-      key: 'goodsStock',
-      width: 120
     },
     {
       title: '状态',
       dataIndex: 'goodsStatus',
-      key: 'goodsStatus',
       width: 100,
       render: (text: any, record: any) => {
         return getLabelByValue(record.goodsStatus, goodsStatusList)
@@ -86,16 +77,14 @@ const Goods: React.FC = () => {
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      key: 'createTime',
-      width: 190,
+      width: 180,
       render: (text: any, record: any) => {
         return record.createTime
       }
     },
     {
       title: '操作',
-      key: 'action',
-      width: 280,
+      width: 260,
       render: (text: any, record: any) => {
         const { goodsStatus, goodsId } = record
         return (
@@ -149,14 +138,6 @@ const Goods: React.FC = () => {
       pageNum: 1
     })
     handleRefresh()
-  }
-
-  // 处理表格返回数据
-  const handleTableList = (list: any[]): any[] => {
-    return list.map((it: any) => ({
-      ...it,
-      key: it.goodsId
-    }))
   }
 
   // 新增|编辑
@@ -221,11 +202,11 @@ const Goods: React.FC = () => {
         extra={extra}
       >
         <Table
+          rowKey='goodsId'
           columns={columns}
           fetchApi={getGoods}
           queryParams={queryParams}
           refreshOutside={refresh}
-          handleTableList={handleTableList}
         />
       </Card>
     </>

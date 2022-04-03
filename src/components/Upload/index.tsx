@@ -1,7 +1,7 @@
 import { FC, ReactElement } from 'react'
 import { message, Upload as AntUpload } from 'antd'
 import { UploadOutlined } from '@ant-design/icons'
-import { UploadType } from '@/types'
+import { UploadProps } from '@/types'
 import { IMAGE_MAX_SIZE } from '@/config'
 
 /**
@@ -9,7 +9,7 @@ import { IMAGE_MAX_SIZE } from '@/config'
  * @param param0 
  * @returns 
  */
-const Upload: FC<UploadType> = (props: UploadType): ReactElement => {
+const Upload: FC<UploadProps> = (props: UploadProps): ReactElement => {
   const { className, fileList, accept = '.png,.jpeg,.jpg', handleRemove, handleUpload } = props
 
   const onbeforeUpload = (file: any): boolean => {

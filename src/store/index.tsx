@@ -15,6 +15,8 @@ class LayoutStore {
 
   // 设置面包屑
   setBreadcrumb (data: Array<string>): void {
+    console.log(data);
+    
     this.breadcrumb = data
   }
 

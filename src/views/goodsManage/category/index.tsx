@@ -108,26 +108,6 @@ const GoodsCategory: React.FC = () => {
     handleRefresh()
   }
 
-  // 处理表格返回数据：每项加key
-  const handleTableList = (list: any[]): any[] => {
-    let newList = list.slice(0)
-    addKey(newList)
-
-    function addKey(list: Array<any>): void {
-      list.forEach((it: any, index: number) => {
-        list[index] = {
-          ...it,
-          key: it.categoryId
-        }
-        if (it.children) {
-          addKey(it.children)
-        }
-      })
-    }
-
-    return newList
-  }
-
   // 新增|编辑
   const onEdit = (show: boolean, data?: CategoryType): void => {
     setVisible(show)
@@ -175,12 +155,12 @@ const GoodsCategory: React.FC = () => {
         extra={extra}
       >
         <Table
+          rowKey='categoryId'
           columns={columns}
           fetchApi={getGoodsCategorys}
           queryParams={queryParams}
           refreshOutside={refresh}
-          handleTableList={handleTableList}
-          pagination={{ hide: true }}
+          pagination={{ hidePagination: true, noPagination: true }}
         />
       </Card>
       <Edit

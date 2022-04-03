@@ -30,7 +30,7 @@ const HomeCarousel: React.FC = () => {
     showQuickJumper: true,
     showSizeChanger: true
   })
-  const [queryParams, setQueryParams] = useState({})
+  const [queryParams] = useState({})
 
   useEffect(() => {
     const getList = async () => {
@@ -42,11 +42,7 @@ const HomeCarousel: React.FC = () => {
       setLoading(true)
       try {
         let { data: { list, pageNum, pageSize, total } } = await getHomeCarousel(params, { noLoading: true })
-        const rows = list.map((it: any) => ({
-          ...it,
-          key: it.carouselId
-        }))
-        setTableData(rows)
+        setTableData(list)
         setPagination({
           ...pagination,
           current: pageNum,
@@ -146,14 +142,12 @@ const HomeCarousel: React.FC = () => {
     {
       title: '序号',
       dataIndex: 'index',
-      key: 'index',
       width: 100,
       render: (text: string, record, index) => <a>{index + 1}</a>,
     },
     {
       title: '轮播图',
       dataIndex: 'carouselImage',
-      key: 'carouselImage',
       width: 200,
       render: carouselImage => (
         <Image
@@ -166,13 +160,11 @@ const HomeCarousel: React.FC = () => {
     {
       title: '排序',
       dataIndex: 'carouselSort',
-      key: 'carouselSort',
       width: 120
     },
     {
       title: '状态',
       dataIndex: 'carouselStatus',
-      key: 'carouselStatus',
       width: 120,
       render: (text: any, record: any) => {
         return record.carouselStatus === '0' ? '已下架' : '上架中'
@@ -181,7 +173,6 @@ const HomeCarousel: React.FC = () => {
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      key: 'createTime',
       width: 160,
       render: (text: any, record: any) => {
         return record.createTime
@@ -190,7 +181,6 @@ const HomeCarousel: React.FC = () => {
     {
       title: '更新时间',
       dataIndex: 'updateTime',
-      key: 'updateTime',
       width: 160,
       render: (text: any, record: any) => {
         return record.updateTime
@@ -198,7 +188,6 @@ const HomeCarousel: React.FC = () => {
     },
     {
       title: '操作',
-      key: 'action',
       width: 200,
       render: (text: any, record: any) => {
         const { carouselStatus } = record
@@ -220,6 +209,7 @@ const HomeCarousel: React.FC = () => {
         extra={extra}
       >
         <Table<CarouselType>
+          rowKey="carouselId"
           columns={columns}
           dataSource={tableData}
           loading={loading}

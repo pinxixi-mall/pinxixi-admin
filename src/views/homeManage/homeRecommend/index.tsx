@@ -29,19 +29,16 @@ const HomeRecommend: React.FC = () => {
   const columns: ColumnsType<RecommendProps> = [
     {
       title: '推荐描述',
-      key: 'recommendDesc',
       dataIndex: 'recommendDesc',
     },
     {
       title: '商品编号',
-      key: 'goodsId',
       dataIndex: 'goodsId',
       width: 100,
     },
     {
       title: '商品图片',
       dataIndex: 'goodsImage',
-      key: 'goodsImage',
       width: 120,
       render: goodsImage => (
         <Image
@@ -53,20 +50,17 @@ const HomeRecommend: React.FC = () => {
     },
     {
       title: '商品价格',
-      key: 'goodsPrice',
       dataIndex: 'goodsPrice',
       width: 120
     },
     {
       title: '排序',
       dataIndex: 'recommendSort',
-      key: 'recommendSort',
       width: 120
     },
     {
       title: '创建时间',
       dataIndex: 'createTime',
-      key: 'createTime',
       width: 190,
       render: (text: any, record: any) => {
         return record.createTime
@@ -118,14 +112,6 @@ const HomeRecommend: React.FC = () => {
     handleRefresh()
   }
 
-  // 处理表格返回数据
-  const handleTableList = (list: any[]): any[] => {
-    return list.map((it: any) => ({
-      ...it,
-      key: it.goodsId
-    }))
-  }
-
   // 新增|编辑
   const onEdit = (show: boolean, data?: RecommendProps): void => {
     setVisible(show)
@@ -173,11 +159,11 @@ const HomeRecommend: React.FC = () => {
         extra={extra}
       >
         <Table
+          rowKey="recommendId"
           columns={columns}
           fetchApi={getRecommends}
           queryParams={queryParams}
           refreshOutside={refresh}
-          handleTableList={handleTableList}
         />
       </Card>
       <Edit
