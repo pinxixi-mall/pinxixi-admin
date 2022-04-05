@@ -18,6 +18,7 @@ const devServerConfig = () => (config) => {
     proxy: {
       "/api": {
         target: "http://localhost:9090/",
+        // target: "http://119.29.134.117:9090/",
         pathRewrite: {
           "^/api": "",
         },
