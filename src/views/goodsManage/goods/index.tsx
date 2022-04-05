@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import SearchPannel from '@/components/SearchPannel'
 import { ColumnsType } from 'antd/es/table'
 import { Card, Button, Space, Tooltip, Image, Modal, message } from 'antd'
-import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined, RetweetOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons'
+import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined, ColumnHeightOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons'
 import type { SearchItemType, GoodsType } from '@/types'
 import Table from '@/components/Table'
 import { getGoods, updateGoodsStatus, deleteGoods } from '@/api'
@@ -90,7 +90,7 @@ const Goods: React.FC = () => {
         return (
           <Space size={0}>
             <Button type="link" icon={<FormOutlined />} onClick={() => handleGoodsEdit(goodsId)}>编辑</Button>
-            <Button type="link" icon={<RetweetOutlined />} onClick={() => onChangeStatus(record)}>{goodsStatus === 0 ? '上架' : '下架'}</Button>
+            <Button type="link" icon={<ColumnHeightOutlined />} onClick={() => onChangeStatus(record)}>{goodsStatus === 0 ? '上架' : '下架'}</Button>
             <Button type="link" icon={<DeleteOutlined />} danger onClick={() => onDelete(record)}>删除</Button>
           </Space>
         )

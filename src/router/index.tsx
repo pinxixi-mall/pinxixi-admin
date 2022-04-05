@@ -11,7 +11,7 @@ type RouteProps = {
 const createRoute = (r: any) => {
     const route = (r: any) => {
         const Component = r.component
-        const docTitle = r.meta ? `${r.meta.title}-拼夕夕` : '拼夕夕'
+        const docTitle = r.meta ? `${r.meta.title}-拼西西` : '拼西西'
         return (
             <Route
                 key={r.route || r.path}

@@ -56,7 +56,7 @@ const RecommendEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, on
       setConfirmLoading(false)
       let ajaxFn = addRecommend
       if (pageType === 'EDIT') {
-        values.goodsId = detail.goodsId
+        values.recommendId = detail.recommendId
         ajaxFn = updateRecommend
       }
       await ajaxFn(values)
@@ -90,12 +90,14 @@ const RecommendEdit: React.FC<ModalFormProps> = ({ visible, onCancel, detail, on
               label="商品名称"
               rules={[{ required: true }]}
             >
-              <Search
+              {
+                pageType === 'ADD' ? <Search
                 placeholder="请选择"
                 enterButton="选择"
                 readOnly
                 onSearch={onGoodsModalVisable}
-              />
+              /> : <Input readOnly />
+              }
             </Form.Item>
             <Form.Item
               name="goodsId"

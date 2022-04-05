@@ -4,17 +4,14 @@ const {
   addLessLoader,
   addWebpackAlias,
   overrideDevServer,
-  addWebpackPlugin,
   setWebpackPublicPath,
 } = require("customize-cra");
 const PUBLIC_PATH = process.env.REACT_APP_ENV === "production" ? "/" : "/";
 const devServerConfig = () => (config) => {
-  console.log('--------log--------', config);
-  config.port = 9091
   return {
     ...config,
     open: false,
-    port: 9091,
+    port: 3000,
     proxy: {
       "/api": {
         target: "http://localhost:9090/",

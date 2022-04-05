@@ -51,7 +51,8 @@ const HomeRecommend: React.FC = () => {
     {
       title: '商品价格',
       dataIndex: 'goodsPrice',
-      width: 120
+      width: 120,
+      render: value => `￥${value.toFixed(2)}`
     },
     {
       title: '排序',

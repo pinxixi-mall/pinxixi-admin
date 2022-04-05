@@ -42,3 +42,6 @@
 .rich-text .bf-content{
   height: 300px;
 }
+.ant-table-thead > tr > th{
+  background-color: #fff!important;
+}

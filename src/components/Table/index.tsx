@@ -7,7 +7,7 @@ const Table: FC<TableProps> = (props: TableProps): ReactElement => {
   const [refreshInside, setRefreshInside] = useState<boolean>()
   const [pagination, setPagination] = useState<PaginationType>({
     current: 1,
-    pageSize: 5,
+    pageSize: pagi.noPagination ? 0 : 5,
     total: 0,
     pageSizeOptions: ['5', '10', '20'],
     showQuickJumper: true,

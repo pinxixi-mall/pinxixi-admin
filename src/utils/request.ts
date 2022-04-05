@@ -2,7 +2,7 @@ import Axios from "axios";
 import { isObject, isNull } from "@/utils/tools";
 import { getToken, setToken } from "@/utils/utils";
 import {
-  BASEURL,
+  BASE_URL,
   NOT_LOGIN,
   TIMEOUT,
   MOCK_BASE_URL,
@@ -25,7 +25,7 @@ class httpRequest {
 
   // 创建实例
   create(options: any) {
-    let baseURL = options.baseUrl ? options.baseUrl : BASEURL;
+    let baseURL = options.baseUrl ? options.baseUrl : BASE_URL;
     if (options.isMock) {
       baseURL = MOCK_BASE_URL;
     }

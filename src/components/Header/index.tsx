@@ -35,7 +35,7 @@ const Header: FC<UserInfo> = (props: UserInfo) => {
   return (
     <AntHeader className={styles.navHeader}>
       <div className={styles.headerLeft}>
-        <Input placeholder="搜索" prefix={<SearchOutlined />} />
+        <Input placeholder="搜索(TODO)" prefix={<SearchOutlined />} />
       </div>
       <div className={styles.headerRight}>
         <div className={styles.rightItem}>
