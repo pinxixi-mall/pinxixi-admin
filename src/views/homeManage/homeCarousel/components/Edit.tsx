@@ -40,13 +40,11 @@ const CarouselEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSu
     }
     if (pageType === 'EDIT') {
       form.setFieldsValue(detail)
-      setFileList([
-        {
-          name: 'image.png',
-          status: 'done',
-          url: detail.carouselImage
-        },
-      ])
+      setFileList([{
+        name: 'image.png',
+        status: 'done',
+        url: detail.carouselImage
+      }])
     }
   }, [visible])
 
@@ -167,7 +165,7 @@ const CarouselEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSu
           name="carouselSort"
           label="排序"
         >
-          <InputNumber min={0}/>
+          <InputNumber min={0} />
         </Form.Item>
       </Form>
     </Modal>

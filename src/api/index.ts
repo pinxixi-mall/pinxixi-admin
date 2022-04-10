@@ -23,7 +23,7 @@ export const logout = () => {
  * @returns 
  */
 export const getUserInfo = () => {
-  return http.get(`/admin/user`);
+  return http.get(`/admin/user`, null, { noLoading: true });
 };
 
 /**
@@ -204,6 +204,15 @@ export const updateGoodsCategory = (data?: any, options?: any) => {
  */
 export const deleteGoodsCategory = (id: number) => {
   return http.delete(`/admin/goods-manage/category/${id}`);
+};
+
+/**
+ * 查询单个商品分类
+ * @param id 
+ * @returns 
+ */
+ export const getGoodsCategory = (id: number) => {
+  return http.get(`/admin/goods-manage/category/${id}`);
 };
 
 /**

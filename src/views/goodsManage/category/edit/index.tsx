@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from 'react'
 import { Form, Input, Modal, InputNumber, message, Select, ConfigProvider } from 'antd'
-import { addGoodsCategory, updateGoodsCategory, getGoodsCategoryByLevel } from '@/api'
+import { addGoodsCategory, updateGoodsCategory, getGoodsCategoryByLevel, getGoodsCategory, commonUpload } from '@/api'
 import { useResetFormOnCloseModal } from '@/utils/common'
 import type { CategoryType } from '../index'
 import { goodsCategoryLevelList } from '@/config/dataList'
 import { validateMessages } from '@/config'
+import Upload from '@/components/Upload'
 const { Option } = Select
 
 interface ModalFormType {
   visible: boolean;
   pageType?: string;
-  detail: CategoryType,
-  onCancel: Function;
-  onSuccess: () => void;
+  detail: Partial<CategoryType>,
+  onCancel(): void;
+  onSuccess(): void;
 }
 
 const CategoryEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSuccess, pageType }) => {
@@ -22,6 +23,7 @@ const CategoryEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSu
   // 二级分类
   const [categoryLevel2List, setCategoryLevel2List] = useState<Array<CategoryType>>([])
   const [form] = Form.useForm()
+  const [fileList, setFileList] = useState<any[]>([])
 
   const layout = {
     labelCol: {
@@ -40,12 +42,49 @@ const CategoryEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSu
 
   useEffect(() => {
     if (!visible) {
+      setFileList([])
       return
     }
     if (pageType === 'EDIT') {
-      form.setFieldsValue(detail)
+      init(detail)
+      setFileList([{
+        name: 'image.png',
+        status: 'done',
+        url: detail.categoryImage
+      }])
     }
   }, [visible])
+
+  // 回显
+  const init = async (detail: Partial<CategoryType>) => {
+    if (detail.categoryLevel) {
+      await onLevelChange(detail.categoryLevel)
+
+      if ([1, 2].includes(detail.categoryLevel)) {
+        form.setFieldsValue({
+          ...detail,
+          categoryId1: detail.parentId
+        })
+      }
+
+      if (detail.categoryLevel === 3) {
+        // 如果是三级
+        if (detail.parentId) {
+          // 先查一级列表
+          await onLevel1Change(detail.parentId)
+          // 再查其父级
+          const { data } = await getGoodsCategory(detail.parentId)
+          // 再根据其父级查二级列表
+          await onLevel1Change(data.parentId)
+          form.setFieldsValue({
+            ...detail,
+            categoryId1: data.parentId,
+            categoryId2: detail.parentId
+          })
+        }
+      }
+    }
+  }
 
   // 根据级别查询一级分类列表
   const onLevelChange = async (level: number) => {
@@ -57,10 +96,10 @@ const CategoryEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSu
       categoryId2: null
     })
     if (level === 1) {
-      // 新增一级分类不需要查询父级分类
+      // 一级分类不需要查询父级分类
       return
     }
-    // 新增二、三级先查出一级列表
+    // 二、三级先查出一级列表
     const { data } = await getGoodsCategoryByLevel({ categoryLevel: 1 })
     setCategoryLevel1List(data)
   }
@@ -75,17 +114,34 @@ const CategoryEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSu
     setCategoryLevel2List(list2)
   }
 
+  // 图片上传
+  const handleUpload = async (file: any) => {
+    const formData = new FormData()
+    formData.append('file', file)
+    const { data: { url } } = await commonUpload(formData)
+    form.setFieldsValue({
+      categoryImage: url
+    })
+    setFileList([{
+      name: 'image.png',
+      status: 'done',
+      url
+    }])
+  }
+
+  // 分类级别只允许修改到父级
   // 提交
   const handleOk = () => {
     setConfirmLoading(true)
     form.validateFields().then(async values => {
       setConfirmLoading(false)
       // 编辑参数
-      let params = {
+      let params: Record<string, number | string> = {
         categoryLevel: values.categoryLevel,
         parentId: 0, // 一级分类父级ID是0
         categoryName: values.categoryName,
         categorySort: values.categorySort,
+        categoryImage: values.categoryImage,
       }
       // 如果是2、3级分类，取其上一级的分类ID
       if (values.categoryLevel === 2) {
@@ -97,7 +153,7 @@ const CategoryEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSu
       }
       let ajaxFn = addGoodsCategory
       if (pageType === 'EDIT') {
-        params = values
+        params.categoryId = values.categoryId
         ajaxFn = updateGoodsCategory
       }
       const { msg } = await ajaxFn(params)
@@ -125,7 +181,6 @@ const CategoryEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSu
             <Form.Item
               name="categoryId"
               label="分类编号"
-
             >
               <Input disabled={true} />
             </Form.Item>
@@ -133,11 +188,9 @@ const CategoryEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSu
           <Form.Item
             name="categoryLevel"
             label="分类级别"
-            rules={[
-              {
-                required: true,
-              }
-            ]}
+            rules={[{
+              required: true,
+            }]}
           >
             <Select disabled={pageType === 'EDIT'} onChange={onLevelChange}>
               {
@@ -158,7 +211,7 @@ const CategoryEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSu
                   label="一级分类"
                   rules={[{ required: true }]}
                 >
-                  <Select disabled={pageType === 'EDIT'} onChange={onLevel1Change} placeholder="选择一级分类">
+                  <Select disabled={pageType === 'EDIT' && getFieldValue('categoryLevel') === 3} onChange={onLevel1Change} placeholder="选择一级分类">
                     {
                       categoryLevel1List.map(c => (
                         <Option value={c.categoryId} key={c.categoryId}>{c.categoryName}</Option>
@@ -180,7 +233,7 @@ const CategoryEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSu
                   label="二级分类"
                   rules={[{ required: true }]}
                 >
-                  <Select disabled={pageType === 'EDIT'} placeholder="选择二级分类">
+                  <Select placeholder="选择二级分类">
                     {
                       categoryLevel2List.map(c => (
                         <Option value={c.categoryId} key={c.categoryId}>{c.categoryName}</Option>
@@ -194,19 +247,20 @@ const CategoryEdit: React.FC<ModalFormType> = ({ visible, onCancel, detail, onSu
           <Form.Item
             name="categoryName"
             label="分类名称"
-            rules={[
-              {
-                required: true,
-              }
-            ]}
+            rules={[{
+              required: true,
+            }]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item name="categoryImage" label="缩略图" rules={[{ required: true }]}>
+            <Upload fileList={fileList} handleUpload={handleUpload} />
           </Form.Item>
           <Form.Item
             name="categorySort"
             label="排序"
           >
-            <InputNumber min={0}/>
+            <InputNumber min={0} />
           </Form.Item>
         </Form>
       </ConfigProvider>

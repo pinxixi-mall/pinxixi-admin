@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import SearchPannel from '@/components/SearchPannel'
 import { ColumnsType } from 'antd/es/table'
-import { Card, Button, Space, Modal, message } from 'antd'
+import { Card, Button, Space, Modal, message, Image } from 'antd'
 import { SyncOutlined, PlusOutlined, ExclamationCircleOutlined, FormOutlined, DeleteOutlined } from '@ant-design/icons'
 import type { SearchItemType } from '@/types'
 import Table from '@/components/Table'
@@ -16,6 +16,9 @@ export interface CategoryType {
   categoryName: string;
   parentId?: number;
   categorySort?: number;
+  categoryLevel?: number;
+  categoryImage?: string;
+  children: CategoryType[] | null;
 }
 
 const GoodsCategory: React.FC = () => {
@@ -23,25 +26,30 @@ const GoodsCategory: React.FC = () => {
   const [visible, setVisible] = useState<boolean>(false)
   const [queryParams, setQueryParams] = useState({})
   const [pageType, setPageType] = useState<string>()
-  const [detail, setDetail] = useState<CategoryType>({
-    categoryId: 0,
-    categoryName: '',
-  })
+  const [detail, setDetail] = useState<Partial<CategoryType>>({})
 
   const columns: ColumnsType<CategoryType> = [
     {
-      title: '分类编号',
-      key: 'categoryId',
-      dataIndex: 'categoryId',
-    },
-    {
       title: '分类名称',
-      key: 'categoryName',
       dataIndex: 'categoryName',
     },
     {
+      title: '分类编号',
+      dataIndex: 'categoryId',
+    },
+    {
+      title: '图标',
+      dataIndex: 'categoryImage',
+      render: icon => (
+        <Image
+          width={50}
+          height={50}
+          src={icon}
+        />
+      ),
+    },
+    {
       title: '分类级别',
-      key: 'categoryLevel',
       dataIndex: 'categoryLevel',
       render: (text: any, record: any) => {
         return  getLabelByValue(record.categoryLevel, goodsCategoryLevelList)
@@ -49,21 +57,11 @@ const GoodsCategory: React.FC = () => {
     },
     {
       title: '排序',
-      key: 'categorySort',
       dataIndex: 'categorySort',
-      width: 100,
     },
     {
       title: '创建时间',
-      key: 'createTime',
       dataIndex: 'createTime',
-      width: 190
-    },
-    {
-      title: '更新时间',
-      key: 'updateTime',
-      dataIndex: 'updateTime',
-      width: 190
     },
     {
       title: '操作',

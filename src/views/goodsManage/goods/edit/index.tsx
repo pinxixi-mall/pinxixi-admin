@@ -36,13 +36,11 @@ const GoodsEdit: FC = (): ReactElement => {
     const getDetail = async (id: number) => {
       const { data } = await goodsDetial(id)
       form.setFieldsValue(data)
-      setFileList([
-        {
-          name: 'image.png',
-          status: 'done',
-          url: data.goodsImage
-        }
-      ])
+      setFileList([{
+        name: 'image.png',
+        status: 'done',
+        url: data.goodsImage
+      }])
     }
     id && getDetail(id)
   }, [refresh])
@@ -74,13 +72,11 @@ const GoodsEdit: FC = (): ReactElement => {
     form.setFieldsValue({
       goodsImage: url
     })
-    setFileList([
-      {
-        name: 'image.png',
-        status: 'done',
-        url
-      }
-    ])
+    setFileList([{
+      name: 'image.png',
+      status: 'done',
+      url
+    }])
   }
 
   // 详情更新
