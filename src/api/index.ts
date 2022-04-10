@@ -7,7 +7,7 @@ import http from '@/utils/request';
  * @returns 
  */
 export const login = (data?: any) => {
-  return http.post(`/admin/login`, data);
+  return http.post(`/admin/login`, data, { noLoading: true });
 };
 
 /**

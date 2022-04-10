@@ -19,6 +19,7 @@ const Login: FC = (): ReactElement => {
   const history = useHistory()
   const [form] = Form.useForm()
   const [verifyImgCode, setVerifyImgCode] = useState<string>()
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     setToken(null)
@@ -27,15 +28,21 @@ const Login: FC = (): ReactElement => {
     })
   }, [form])
 
-  const onVerifyCodeChange = (code: string) : void => {
+  const onVerifyCodeChange = (code: string): void => {
     setVerifyImgCode(code)
   }
 
   const onFinish = async (values: SubmitValues) => {
+    setLoading(true)
     const { redirect } = url.parse(history.location.search, true).query
-    const { data: { token } } = await login(values)
-    setToken(token)
-    history.push(redirect || '/dashboard')
+    try {
+      const { data: { token } } = await login(values)
+      setToken(token)
+      history.push(redirect || '/dashboard')
+      setLoading(false)
+    } catch (error) {
+      setLoading(false)
+    }
   }
 
   return (
@@ -59,12 +66,10 @@ const Login: FC = (): ReactElement => {
         </section>
         <Form.Item
           name="userName"
-          rules={[
-            {
-              required: true,
-              message: "请输入用户名",
-            },
-          ]}
+          rules={[{
+            required: true,
+            message: "请输入用户名",
+          },]}
         >
           <Input
             size="large"
@@ -74,12 +79,10 @@ const Login: FC = (): ReactElement => {
         </Form.Item>
         <Form.Item
           name="password"
-          rules={[
-            {
-              required: true,
-              message: "请输入密码",
-            },
-          ]}
+          rules={[{
+            required: true,
+            message: "请输入密码",
+          },]}
         >
           <Input.Password
             size="large"
@@ -88,19 +91,19 @@ const Login: FC = (): ReactElement => {
             iconRender={visible => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
           />
         </Form.Item>
-        <Form.Item style={{marginBottom:'10px'}}>
+        <Form.Item style={{ marginBottom: '10px' }}>
           <Input.Group className={styles.verify}>
             <Form.Item
-              style={{marginBottom:0}}
+              style={{ marginBottom: 0 }}
               name="verifyCode"
               rules={[
                 {
                   validator: (_, value) =>
                     !value
-                    ? Promise.reject(new Error('请输入验证码'))
-                    : value.toLocaleLowerCase() !== verifyImgCode?.toLocaleLowerCase()
-                    ? Promise.reject(new Error('验证码不正确'))
-                    : Promise.resolve() 
+                      ? Promise.reject(new Error('请输入验证码'))
+                      : value.toLocaleLowerCase() !== verifyImgCode?.toLocaleLowerCase()
+                        ? Promise.reject(new Error('验证码不正确'))
+                        : Promise.resolve()
                 },
               ]}>
               <Input
@@ -111,7 +114,7 @@ const Login: FC = (): ReactElement => {
                 prefix={<SafetyCertificateOutlined />}
               />
             </Form.Item>
-            <VerifyCode width={120} height={40} length={4} change={onVerifyCodeChange}/>
+            <VerifyCode width={120} height={40} length={4} change={onVerifyCodeChange} />
           </Input.Group>
         </Form.Item>
         <Form.Item name="remember" valuePropName="checked">
@@ -123,6 +126,7 @@ const Login: FC = (): ReactElement => {
             size="large"
             htmlType="submit"
             className="login-form-button"
+            loading={loading}
             block
           >
             登 录
