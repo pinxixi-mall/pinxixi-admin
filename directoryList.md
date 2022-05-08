@@ -1,0 +1,19 @@
+|-- src
+    |-- api                     // 接口文件
+    |-- assets                  // 静态资源
+    |-- components              // 组件
+    |-- config                  // 项目配置
+    |-- hooks                   // 自定义hook
+    |-- layout                  // 页面布局
+    |-- router                  // 路由配置
+    |-- store                   // store仓库    
+    |-- style                   // 全局样式
+    |-- types                   // ts接口
+    |-- utils                   // 工具方法
+    |-- views                   // 页面
+        |-- dashboard           // 首页看板
+        |-- goodsManage         // 商品管理
+        |-- homeManage          // 首页管理
+        |-- login               // 登录
+        |-- orderManage         // 订单管理
+        |-- userManage          // 用户管理
